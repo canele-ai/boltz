@@ -272,7 +272,7 @@ def _parse_confidence(out_dir: Path, input_yaml: Path) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 @app.function(
-    gpu="A100",
+    gpu="L40S",
     timeout=7200,
     mounts=[modal.Mount.from_local_dir(str(EVAL_DIR), remote_path="/eval")],
 )
@@ -536,7 +536,7 @@ def evaluate(config_json: str, sanity_check: bool = False, num_runs: int = 1) ->
 # ---------------------------------------------------------------------------
 
 @app.function(
-    gpu="A100",
+    gpu="L40S",
     timeout=7200,
     mounts=[modal.Mount.from_local_dir(str(EVAL_DIR), remote_path="/eval")],
 )

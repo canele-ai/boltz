@@ -185,7 +185,7 @@ We do not claim novelty in the metric design. The contribution is applying it sy
 ### Reproducibility
 
 - Seeds pinned for all evaluations
-- Modal A100-80GB for consistent hardware
+- Modal L40S-48GB for consistent hardware (production deployment target)
 - OpenStructure version 2.8.0 for true lDDT computation (matching Boltz-1 evaluation)
 - Median of 3 runs per complex for timing stability
 

@@ -81,7 +81,7 @@ subject to: mean_pLDDT(optimized) >= mean_pLDDT(baseline) - 0.02
 
 - **Model**: Boltz-2 (primary). Boltz-1 results reported separately where applicable — the two models differ in precision (Boltz-2 uses bf16-mixed by default; Boltz-1 uses fp32), trunk depth (64 vs 48 pairformer blocks), and diffusion conditioning architecture.
 - **Test set**: CASP15 targets + a representative held-out PDB set (release date after Boltz training cutoff). Exact target list to be defined in `research/eval/config.yaml`.
-- **Hardware**: single A100-80GB or equivalent.
+- **Hardware**: single L40S-48GB (primary), A100-80GB (secondary/published comparison).
 - **Baseline**: Boltz-2, 200-step EDM/Karras-style diffusion (stochastic sampler with gamma noise injection), 3 recycling steps, `float32_matmul_precision="highest"`, `torch.compile` disabled, `diffusion_samples=1`.
 - **Timing**: median of 3 runs per complex, excluding model load and `torch.compile` warmup. Seeds fixed for reproducibility.
 - **Quality**: lDDT computed via OpenStructure `compare-structures` (same tooling as `scripts/eval/run_evals.py`).
@@ -134,7 +134,7 @@ Approaches to explore, roughly ordered by expected impact:
 
 1. **Quality floor**: Mean lDDT on the evaluation set must remain within 2 percentage points of the 200-step DDPM baseline. This is non-negotiable — a speedup that breaks predictions is not a speedup.
 
-2. **Standard GPU hardware**: Primary evaluation on A100-80GB (for published comparability). Secondary validation on L4-24GB (production deployment target for binder design pipelines — cheaper, lower VRAM, no BF16 tensor cores, no FP8). Approaches should ideally work on both, but A100 is the gating benchmark.
+2. **Standard GPU hardware**: Primary evaluation on **L40S (48GB GDDR6)** — this is the production inference GPU for binder design pipelines. Secondary validation on A100-80GB for published comparability. L40S is Ada Lovelace architecture with BF16 tensor cores and FP8 transformer engine support. All approaches must fit within 48GB VRAM.
 
 3. **No retraining**: All approaches must work with existing Boltz checkpoints. No fine-tuning, distillation, or retraining of any kind. This constrains us to inference-time optimizations only.
 
