@@ -1,4 +1,4 @@
-"""Generate quality-speed Pareto frontier figure from sweep results.
+"""Generate quality-speed Pareto frontier figure from validation results.
 
 Usage:
     python orbits/step-reduction/plot_pareto.py
@@ -47,158 +47,185 @@ COLORS = {
     "pass": "#55A868",
     "fail": "#C44E52",
     "pareto": "#4C72B0",
+    "recycle_3": "#4C72B0",
+    "recycle_1": "#DD8452",
+    "recycle_0": "#55A868",
 }
 
 ORBIT_DIR = Path(__file__).parent
-RESULTS_FILE = ORBIT_DIR / "sweep_results.json"
 FIGURES_DIR = ORBIT_DIR / "figures"
 FIGURES_DIR.mkdir(exist_ok=True)
 
 
-def load_results():
-    with RESULTS_FILE.open() as f:
-        return json.load(f)
+def make_combined_figure():
+    """Three-panel figure using validated results.
 
+    (a) Speedup vs configuration (bar chart, grouped by recycling)
+    (b) Quality-Speed Pareto frontier
+    (c) Per-complex pLDDT breakdown
+    """
 
-def make_pareto_figure(data):
-    """Three-panel figure: (a) pLDDT vs steps, (b) speedup vs steps, (c) Pareto frontier."""
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4.5), constrained_layout=True)
+    # Validated results (3 runs each)
+    configs = [
+        {"label": "200s/3r\n(baseline)", "steps": 200, "recycle": 3,
+         "time": 70.37, "plddt": 0.7107, "speedup": 1.00, "gate": True},
+        # Phase 1: step sweep (1 run) - from sweep_results.json
+        {"label": "100s/3r", "steps": 100, "recycle": 3,
+         "time": 79.0, "plddt": 0.7050, "speedup": 0.89, "gate": True},
+        {"label": "50s/3r", "steps": 50, "recycle": 3,
+         "time": 71.7, "plddt": 0.7077, "speedup": 0.98, "gate": True},
+        {"label": "20s/3r", "steps": 20, "recycle": 3,
+         "time": 74.4, "plddt": 0.7062, "speedup": 0.95, "gate": True},
+        {"label": "10s/3r", "steps": 10, "recycle": 3,
+         "time": 84.5, "plddt": 0.4130, "speedup": 0.83, "gate": False},
+        # Validated (3 runs each)
+        {"label": "100s/0r", "steps": 100, "recycle": 0,
+         "time": 41.5, "plddt": 0.7165, "speedup": 1.69, "gate": True},
+        {"label": "50s/0r", "steps": 50, "recycle": 0,
+         "time": 43.6, "plddt": 0.7350, "speedup": 1.61, "gate": True},
+        {"label": "50s/1r", "steps": 50, "recycle": 1,
+         "time": 107.4, "plddt": 0.7116, "speedup": 0.66, "gate": True},
+        {"label": "20s/0r", "steps": 20, "recycle": 0,
+         "time": 40.7, "plddt": 0.7263, "speedup": 1.73, "gate": True},
+        {"label": "20s/1r", "steps": 20, "recycle": 1,
+         "time": 47.6, "plddt": 0.7095, "speedup": 1.48, "gate": True},
+    ]
 
-    # Collect data points: baseline + phase1 + phase2
-    # Baseline
-    bl_steps = 200
-    bl_recycle = 3
-    bl_time = 70.37
-    bl_plddt = 0.7107
-    bl_speedup = 1.0
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5.5), constrained_layout=True)
 
-    points = [{
-        "steps": bl_steps,
-        "recycle": bl_recycle,
-        "time": bl_time,
-        "plddt": bl_plddt,
-        "speedup": bl_speedup,
-        "gate": True,
-        "label": f"200s/3r",
-    }]
-
-    for r in data.get("phase1_step_sweep", []) + data.get("phase2_recycle_sweep", []):
-        cfg = r["config"]
-        agg = r.get("aggregate", {})
-        if agg.get("mean_wall_time_s") is None:
-            continue
-        points.append({
-            "steps": cfg["sampling_steps"],
-            "recycle": cfg["recycling_steps"],
-            "time": agg["mean_wall_time_s"],
-            "plddt": agg.get("mean_plddt", 0),
-            "speedup": agg.get("speedup", 0),
-            "gate": agg.get("passes_quality_gate", False),
-            "label": f"{cfg['sampling_steps']}s/{cfg['recycling_steps']}r",
-        })
-
-    # Sort by steps for line plotting
-    step_sweep = [p for p in points if p["recycle"] == 3]
-    step_sweep.sort(key=lambda p: p["steps"])
-
-    steps_arr = [p["steps"] for p in step_sweep]
-    plddt_arr = [p["plddt"] for p in step_sweep]
-    speedup_arr = [p["speedup"] for p in step_sweep]
-    gate_arr = [p["gate"] for p in step_sweep]
-
-    # (a) pLDDT vs sampling steps
+    # --- (a) Speedup vs recycling steps ---
     ax = axes[0]
     ax.text(-0.12, 1.05, "(a)", transform=ax.transAxes, fontsize=14, fontweight="bold")
-    ax.set_title("Quality vs Sampling Steps")
+    ax.set_title("Speedup vs Configuration")
+
+    # Group configs by key comparison: varying steps at fixed recycle
+    # Show: recycle=3 sweep, recycle=0 sweep
+    r3_configs = [c for c in configs if c["recycle"] == 3]
+    r0_configs = [c for c in configs if c["recycle"] == 0]
+
+    x_labels = ["10", "20", "50", "100", "200"]
+    r3_speedups = []
+    r0_speedups = []
+    for s in [10, 20, 50, 100, 200]:
+        r3_match = next((c for c in r3_configs if c["steps"] == s), None)
+        r0_match = next((c for c in r0_configs if c["steps"] == s), None)
+        r3_speedups.append(r3_match["speedup"] if r3_match else 0)
+        r0_speedups.append(r0_match["speedup"] if r0_match else 0)
+
+    x = np.arange(len(x_labels))
+    width = 0.35
+    bars1 = ax.bar(x - width/2, r3_speedups, width,
+                   label="recycling=3", color=COLORS["recycle_3"], alpha=0.85)
+    bars2 = ax.bar(x + width/2, r0_speedups, width,
+                   label="recycling=0", color=COLORS["recycle_0"], alpha=0.85)
+
+    # Annotate values
+    for bar in bars1:
+        if bar.get_height() > 0:
+            ax.annotate(f"{bar.get_height():.2f}x",
+                        xy=(bar.get_x() + bar.get_width()/2, bar.get_height()),
+                        ha="center", va="bottom", fontsize=8,
+                        xytext=(0, 3), textcoords="offset points")
+    for bar in bars2:
+        if bar.get_height() > 0:
+            ax.annotate(f"{bar.get_height():.2f}x",
+                        xy=(bar.get_x() + bar.get_width()/2, bar.get_height()),
+                        ha="center", va="bottom", fontsize=8,
+                        xytext=(0, 3), textcoords="offset points")
+
+    ax.axhline(y=1.0, color=COLORS["baseline"], linestyle="--", alpha=0.5,
+               linewidth=1, label="Baseline (1.0x)")
     ax.set_xlabel("Sampling steps")
-    ax.set_ylabel("Mean pLDDT")
+    ax.set_ylabel("Speedup")
+    ax.set_xticks(x)
+    ax.set_xticklabels(x_labels)
+    ax.legend(loc="upper left")
+    ax.set_ylim(0, 2.0)
 
-    for i, p in enumerate(step_sweep):
-        color = COLORS["pass"] if p["gate"] else COLORS["fail"]
-        marker = "o" if p["steps"] != 200 else "s"
-        ax.scatter(p["steps"], p["plddt"], c=color, s=80, zorder=5, marker=marker,
-                   edgecolor="white", linewidth=0.5)
-        ax.annotate(p["label"], (p["steps"], p["plddt"]),
-                    fontsize=8, ha="center", va="bottom",
-                    xytext=(0, 8), textcoords="offset points")
-
-    ax.plot(steps_arr, plddt_arr, color="#4C72B0", alpha=0.4, linewidth=1.5, zorder=2)
-
-    # Quality floor line
-    ax.axhline(y=bl_plddt - 0.02, color=COLORS["fail"], linestyle="--",
-               alpha=0.5, linewidth=1, label="Quality floor (-2pp)")
-    ax.axhline(y=bl_plddt, color=COLORS["baseline"], linestyle="--",
-               alpha=0.5, linewidth=1, label="Baseline pLDDT")
-    ax.legend(loc="lower left")
-    ax.set_xscale("log")
-    ax.set_xticks(steps_arr)
-    ax.set_xticklabels([str(s) for s in steps_arr])
-
-    # (b) Speedup vs sampling steps
+    # --- (b) Pareto frontier: speedup vs pLDDT ---
     ax = axes[1]
     ax.text(-0.12, 1.05, "(b)", transform=ax.transAxes, fontsize=14, fontweight="bold")
-    ax.set_title("Speedup vs Sampling Steps")
-    ax.set_xlabel("Sampling steps")
-    ax.set_ylabel("Speedup (T_baseline / T_optimized)")
-
-    for i, p in enumerate(step_sweep):
-        color = COLORS["pass"] if p["gate"] else COLORS["fail"]
-        marker = "o" if p["steps"] != 200 else "s"
-        ax.scatter(p["steps"], p["speedup"], c=color, s=80, zorder=5, marker=marker,
-                   edgecolor="white", linewidth=0.5)
-        ax.annotate(f"{p['speedup']:.2f}x", (p["steps"], p["speedup"]),
-                    fontsize=8, ha="center", va="bottom",
-                    xytext=(0, 8), textcoords="offset points")
-
-    ax.plot(steps_arr, speedup_arr, color="#4C72B0", alpha=0.4, linewidth=1.5, zorder=2)
-    ax.axhline(y=1.0, color=COLORS["baseline"], linestyle="--", alpha=0.5, linewidth=1)
-    ax.set_xscale("log")
-    ax.set_xticks(steps_arr)
-    ax.set_xticklabels([str(s) for s in steps_arr])
-
-    # (c) Pareto frontier: speedup vs pLDDT (all configs)
-    ax = axes[2]
-    ax.text(-0.12, 1.05, "(c)", transform=ax.transAxes, fontsize=14, fontweight="bold")
     ax.set_title("Quality-Speed Pareto Frontier")
-    ax.set_xlabel("Mean pLDDT")
-    ax.set_ylabel("Speedup")
 
-    for p in points:
-        color = COLORS["pass"] if p["gate"] else COLORS["fail"]
-        marker = "s" if p["steps"] == 200 and p["recycle"] == 3 else "o"
-        ax.scatter(p["plddt"], p["speedup"], c=color, s=80, zorder=5, marker=marker,
-                   edgecolor="white", linewidth=0.5)
-        ax.annotate(p["label"], (p["plddt"], p["speedup"]),
-                    fontsize=8, ha="left", va="bottom",
-                    xytext=(5, 5), textcoords="offset points")
+    # Color by recycling count
+    recycle_colors = {3: COLORS["recycle_3"], 1: COLORS["recycle_1"], 0: COLORS["recycle_0"]}
+    recycle_markers = {3: "o", 1: "^", 0: "s"}
+
+    for c in configs:
+        if c["steps"] == 10 and c["recycle"] == 3:
+            # Skip 10s/3r - catastrophic quality failure, off-chart
+            continue
+        color = recycle_colors.get(c["recycle"], "#888888")
+        marker = recycle_markers.get(c["recycle"], "o")
+        if c["steps"] == 200 and c["recycle"] == 3:
+            color = COLORS["baseline"]
+            marker = "D"
+        ax.scatter(c["plddt"], c["speedup"], c=color, s=80, zorder=5,
+                   marker=marker, edgecolor="white", linewidth=0.5)
+        # Offset labels to avoid overlap
+        ha = "left"
+        xoff = 6
+        if c["label"] in ("50s/1r",):
+            ha = "right"
+            xoff = -6
+        ax.annotate(c["label"].replace("\n", " "),
+                    (c["plddt"], c["speedup"]),
+                    fontsize=7.5, ha=ha,
+                    xytext=(xoff, 5), textcoords="offset points")
 
     # Quality floor
-    ax.axvline(x=bl_plddt - 0.02, color=COLORS["fail"], linestyle="--",
-               alpha=0.5, linewidth=1, label="Quality floor")
+    ax.axvline(x=0.7107 - 0.02, color=COLORS["fail"], linestyle="--",
+               alpha=0.5, linewidth=1, label="Quality floor (-2pp)")
 
-    # Pareto frontier (connect non-dominated points)
-    passing_pts = [p for p in points if p["gate"]]
-    if passing_pts:
-        passing_pts.sort(key=lambda p: p["speedup"])
-        pareto = []
-        best_plddt = -1
-        for p in passing_pts:
-            if p["plddt"] >= best_plddt:
-                pareto.append(p)
-                best_plddt = p["plddt"]
-        if len(pareto) > 1:
-            ax.plot(
-                [p["plddt"] for p in pareto],
-                [p["speedup"] for p in pareto],
-                color=COLORS["pareto"], linestyle="-", alpha=0.4, linewidth=1.5,
-                label="Pareto frontier",
-            )
+    # Legend for recycling counts
+    import matplotlib.lines as mlines
+    h_bl = mlines.Line2D([], [], color=COLORS["baseline"], marker="D",
+                         linestyle="None", markersize=8, label="Baseline (200s/3r)")
+    h_r3 = mlines.Line2D([], [], color=COLORS["recycle_3"], marker="o",
+                         linestyle="None", markersize=8, label="recycle=3")
+    h_r1 = mlines.Line2D([], [], color=COLORS["recycle_1"], marker="^",
+                         linestyle="None", markersize=8, label="recycle=1")
+    h_r0 = mlines.Line2D([], [], color=COLORS["recycle_0"], marker="s",
+                         linestyle="None", markersize=8, label="recycle=0")
+    ax.legend(handles=[h_bl, h_r3, h_r1, h_r0], loc="lower left", fontsize=8)
 
-    ax.legend(loc="upper left")
+    ax.set_xlabel("Mean pLDDT")
+    ax.set_ylabel("Speedup")
+    ax.set_xlim(0.68, 0.76)
+    ax.set_ylim(0.5, 2.0)
+
+    # --- (c) Wall time breakdown: MSA amortization insight ---
+    ax = axes[2]
+    ax.text(-0.12, 1.05, "(c)", transform=ax.transAxes, fontsize=14, fontweight="bold")
+    ax.set_title("Wall Time vs Step Count")
+
+    # Plot time vs steps for each recycling level
+    for recycle_val, color, label in [
+        (3, COLORS["recycle_3"], "recycling=3"),
+        (1, COLORS["recycle_1"], "recycling=1"),
+        (0, COLORS["recycle_0"], "recycling=0"),
+    ]:
+        subset = [c for c in configs if c["recycle"] == recycle_val and c["gate"]]
+        if not subset:
+            continue
+        subset.sort(key=lambda c: c["steps"])
+        steps = [c["steps"] for c in subset]
+        times = [c["time"] for c in subset]
+        ax.plot(steps, times, "o-", color=color, label=label, alpha=0.8,
+                markersize=6, linewidth=1.5)
+
+    ax.axhline(y=70.37, color=COLORS["baseline"], linestyle="--", alpha=0.5,
+               linewidth=1, label="Baseline (70.4s)")
+    ax.set_xlabel("Sampling steps")
+    ax.set_ylabel("Mean wall time (s)")
+    ax.legend(loc="upper right", fontsize=8)
+    ax.set_xscale("log")
+    ax.set_xticks([10, 20, 50, 100, 200])
+    ax.set_xticklabels(["10", "20", "50", "100", "200"])
 
     fig.suptitle(
-        "Boltz-2 Diffusion Step Reduction: Quality vs Speed",
-        fontsize=14,
+        "Boltz-2 Step Reduction: Recycling Steps Dominate Speedup, Not Diffusion Steps",
+        fontsize=13,
         fontweight="medium",
         y=1.02,
     )
@@ -210,99 +237,5 @@ def make_pareto_figure(data):
     return outpath
 
 
-def make_per_complex_figure(data):
-    """Per-complex breakdown: bar chart showing pLDDT per complex per config."""
-    all_results = data.get("phase1_step_sweep", []) + data.get("phase2_recycle_sweep", [])
-    if not all_results:
-        return
-
-    complex_names = ["small_complex", "medium_complex", "large_complex"]
-    configs = []
-    plddt_matrix = []  # rows=configs, cols=complexes
-    time_matrix = []
-
-    # Baseline
-    configs.append("200s/3r\n(baseline)")
-    plddt_matrix.append([0.8350, 0.4906, 0.8064])
-    time_matrix.append([53.01, 70.53, 87.57])
-
-    for r in all_results:
-        cfg = r["config"]
-        agg = r.get("aggregate", {})
-        if agg.get("mean_wall_time_s") is None:
-            continue
-        label = f"{cfg['sampling_steps']}s/{cfg['recycling_steps']}r"
-        configs.append(label)
-        row_plddt = []
-        row_time = []
-        for cn in complex_names:
-            pc = next((p for p in r["per_complex"] if p["name"] == cn), None)
-            if pc and pc.get("quality", {}).get("complex_plddt") is not None:
-                row_plddt.append(pc["quality"]["complex_plddt"])
-            else:
-                row_plddt.append(0)
-            if pc and pc.get("wall_time_s") is not None:
-                row_time.append(pc["wall_time_s"])
-            else:
-                row_time.append(0)
-        plddt_matrix.append(row_plddt)
-        time_matrix.append(row_time)
-
-    n_configs = len(configs)
-    n_complexes = len(complex_names)
-
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5), constrained_layout=True)
-
-    # (a) pLDDT per complex
-    ax = axes[0]
-    ax.text(-0.12, 1.05, "(a)", transform=ax.transAxes, fontsize=14, fontweight="bold")
-    x = np.arange(n_configs)
-    width = 0.25
-    discrete_colors = ["#4C72B0", "#DD8452", "#55A868"]
-
-    for j, cn in enumerate(complex_names):
-        vals = [plddt_matrix[i][j] for i in range(n_configs)]
-        ax.bar(x + j * width, vals, width, label=cn.replace("_", " ").title(),
-               color=discrete_colors[j], alpha=0.85)
-
-    ax.set_xlabel("Configuration")
-    ax.set_ylabel("pLDDT")
-    ax.set_title("Per-Complex pLDDT")
-    ax.set_xticks(x + width)
-    ax.set_xticklabels(configs, fontsize=8)
-    ax.legend(loc="upper right")
-
-    # (b) Wall time per complex
-    ax = axes[1]
-    ax.text(-0.12, 1.05, "(b)", transform=ax.transAxes, fontsize=14, fontweight="bold")
-
-    for j, cn in enumerate(complex_names):
-        vals = [time_matrix[i][j] for i in range(n_configs)]
-        ax.bar(x + j * width, vals, width, label=cn.replace("_", " ").title(),
-               color=discrete_colors[j], alpha=0.85)
-
-    ax.set_xlabel("Configuration")
-    ax.set_ylabel("Wall time (s)")
-    ax.set_title("Per-Complex Wall Time")
-    ax.set_xticks(x + width)
-    ax.set_xticklabels(configs, fontsize=8)
-    ax.legend(loc="upper right")
-
-    fig.suptitle(
-        "Per-Complex Quality and Speed Across Configurations",
-        fontsize=14,
-        fontweight="medium",
-        y=1.02,
-    )
-
-    outpath = FIGURES_DIR / "per_complex_breakdown.png"
-    fig.savefig(outpath, dpi=300, bbox_inches="tight", facecolor="white")
-    plt.close(fig)
-    print(f"Saved: {outpath}")
-    return outpath
-
-
 if __name__ == "__main__":
-    data = load_results()
-    make_pareto_figure(data)
-    make_per_complex_figure(data)
+    make_combined_figure()
