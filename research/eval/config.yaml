@@ -1,0 +1,29 @@
+metric:
+  name: speedup_at_iso_quality
+  direction: maximize
+  quality_gate:
+    metric: plddt
+    max_regression_pp: 2.0
+    note: pLDDT (predicted lDDT from Boltz confidence head) used as proxy. True lDDT
+      via OpenStructure validated on subset.
+baseline: null
+significance:
+  num_seeds: 3
+  min_relative_improvement: null
+test_cases:
+- name: small_complex
+  description: Small protein-protein complex (~200 residues total)
+  yaml: test_cases/small_complex.yaml
+- name: medium_complex
+  description: Medium protein-protein complex (~400 residues, typical binder design)
+  yaml: test_cases/medium_complex.yaml
+- name: large_complex
+  description: Large protein complex (~600 residues)
+  yaml: test_cases/large_complex.yaml
+sanity_checks:
+- name: evaluator_runs
+  description: Evaluator completes without error on smallest test case
+- name: timing_positive
+  description: All timing measurements are positive
+- name: quality_in_range
+  description: pLDDT values between 0 and 1
