@@ -114,11 +114,19 @@ Approaches to explore, roughly ordered by expected impact:
 
 9. **Early exit / adaptive recycling**: Terminate trunk recycling early when the pair representation has converged (e.g., measured by cosine similarity between successive iterations).
 
+### Medium impact — kernel-level optimizations
+
+10. **Custom Triton kernels for triangular attention**: The Pairformer uses triangular attention (unique to AlphaFold-style models) implemented via generic einsum. A fused Triton kernel could eliminate memory round-trips and exploit the triangular structure.
+
+11. **Fused attention + LayerNorm kernels**: Combine multi-head attention with post-attention LayerNorm into a single kernel pass, reducing memory bandwidth.
+
+12. **Operator fusion via torch.compile inductor**: Let the inductor backend auto-fuse operations in the score model. Complements explicit Triton kernels — inductor handles the long tail of small ops.
+
 ### Medium-lower impact
 
-10. **INT8 / FP8 post-training quantization**: Quantize score model and Pairformer weights without retraining. Requires calibration dataset. Expected 1.5–3× throughput on H100.
+13. **INT8 / FP8 post-training quantization**: Quantize score model and Pairformer weights without retraining. Requires calibration dataset. Expected 1.5–3× throughput on H100.
 
-11. **Batched multi-sample inference**: When generating multiple diffusion samples, maximize `max_parallel_samples` to batch all samples in a single forward pass, removing chunking overhead.
+14. **Batched multi-sample inference**: When generating multiple diffusion samples, maximize `max_parallel_samples` to batch all samples in a single forward pass, removing chunking overhead.
 
 ---
 
@@ -126,7 +134,7 @@ Approaches to explore, roughly ordered by expected impact:
 
 1. **Quality floor**: Mean lDDT on the evaluation set must remain within 2 percentage points of the 200-step DDPM baseline. This is non-negotiable — a speedup that breaks predictions is not a speedup.
 
-2. **Standard GPU hardware**: All approaches must work on a single A100 (80 GB) or equivalent (A6000, H100). No multi-GPU or specialized hardware assumptions.
+2. **Standard GPU hardware**: Primary evaluation on A100-80GB (for published comparability). Secondary validation on L4-24GB (production deployment target for binder design pipelines — cheaper, lower VRAM, no BF16 tensor cores, no FP8). Approaches should ideally work on both, but A100 is the gating benchmark.
 
 3. **No retraining**: All approaches must work with existing Boltz checkpoints. No fine-tuning, distillation, or retraining of any kind. This constrains us to inference-time optimizations only.
 
