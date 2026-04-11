@@ -249,10 +249,18 @@ def main():
         err = agg.get("error")
 
         if err:
-            print(f"{label:<14} {cfg.get('sampling_steps','?'):>5} {cfg.get('gamma_0','?'):>8} {'ERROR':>8} -- {err[:60]}")
+            steps_str = str(cfg.get('sampling_steps', '?'))
+            gamma_str = str(cfg.get('gamma_0', '?'))
+            print(f"{label:<14} {steps_str:>5} {gamma_str:>8} {'ERROR':>8} -- {str(err)[:60]}")
         else:
             gate = "PASS" if passes else "FAIL" if passes is not None else "?"
-            print(f"{label:<14} {cfg.get('sampling_steps','?'):>5} {cfg.get('gamma_0','?'):>8} {mt:.1f:>8} {mp:.4f:>7} {dp:+.2f:>10} {sp:.2f}x:>8 {gate:>5}")
+            time_str = f"{mt:.1f}" if mt is not None else "?"
+            plddt_str = f"{mp:.4f}" if mp is not None else "?"
+            delta_str = f"{dp:+.2f}" if dp is not None else "?"
+            speedup_str = f"{sp:.2f}x" if sp is not None else "?"
+            steps_str = str(cfg.get('sampling_steps', '?'))
+            gamma_str = str(cfg.get('gamma_0', '?'))
+            print(f"{label:<14} {steps_str:>5} {gamma_str:>8} {time_str:>8} {plddt_str:>7} {delta_str:>10} {speedup_str:>8} {gate:>5}")
 
         # Print per-complex details
         for pc in r.get("per_complex", []):
@@ -260,7 +268,9 @@ def main():
             wt = pc.get("wall_time_s", "?")
             times = pc.get("run_times", [])
             times_str = ", ".join(f"{t:.1f}" for t in times) if times else "?"
-            print(f"  {pc['name']:<20} time={wt:.1f if isinstance(wt, float) else wt}s  pLDDT={plddt:.4f if isinstance(plddt, float) else plddt}  runs=[{times_str}]")
+            wt_str = f"{wt:.1f}" if isinstance(wt, (int, float)) else str(wt)
+            plddt_str = f"{plddt:.4f}" if isinstance(plddt, (int, float)) else str(plddt)
+            print(f"  {pc['name']:<20} time={wt_str}s  pLDDT={plddt_str}  runs=[{times_str}]")
 
         all_results.append({"label": label, "result": r})
 
