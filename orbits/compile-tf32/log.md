@@ -26,8 +26,19 @@ root_rationale: "First exploration -- measure speedup from TF32 matmul precision
 |---|--------|-----------------|------------|---------|----------------|--------------|----------|
 | baseline | 200 steps, highest precision | 70.37 | 0.7107 | 1.00x | 0.0 | PASS | 3 (median) |
 | 1 | TF32 (high) | 72.39 | 0.7107 | 0.97x | 0.00 | PASS | 3 (median) |
-| 2 | TF32 + compile_structure | 144.83 | 0.7046 | 0.49x | -0.61 | PASS | 1 |
+| 2 | TF32 + compile_structure | 121.21 | 0.7107 | 0.58x | -0.00 | PASS | 3 (median) |
 | 3 | TF32 + compile_confidence | 199.09 | 0.7046 | 0.35x | -0.61 | PASS | 1 |
+| 4 | TF32 + compile_structure + compile_confidence | 252.21 | 0.7045 | 0.28x | -0.61 | PASS | 1 |
+
+### compile_structure validation detail (3 runs, per complex)
+
+| Complex | Run 1 (cold) | Run 2 (warm cache) | Run 3 (warm cache) | Median | Baseline |
+|---------|-------------|-------------------|-------------------|--------|----------|
+| small (~200 res) | 175.3s | 89.0s | 87.7s | 89.0s | 53.0s |
+| medium (~400 res) | 138.5s | 114.7s | 128.6s | 128.6s | 70.5s |
+| large (~600 res) | 168.8s | 146.0s | 135.9s | 146.0s | 87.6s |
+
+Even with inductor disk cache warm, compile_structure runs 1.6-1.8x slower than the uncompiled baseline on every complex size.
 
 ## Approach
 
@@ -53,7 +64,7 @@ torch.compile was expected to speed up the diffusion score model (which runs 200
 
 3. **Confidence module overhead**: The confidence module runs only once per prediction, so the compile overhead (estimated at 100-130 seconds per shape) is never amortized.
 
-For the score model (200 diffusion steps), the steady-state benefit of compilation might offset the initial overhead -- but only if (a) the process persists across multiple predictions of the same shape, and (b) the inductor disk cache is warm.
+The 3-run validation shows that even with warm inductor disk cache, compiled score model runs 1.6-1.8x slower than uncompiled. The inductor backend generates suboptimal kernels for Boltz-2's complex attention patterns (windowed atom attention, pair-biased attention, AdaLN conditioning). The bf16-mixed precision mode already leverages highly optimized cuBLAS kernels that the inductor cannot improve upon; in fact, the inductor's generated code is worse.
 
 ### Wrapper Fix
 
