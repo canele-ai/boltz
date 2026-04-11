@@ -1,71 +1,25 @@
-- key: mariani_2013
-  title: "lDDT: a local superposition-free score for comparing protein structures and models using distance difference tests"
-  authors: "Valerio Mariani, Marco Biasini, Alessandro Barbato, Torsten Schwede"
-  year: 2013
-  url: "https://doi.org/10.1093/bioinformatics/btt473"
-  type: paper
-  finding: "Introduced lDDT, a superposition-free local quality score using distance difference tests at four thresholds (0.5, 1, 2, 4 A) with a 15 A inclusion radius."
-  cited_by: [metric_provenance]
+# Shared Reference Registry
+# All orbits contribute references here. One entry per paper/resource.
+# The reviewer and /summarize use this as the master bibliography.
+#
+# Format:
+#   - key: author_year (unique identifier, e.g., watanabe2007, tapias2016)
+#     title: "Full paper title"
+#     authors: "Author A, Author B, Author C"
+#     year: 2007
+#     url: "https://arxiv.org/abs/..."  # or DOI link
+#     type: paper | book | repo | website | wikipedia
+#     finding: "One-sentence summary of the key relevant finding"
+#     cited_by: [orbit/name-1, orbit/name-2]  # which orbits cite this
+#
+# Example:
+# - key: nose1984
+#   title: "A unified formulation of the constant temperature molecular dynamics methods"
+#   authors: "Shuichi Nose"
+#   year: 1984
+#   url: "https://doi.org/10.1063/1.447334"
+#   type: paper
+#   finding: "Introduced extended-system thermostat for canonical ensemble sampling"
+#   cited_by: [orbit/baseline-nh]
 
-- key: jumper_2021
-  title: "Highly accurate protein structure prediction with AlphaFold"
-  authors: "John Jumper, Richard Evans, Alexander Pritzel, Tim Green, Michael Figurnov, Olaf Ronneberger, et al."
-  year: 2021
-  url: "https://doi.org/10.1038/s41586-021-03819-2"
-  type: paper
-  finding: "AlphaFold2 achieved median GDT_TS of 92.4 on CASP14; introduced pLDDT as a predicted confidence score trained against lDDT-Ca."
-  cited_by: [metric_provenance]
-
-- key: abramson_2024
-  title: "Accurate structure prediction of biomolecular interactions with AlphaFold 3"
-  authors: "Josh Abramson, Jonas Adler, Jack Dunger, Richard Evans, Tim Green, Alexander Pritzel, Olaf Ronneberger, et al."
-  year: 2024
-  url: "https://doi.org/10.1038/s41586-024-07487-w"
-  type: paper
-  finding: "Diffusion-based architecture for joint structure prediction of proteins, nucleic acids, ligands; uses 200 diffusion steps; full-complex lDDT 82-83 on example complexes."
-  cited_by: [metric_provenance]
-
-- key: wohlwend_2024
-  title: "Boltz-1: Democratizing Biomolecular Interaction Modeling"
-  authors: "Jeremy Wohlwend, Gabriele Corso, Saro Passaro, Noah Getz, Mateo Reveiz, Ken Leidal, et al."
-  year: 2024
-  url: "https://doi.org/10.1101/2024.11.19.624167"
-  type: paper
-  finding: "First open-source model matching AlphaFold3 accuracy; comparable lDDT on CASP15; uses OpenStructure 2.8.0 for evaluation."
-  cited_by: [metric_provenance]
-
-- key: lin_2023
-  title: "Evolutionary-scale prediction of atomic-level protein structure with a language model"
-  authors: "Zeming Lin, Halil Akin, Roshan Rao, Brian Hie, Zhongkai Zhu, Wenting Lu, et al."
-  year: 2023
-  url: "https://doi.org/10.1126/science.ade2574"
-  type: paper
-  finding: "ESMFold achieves mean lDDT ~0.68 on CASP14 (vs AF2 ~0.85) with ~6x speedup; demonstrates speed-quality trade-off in structure prediction."
-  cited_by: [metric_provenance]
-
-- key: passaro_2025
-  title: "Boltz-2: Towards Accurate and Efficient Binding Affinity Prediction"
-  authors: "Saro Passaro, Gabriele Corso, Jeremy Wohlwend, Mateo Reveiz, Stephan Thaler, Vignesh Ram Somnath, et al."
-  year: 2025
-  url: "https://doi.org/10.1101/2025.06.14.659707"
-  type: paper
-  finding: "Boltz-2 modestly outperforms Boltz-1 on recall lDDT; average lDDT ~0.82 on PDB test set; first AI model approaching FEP for binding affinity."
-  cited_by: [metric_provenance]
-
-- key: song_2021_ddim
-  title: "Denoising Diffusion Implicit Models"
-  authors: "Jiaming Song, Chenlin Meng, Stefano Ermon"
-  year: 2021
-  url: "https://arxiv.org/abs/2010.02502"
-  type: paper
-  finding: "DDIM achieves 10-50x faster sampling than DDPM with controllable quality trade-off; establishes the speed-quality Pareto frontier paradigm for diffusion models."
-  cited_by: [metric_provenance]
-
-- key: song_2023_consistency
-  title: "Consistency Models"
-  authors: "Yang Song, Prafulla Dhariwal, Mark Chen, Ilya Sutskever"
-  year: 2023
-  url: "https://arxiv.org/abs/2303.01469"
-  type: paper
-  finding: "Single-step generation with FID 3.55 on CIFAR-10; demonstrates that diffusion model quality can be preserved with dramatically fewer steps."
-  cited_by: [metric_provenance]
+references: []

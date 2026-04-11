@@ -1,0 +1,69 @@
+name: Search Status Update
+
+on:
+  # Only trigger manually or from the orchestrator — NOT on a schedule
+  # Running every 30min when no research is active wastes Actions minutes
+  workflow_dispatch:
+    inputs:
+      campaign_issue:
+        description: 'Campaign Issue number to post summary to'
+        required: false
+
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch all orbit branches
+        run: git fetch --all
+
+      - name: Scan orbits and generate summary
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "## Search Status ($(date -u +%Y-%m-%dT%H:%M:%SZ))" > /tmp/status.md
+          echo "" >> /tmp/status.md
+
+          # Count orbits by label
+          for label in exploring evaluated promising dead-end winner; do
+            count=$(gh issue list --label "$label" --json number --jq 'length')
+            echo "- **$label**: $count" >> /tmp/status.md
+          done
+          echo "" >> /tmp/status.md
+
+          # Build leaderboard from hypothesis Issues with Results
+          echo "### Leaderboard" >> /tmp/status.md
+          echo "| Orbit | Metric | Status | Issue |" >> /tmp/status.md
+          echo "|-------|--------|--------|-------|" >> /tmp/status.md
+
+          gh issue list --label hypothesis --json number,title,body,labels --limit 50 | \
+            python3 -c "
+          import json, sys, re
+          issues = json.load(sys.stdin)
+          rows = []
+          for iss in issues:
+              title = iss['title'].replace('[Hypothesis] ', '')
+              labels = [l['name'] for l in iss['labels']]
+              status = 'proposed'
+              for s in ['winner','promising','dead-end','evaluated','exploring','proposed']:
+                  if s in labels:
+                      status = s
+                      break
+              metric_match = re.search(r'Metric:\s*([-\d.]+)', iss.get('body',''))
+              metric = metric_match.group(1) if metric_match else '-'
+              rows.append((float(metric) if metric != '-' else float('inf'), title, metric, status, iss['number']))
+          for _, title, metric, status, num in sorted(rows):
+              print(f'| {title} | {metric} | {status} | #{num} |')
+          " >> /tmp/status.md
+
+          cat /tmp/status.md
+
+      - name: Post summary to Campaign Issue (if specified)
+        if: ${{ github.event.inputs.campaign_issue }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ github.event.inputs.campaign_issue }} --body "$(cat /tmp/status.md)"

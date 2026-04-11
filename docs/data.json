@@ -1,0 +1,27 @@
+{
+  "campaign": {
+    "title": "Erdős Minimum Overlap",
+    "problem": "Find partitions of [n] into A, B with |A|=|B| that minimize the maximum overlap count maxk |{(a,b): a+b=k}|. Established lower bound 0.380926. We're searching for constructions and SLPs that approach it from above.",
+    "eval_version": "eval-v1",
+    "repo": "wwang2/overlap",
+    "best": { "orbit": "slp-lattice-anneal", "metric": 0.38087, "direction": "min" },
+    "timeline": [
+      { "at": "2026-02-14", "author": "reviewer", "text": "Milestone 1: three baselines evaluated. Random partitions plateau at 0.49; SLP variants at 256/512 block size are below 0.45. Lattice packing gets 0.40 but is rigid. Pivoting away from random construction." },
+      { "at": "2026-03-02", "author": "reviewer", "text": "Milestone 2: cross of slp-1024 and lattice-pack yields slp-lattice — 0.382, now best-in-class. The lattice provides structure that SLP alone misses, while SLP refines lattice's rigidity." },
+      { "at": "2026-03-21", "author": "reviewer", "text": "Milestone 3: annealing on top of slp-lattice gives slp-lattice-anneal at 0.38087, within 0.0001 of the conjectured optimum. Diminishing returns from here without a structural insight." }
+    ]
+  },
+  "orbits": [
+    { "name": "random-base",        "status": "dead-end",   "strategy": "uniform random partitions",                       "metric": 0.4920,  "issue": 2,  "parents": [] },
+    { "name": "lattice-pack",       "status": "dead-end",   "strategy": "lattice packing construction",                    "metric": 0.4030,  "issue": 3,  "parents": [] },
+    { "name": "literature-X",       "status": "dead-end",   "strategy": "reproduction of Cilleruelo (2018) construction",  "metric": 0.4112,  "issue": 4,  "parents": [] },
+    { "name": "slp-256",            "status": "dead-end",   "strategy": "SLP, block size 256",                             "metric": 0.4521,  "issue": 5,  "parents": ["random-base"] },
+    { "name": "slp-1024",           "status": "promising",  "strategy": "SLP, block size 1024",                            "metric": 0.3914,  "issue": 6,  "parents": ["slp-256"] },
+    { "name": "slp-lit",            "status": "promising",  "strategy": "SLP seeded from Cilleruelo construction",         "metric": 0.3885,  "issue": 7,  "parents": ["slp-1024", "literature-X"] },
+    { "name": "slp-lattice",        "status": "promising",  "strategy": "cross: SLP seeded from lattice packing",          "metric": 0.3820,  "issue": 8,  "parents": ["slp-1024", "lattice-pack"] },
+    { "name": "annealed",           "status": "exploring",  "strategy": "simulated annealing refinement",                  "metric": 0.3950,  "issue": 9,  "parents": ["slp-lattice"] },
+    { "name": "slp-lattice-anneal", "status": "winner",     "strategy": "anneal applied to slp-lattice + slp-lit",         "metric": 0.38087, "issue": 10, "parents": ["slp-lattice", "slp-lit", "annealed"] },
+    { "name": "spectral-relax",     "status": "exploring",  "strategy": "spectral relaxation of the SLP objective",        "metric": null,    "issue": 11, "parents": ["slp-lattice"] },
+    { "name": "tabu-search",        "status": "exploring",  "strategy": "tabu search starting from current best",          "metric": null,    "issue": 12, "parents": ["slp-lattice-anneal"] }
+  ]
+}
