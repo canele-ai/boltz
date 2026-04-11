@@ -164,3 +164,20 @@ cython_debug/
 # Boltz prediction outputs
 #   All result files generated from a boltz prediction call
 boltz_results_*/
+# research-everything state
+.re/
+.worktrees/
+.omc/
+
+# Large binary artifacts (checkpoints, datasets, model weights)
+*.pt
+*.ckpt
+*.h5
+*.pkl
+*.npy
+*.npz
+*.safetensors
+
+# Temporary files
+/tmp/
+*.log

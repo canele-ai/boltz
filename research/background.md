@@ -1,0 +1,20 @@
+# Background: Inference Speedups for Boltz
+
+## Motivation
+
+Boltz-1 and Boltz-2 (Wohlwend et al. 2024, 2025) are state-of-the-art open-source models for biomolecular structure prediction, capable of predicting the 3D structures of proteins, nucleic acids, and small-molecule ligands — including their complexes. Like AlphaFold3, they follow a two-stage architecture: a trunk that builds a joint representation of all input entities, followed by a diffusion module that iteratively refines atomic coordinates from noise into a physically plausible structure. The diffusion stage is the dominant cost at inference time. By default Boltz runs 200 denoising steps, each of which requires a full forward pass through the transformer-based structure module. On a modern GPU, predicting a single protein-ligand complex takes on the order of minutes. This is acceptable for individual predictions, but becomes a hard bottleneck in production workflows. In binder design pipelines (e.g., CD19 therapeutic binder campaigns), each candidate sequence requires a separate Boltz prediction — including MSA generation via an external server (5-30 min) plus GPU inference (5-10 min). A typical campaign evaluates dozens to hundreds of designs, making Boltz the dominant time cost. The inputs are protein-protein complexes (~300-400 residues) with soft PDB templates, and both structures and confidence scores (iPTM, pDockQ) are consumed downstream. Closing the end-to-end latency gap — including MSA, not just GPU compute — without sacrificing the accuracy that makes Boltz worth using is the central problem of this research campaign.
+
+## Related Work
+
+The diffusion modeling literature has developed a range of techniques to reduce sampling cost. DDIM (Song et al. 2020) showed that deterministic implicit sampling allows high-quality generation with far fewer steps than the original DDPM schedule, often 10–50× fewer. Consistency models (Song et al. 2023) go further, training networks to map any noisy intermediate directly to the clean output, enabling single-step or few-step generation. Flow matching (Lipman et al. 2022) recasts generative modeling as learning straight-line transport paths in data space, which are inherently cheaper to integrate numerically than the curved trajectories of score-based diffusion. Boltz uses the EDM noise schedule (Karras et al. 2022), which was designed to be solver-agnostic and is in principle compatible with higher-order ODE integrators that can reach comparable sample quality in far fewer function evaluations. On the transformer side, Flash Attention (Dao et al. 2022) rewrites the attention computation to minimize memory bandwidth usage, yielding substantial wall-clock speedups for long sequences at no cost to mathematical correctness. Compiler-level optimizations via `torch.compile` and weight quantization (INT8/FP8) offer additional multipliers that are largely orthogonal to algorithmic changes. In the protein structure prediction space, FrameFlow and FoldFlow demonstrated that flow matching can replace diffusion for backbone generation while maintaining competitive accuracy. AlphaFold3 uses an architecture closely analogous to Boltz and faces the same inference-cost profile, but Alphabet has not published work on accelerating its sampling. To our knowledge, no published work addresses inference speedups specifically for Boltz or a direct equivalent.
+
+## Key References
+
+- **Boltz-1**: Wohlwend et al. 2024. doi:10.1101/2024.11.19.624167
+- **Boltz-2**: Wohlwend et al. 2025. doi:10.1101/2025.06.14.659707
+- **AlphaFold3**: Abramson et al. 2024. *Nature*. doi:10.1038/s41586-024-07487-w
+- **EDM noise schedule**: Karras et al. 2022. "Elucidating the Design Space of Diffusion-Based Generative Models." NeurIPS 2022.
+- **DDIM**: Song et al. 2020. "Denoising Diffusion Implicit Models." ICLR 2021.
+- **Consistency Models**: Song et al. 2023. "Consistency Models." ICML 2023.
+- **Flow Matching**: Lipman et al. 2022. "Flow Matching for Generative Modeling." ICLR 2023.
+- **Flash Attention**: Dao et al. 2022. "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness." NeurIPS 2022.
