@@ -11,7 +11,6 @@ Usage:
 
 from __future__ import annotations
 
-import argparse
 import json
 import sys
 import time
@@ -165,28 +164,25 @@ def _format_summary_table(all_results: dict[str, dict]) -> str:
 
 
 @app.local_entrypoint()
-def main():
-    parser = argparse.ArgumentParser(
-        description="Run baseline configurations through the Boltz evaluator.",
-    )
-    parser.add_argument(
-        "--only",
-        type=str,
-        default=None,
-        help="Comma-separated list of baseline names to run. Runs all if omitted.",
-    )
-    parser.add_argument(
-        "--output",
-        type=str,
-        default=None,
-        help="Path to save full JSON results.",
-    )
+def main(
+    only: str = "",
+    output: str = "",
+    num_runs: int = 1,
+    validate: bool = False,
+):
+    """Run baseline configurations through the Boltz evaluator.
 
-    args, _unknown = parser.parse_known_args()
+    Usage:
+        modal run research/eval/baselines.py                        # all baselines, 1 rep (fast)
+        modal run research/eval/baselines.py --validate             # all baselines, 3 reps (stable)
+        modal run research/eval/baselines.py --only default_20step  # single baseline
+    """
+    if validate:
+        num_runs = 3
 
     # Select baselines to run
-    if args.only:
-        names = [n.strip() for n in args.only.split(",")]
+    if only:
+        names = [n.strip() for n in only.split(",")]
         selected = {n: BASELINES[n] for n in names if n in BASELINES}
         missing = [n for n in names if n not in BASELINES]
         if missing:
@@ -207,7 +203,7 @@ def main():
         t0 = time.perf_counter()
 
         try:
-            result_json = evaluate.remote(json.dumps(config), sanity_check=False, num_runs=3)
+            result_json = evaluate.remote(json.dumps(config), sanity_check=False, num_runs=num_runs)
             result = json.loads(result_json)
             all_results[name] = result
         except Exception as exc:  # noqa: BLE001
@@ -224,7 +220,7 @@ def main():
     print(_format_summary_table(all_results))
 
     # Save full results
-    output_path = args.output or str(
+    output_path = output or str(
         Path(__file__).resolve().parent / "baseline_results.json"
     )
     with open(output_path, "w") as f:

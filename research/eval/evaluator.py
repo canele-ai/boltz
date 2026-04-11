@@ -597,6 +597,7 @@ def main(
     config: str = "",
     config_file: str = "",
     num_runs: int = 1,
+    validate: bool = False,
 ):
     """Boltz-2 inference evaluation harness.
 
@@ -604,7 +605,15 @@ def main(
         modal run research/eval/evaluator.py --sanity-check
         modal run research/eval/evaluator.py --baseline
         modal run research/eval/evaluator.py --config '{"sampling_steps": 20}'
+        modal run research/eval/evaluator.py --config '{"sampling_steps": 20}' --validate
+
+    Cost guide (L40S):
+        --num-runs 1 (default):  ~3.5 min GPU / eval  — use for iteration
+        --validate (num_runs=3): ~10.5 min GPU / eval  — use for promising results
+        --baseline (num_runs=3): ~10.5 min GPU / eval  — run once to anchor metric
     """
+    if validate:
+        num_runs = 3
     if sanity_check:
         print("[evaluator] Running sanity check ...")
         result_json = evaluate.remote(json.dumps(DEFAULT_CONFIG), sanity_check=True)
