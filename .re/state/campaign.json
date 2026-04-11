@@ -1,0 +1,17 @@
+{
+  "question": "Can we achieve a 5x or greater GPU inference speedup for Boltz-2 structure prediction while keeping per-complex lDDT within 2 percentage points of the baseline (200-step EDM/Karras diffusion, 3 recycling steps), measured on the CASP15 / held-out PDB test set?",
+  "references": [
+    "https://github.com/jwohlwend/boltz",
+    "https://doi.org/10.1101/2024.11.19.624167",
+    "https://doi.org/10.1101/2025.06.14.659707",
+    "https://doi.org/10.1038/s41586-024-07487-w"
+  ],
+  "project_name": "boltz",
+  "status": "setup",
+  "setup_phase": 2,
+  "eval_version": null,
+  "direction": "maximize",
+  "metric_name": "speedup_at_iso_quality",
+  "best_metric": null,
+  "best_orbit": null
+}

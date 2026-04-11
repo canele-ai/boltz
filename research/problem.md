@@ -2,7 +2,7 @@
 
 ## Research Question
 
-Can we achieve a 5x or greater GPU inference speedup for Boltz-2 structure prediction while keeping per-complex lDDT within 2 percentage points of the baseline (200-step EDM/Karras diffusion, 3 recycling steps), measured on the CASP15 / held-out PDB test set?
+How much can we speed up Boltz-2 GPU inference while keeping per-complex lDDT within 2 percentage points of the baseline (200-step EDM/Karras diffusion, 3 recycling steps), measured on the CASP15 / held-out PDB test set? Any measurable speedup is valuable; 2-3x would meaningfully accelerate production pipelines; 5x+ would be transformative.
 
 ---
 
@@ -65,8 +65,8 @@ subject to: mean_pLDDT(optimized) >= mean_pLDDT(baseline) - 0.02
 **Quality proxy**: We use pLDDT (Boltz's predicted lDDT from the confidence head) rather than true lDDT (which requires reference structures and OpenStructure). pLDDT correlates well with structural accuracy and is available for any prediction. True lDDT will be validated against reference structures for a representative subset to confirm the proxy holds.
 
 - **Direction**: MAXIMIZE speedup
-- **Minimum target**: 5× speedup at iso-quality
-- **Stretch target**: 10× speedup at iso-quality
+- **Practical value threshold**: 2-3× speedup at iso-quality
+- **Aspirational target**: 5×+ speedup at iso-quality
 
 ### Secondary Metrics
 

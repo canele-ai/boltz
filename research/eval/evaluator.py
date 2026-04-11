@@ -306,6 +306,8 @@ def evaluate(config_json: str, sanity_check: bool = False, num_runs: int = 1) ->
     recycle = merged.get("recycling_steps", 3)
     if not isinstance(recycle, int) or recycle < 0:
         return json.dumps({"error": f"Invalid recycling_steps: {recycle}. Must be non-negative integer."})
+    if not isinstance(num_runs, int) or num_runs < 1:
+        return json.dumps({"error": f"Invalid num_runs: {num_runs}. Must be >= 1."})
 
     # Load eval config
     eval_config = _load_config_yaml()
@@ -446,10 +448,14 @@ def evaluate(config_json: str, sanity_check: bool = False, num_runs: int = 1) ->
             for r in successful
             if "complex_plddt" in r["quality"]
         ]
-        # Filter out NaN/None before computing mean
+        # Filter out NaN/Inf/out-of-range before computing mean
         plddts = [
             p for p in plddts_raw
-            if p is not None and not (isinstance(p, float) and math.isnan(p))
+            if p is not None
+            and isinstance(p, (int, float))
+            and not math.isnan(p)
+            and not math.isinf(p)
+            and 0.0 <= p <= 1.0
         ]
         iptms = [
             r["quality"]["iptm"]
@@ -466,10 +472,13 @@ def evaluate(config_json: str, sanity_check: bool = False, num_runs: int = 1) ->
             "mean_iptm": sum(iptms) / len(iptms) if iptms else None,
         }
 
-        # Reject NaN/None pLDDT values
+        # Reject NaN/Inf/None/out-of-range pLDDT values
         invalid_plddts = [
             p for p in plddts_raw
-            if p is None or (isinstance(p, float) and math.isnan(p))
+            if p is None
+            or not isinstance(p, (int, float))
+            or (isinstance(p, float) and (math.isnan(p) or math.isinf(p)))
+            or not (0.0 <= p <= 1.0)
         ]
         if invalid_plddts:
             results["aggregate"]["error"] = (
@@ -497,17 +506,22 @@ def evaluate(config_json: str, sanity_check: bool = False, num_runs: int = 1) ->
                     # Per-complex quality floor: no single case may regress by more than 5 pp
                     if baseline.get("per_complex"):
                         baseline_by_name = {pc["name"]: pc for pc in baseline["per_complex"]}
+                        per_complex_violations = {}
                         for r in successful:
                             bl_case = baseline_by_name.get(r["name"])
                             if bl_case and bl_case.get("complex_plddt") is not None:
                                 case_plddt = r["quality"].get("complex_plddt")
-                                if case_plddt is not None:
+                                if case_plddt is None:
+                                    # Missing pLDDT for a successful complex — fail the gate
+                                    results["aggregate"]["passes_quality_gate"] = False
+                                    per_complex_violations[r["name"]] = "missing pLDDT"
+                                else:
                                     case_regression = (bl_case["complex_plddt"] - case_plddt) * 100.0
                                     if case_regression > 5.0:
                                         results["aggregate"]["passes_quality_gate"] = False
-                                        results["aggregate"]["per_complex_regression"] = {
-                                            r["name"]: f"-{case_regression:.1f}pp (limit: 5pp)"
-                                        }
+                                        per_complex_violations[r["name"]] = f"-{case_regression:.1f}pp (limit: 5pp)"
+                        if per_complex_violations:
+                            results["aggregate"]["per_complex_regression"] = per_complex_violations
 
     if sanity_check:
         results["sanity_checks"] = sanity_ok
