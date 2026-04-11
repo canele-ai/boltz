@@ -8,6 +8,7 @@ hardware.
 Usage:
     python boltz_wrapper_sdpa.py input.yaml --out_dir out --sampling_steps 20 \
         --matmul_precision high
+    python boltz_wrapper_sdpa.py input.yaml --out_dir out --sdpa_bf16
 """
 import sys
 import os
@@ -26,19 +27,28 @@ def main():
     parser.add_argument("--compile_msa", action="store_true")
     parser.add_argument("--no_sdpa", action="store_true",
                        help="Disable SDPA patches (for A/B comparison)")
+    parser.add_argument("--sdpa_bf16", action="store_true",
+                       help="Use bf16 variant of SDPA (faster but less precise)")
 
     our_args, boltz_args = parser.parse_known_args()
 
     # Apply matmul precision BEFORE any boltz imports
     torch.set_float32_matmul_precision(our_args.matmul_precision)
 
+    # Add paths for importing patch modules
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    sys.path.insert(0, script_dir)
+    if os.path.isdir("/orbit"):
+        sys.path.insert(0, "/orbit")
+
     # Apply SDPA patches BEFORE boltz is imported
     if not our_args.no_sdpa:
-        # Add the orbit directory to sys.path so we can import sdpa_patch
-        orbit_dir = os.path.dirname(os.path.abspath(__file__))
-        sys.path.insert(0, orbit_dir)
-        import sdpa_patch
-        sdpa_patch.apply()
+        if our_args.sdpa_bf16:
+            import sdpa_patch_bf16
+            sdpa_patch_bf16.apply()
+        else:
+            import sdpa_patch
+            sdpa_patch.apply()
     else:
         print("[wrapper] SDPA patches disabled (--no_sdpa)")
 
