@@ -1,0 +1,24 @@
+{
+  "config": {
+    "sampling_steps": 20,
+    "recycling_steps": 0,
+    "seed": 42
+  },
+  "per_complex": [
+    {
+      "name": "small_complex",
+      "error": "Pass 1 failed: Exit 1: lable: True (cuda), used: True\nTPU available: False, using: 0 TPU cores\nHPU available: False, using: 0 HPUs\n/usr/local/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/logger_",
+      "pass1_time": 56.166624881000004
+    },
+    {
+      "name": "medium_complex",
+      "error": "Pass 1 failed: Exit 1: le: True (cuda), used: True\nTPU available: False, using: 0 TPU cores\nHPU available: False, using: 0 HPUs\n/usr/local/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/logger_con",
+      "pass1_time": 5.837913126000004
+    },
+    {
+      "name": "large_complex",
+      "error": "Pass 1 failed: Exit 1: lable: True (cuda), used: True\nTPU available: False, using: 0 TPU cores\nHPU available: False, using: 0 HPUs\n/usr/local/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/logger_",
+      "pass1_time": 6.565384863000006
+    }
+  ]
+}
