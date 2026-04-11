@@ -118,9 +118,7 @@ Approaches to explore, roughly ordered by expected impact:
 
 10. **INT8 / FP8 post-training quantization**: Quantize score model and Pairformer weights without retraining. Requires calibration dataset. Expected 1.5–3× throughput on H100.
 
-11. **MSA caching / precomputation**: For repeated targets (e.g., CD19 in binder design), cache MSA results to skip the 5-30 min MSA server call on subsequent predictions with the same target. The target MSA is identical across all binder designs.
-
-12. **Parallel MSA + GPU pipeline**: Overlap MSA generation for the next prediction with GPU inference for the current one, hiding MSA latency in a multi-prediction batch.
+11. **Batched multi-sample inference**: When generating multiple diffusion samples, maximize `max_parallel_samples` to batch all samples in a single forward pass, removing chunking overhead.
 
 ---
 
