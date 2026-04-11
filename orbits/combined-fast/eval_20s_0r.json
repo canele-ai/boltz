@@ -1,0 +1,91 @@
+{
+  "config": {
+    "sampling_steps": 20,
+    "recycling_steps": 0,
+    "matmul_precision": "highest",
+    "compile_pairformer": false,
+    "compile_structure": false,
+    "compile_confidence": false,
+    "compile_msa": false,
+    "diffusion_samples": 1,
+    "seed": 42
+  },
+  "sanity_check": false,
+  "num_runs": 3,
+  "per_complex": [
+    {
+      "name": "small_complex",
+      "wall_time_s": 37.785082450999994,
+      "quality": {
+        "confidence_score": 0.8902489542961121,
+        "ptm": 0.9328784346580505,
+        "iptm": 0.9025626182556152,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.9025626182556152,
+        "complex_plddt": 0.8871705532073975,
+        "complex_iplddt": 0.8504923582077026,
+        "complex_pde": 0.4213079810142517,
+        "complex_ipde": 1.0011522769927979
+      },
+      "error": null,
+      "run_times": [
+        91.421534593,
+        37.392608362000004,
+        37.785082450999994
+      ]
+    },
+    {
+      "name": "medium_complex",
+      "wall_time_s": 41.13772436900001,
+      "quality": {
+        "confidence_score": 0.4082426130771637,
+        "ptm": 0.36272960901260376,
+        "iptm": 0.135481595993042,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.135481595993042,
+        "complex_plddt": 0.47643283009529114,
+        "complex_iplddt": 0.46016713976860046,
+        "complex_pde": 3.3342034816741943,
+        "complex_ipde": 11.380353927612305
+      },
+      "error": null,
+      "run_times": [
+        45.73026794400002,
+        41.03435170199998,
+        41.13772436900001
+      ]
+    },
+    {
+      "name": "large_complex",
+      "wall_time_s": 48.59728131200001,
+      "quality": {
+        "confidence_score": 0.6774444580078125,
+        "ptm": 0.37974444031715393,
+        "iptm": 0.1258619874715805,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.1258619874715805,
+        "complex_plddt": 0.8153401017189026,
+        "complex_iplddt": 0.7690467834472656,
+        "complex_pde": 0.9896849989891052,
+        "complex_ipde": 16.496028900146484
+      },
+      "error": null,
+      "run_times": [
+        48.59728131200001,
+        48.91573321300001,
+        47.17383410299999
+      ]
+    }
+  ],
+  "aggregate": {
+    "num_successful": 3,
+    "num_total": 3,
+    "total_wall_time_s": 127.52008813200001,
+    "mean_wall_time_s": 42.506696044,
+    "mean_plddt": 0.726314495007197,
+    "mean_iptm": 0.3879687339067459,
+    "speedup": 1.655517671643009,
+    "plddt_delta_pp": 1.5642613172531128,
+    "passes_quality_gate": true
+  }
+}
