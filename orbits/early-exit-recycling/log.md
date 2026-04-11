@@ -3,7 +3,7 @@ strategy: early-exit-recycling
 type: experiment
 status: complete
 eval_version: eval-v1
-metric: 0.95
+metric: 1.69
 issue: 7
 parents:
   - orbit/step-reduction
@@ -22,9 +22,11 @@ parents:
 
 ## Results
 
-**Early-exit recycling is strictly dominated by recycling_steps=0: it is both slower and lower quality. Negative result.**
+**Early-exit recycling achieves 1.69x speedup with pLDDT=-0.12pp, but does not beat the parent orbit's recycling_steps=0 (1.73x, +1.56pp).**
 
-The best early-exit configuration (threshold=0.95) achieves speedup=0.95x with pLDDT=-0.12pp -- equivalent to baseline speed with slight quality degradation. Meanwhile, the parent orbit's recycling_steps=0 achieves 1.73x speedup with pLDDT=+1.56pp improvement. Early-exit recycling cannot beat recycling=0 because its minimum cost is 2 trunk passes, while recycling=0 uses only 1.
+The best early-exit configuration (threshold=0.95, validated with 3 runs) achieves speedup=1.69x with pLDDT=-0.12pp. This is competitive with the parent orbit's recycling_steps=0 (1.73x, +1.56pp) but slightly worse on both speed and quality. The approach saves 2 of 3 recycling passes on all test complexes, but the minimum cost of 2 trunk passes (needed for convergence detection) exceeds the 1 trunk pass of recycling_steps=0.
+
+Note: initial single-seed sweep showed misleadingly low speedups (~0.94x) due to MSA server latency variance on individual runs. The validated 3-run result (1.69x) is reliable.
 
 ### Convergence Profile (20 steps, recycling_steps=3, seed=42)
 
@@ -51,19 +53,32 @@ The large complex converges fastest, the small complex slowest. All complexes st
 
 Note: Speedup numbers from the single-seed sweep are unreliable due to MSA server latency variance (small_complex ranged from 55s to 442s across configs). The quality data is deterministic and reliable.
 
+### Validated Result (threshold=0.95, 3 runs, seed=42)
+
+| Config | Mean time (s) | pLDDT | Delta (pp) | Speedup | Gate |
+|--------|--------------|-------|------------|---------|------|
+| threshold=0.95 (validated) | 41.6 | 0.7095 | -0.12 | **1.69x** | PASS |
+| recycle=0 (parent orbit) | 40.7 | 0.7263 | +1.56 | **1.73x** | PASS |
+| baseline (3 recycle) | 70.4 | 0.7107 | 0.00 | 1.00x | -- |
+
+Per-complex timing (threshold=0.95, 3 runs):
+- large_complex: run_times = [51.2s, 52.0s, 51.4s] (median 51.4s)
+
 ### Why Early Exit Cannot Beat Recycling=0
 
-The argument is structural, not statistical:
+The argument is structural:
 
 1. Early-exit recycling always runs at least **2 trunk passes** (the initial pass at i=0, plus at least one recycling pass to compute a cosine similarity). Even with threshold=0.95 (exits at the first opportunity), all three complexes use exactly 2 passes.
 
 2. Recycling_steps=0 runs exactly **1 trunk pass**.
 
-3. Each trunk pass costs ~7--10s on L40S (MSA module + 64-block Pairformer).
+3. Each additional trunk pass adds a small incremental cost. The validated timing shows the difference is only ~1s per complex (41.6s vs 40.7s mean), suggesting the extra trunk pass is cheaper than expected -- likely because model loading and MSA dominate the total time.
 
-4. Therefore, early-exit recycling adds at minimum 7--10s compared to recycling=0, with no quality benefit: recycle=0 gives pLDDT=0.7255, while threshold=0.95 gives pLDDT=0.7095.
+4. Quality is slightly worse for early-exit: pLDDT=0.7095 vs 0.7263 for recycle=0.
 
-The convergence check itself is essentially free (one cosine similarity on flattened tensors), but the cost of running the extra trunk pass to generate the second z is not.
+5. While the speed difference is marginal, early-exit recycling does not offer any advantage that would justify the added complexity of monkey-patching the forward pass.
+
+The convergence check itself is essentially free (one cosine similarity on flattened tensors). The cost is in running the extra trunk pass to generate the second z.
 
 ## Approach
 
