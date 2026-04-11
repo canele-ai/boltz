@@ -42,7 +42,6 @@ Per-complex quality floor
 
 from __future__ import annotations
 
-import argparse
 import json
 import math
 import os
@@ -71,6 +70,7 @@ boltz_image = (
         "pyyaml==6.0.2",
         "boltz==2.2.1",
     )
+    .add_local_dir(str(EVAL_DIR), remote_path="/eval")
 )
 
 app = modal.App("boltz-eval-harness", image=boltz_image)
@@ -144,13 +144,14 @@ def _run_boltz_prediction(
     # are applied before boltz is imported (the Boltz CLI does not expose them).
     wrapper = str(Path("/eval/boltz_wrapper.py"))
     cmd = [
-        sys.executable, wrapper, "predict",
+        sys.executable, wrapper,
         str(input_yaml),
         "--out_dir", str(out_dir),
         "--sampling_steps", str(config.get("sampling_steps", 200)),
         "--recycling_steps", str(config.get("recycling_steps", 3)),
         "--diffusion_samples", str(config.get("diffusion_samples", 1)),
         "--override",
+        "--no_kernels",  # cuequivariance_torch conflicts with torch 2.5.1 CUDA 12.4
     ]
 
     # MSA handling: prefer a cached directory to avoid network variance
@@ -274,7 +275,6 @@ def _parse_confidence(out_dir: Path, input_yaml: Path) -> dict[str, Any]:
 @app.function(
     gpu="L40S",
     timeout=7200,
-    mounts=[modal.Mount.from_local_dir(str(EVAL_DIR), remote_path="/eval")],
 )
 def evaluate(config_json: str, sanity_check: bool = False, num_runs: int = 1) -> str:
     """Run evaluation on the test set and return JSON results.
@@ -538,7 +538,6 @@ def evaluate(config_json: str, sanity_check: bool = False, num_runs: int = 1) ->
 @app.function(
     gpu="L40S",
     timeout=7200,
-    mounts=[modal.Mount.from_local_dir(str(EVAL_DIR), remote_path="/eval")],
 )
 def run_baseline() -> str:
     """Run the default 200-step baseline and return results + updated config.
@@ -592,42 +591,21 @@ def run_baseline() -> str:
 # ---------------------------------------------------------------------------
 
 @app.local_entrypoint()
-def main():
-    parser = argparse.ArgumentParser(
-        description="Boltz-2 inference evaluation harness",
-    )
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
-        "--sanity-check",
-        action="store_true",
-        help="Run a minimal test to verify the evaluator works.",
-    )
-    group.add_argument(
-        "--baseline",
-        action="store_true",
-        help="Run with default settings and save results as the baseline.",
-    )
-    group.add_argument(
-        "--config",
-        type=str,
-        help="JSON string of configuration overrides.",
-    )
-    group.add_argument(
-        "--config-file",
-        type=str,
-        help="Path to a JSON file with configuration overrides.",
-    )
-    parser.add_argument(
-        "--num-runs",
-        type=int,
-        default=1,
-        help="Number of repeated runs per test case; median wall time is reported.",
-    )
+def main(
+    sanity_check: bool = False,
+    baseline: bool = False,
+    config: str = "",
+    config_file: str = "",
+    num_runs: int = 1,
+):
+    """Boltz-2 inference evaluation harness.
 
-    # Parse only known args; Modal may inject its own
-    args, _unknown = parser.parse_known_args()
-
-    if args.sanity_check:
+    Usage:
+        modal run research/eval/evaluator.py --sanity-check
+        modal run research/eval/evaluator.py --baseline
+        modal run research/eval/evaluator.py --config '{"sampling_steps": 20}'
+    """
+    if sanity_check:
         print("[evaluator] Running sanity check ...")
         result_json = evaluate.remote(json.dumps(DEFAULT_CONFIG), sanity_check=True)
         result = json.loads(result_json)
@@ -639,7 +617,7 @@ def main():
             print("\n[evaluator] Sanity check FAILED.")
             sys.exit(1)
 
-    elif args.baseline:
+    elif baseline:
         print("[evaluator] Running baseline evaluation ...")
         result_json = run_baseline.remote()
         result = json.loads(result_json)
@@ -654,17 +632,15 @@ def main():
 
         print(json.dumps(result["results"], indent=2))
 
-    else:
-        # Load config from --config or --config-file
-        if args.config_file:
-            with open(args.config_file) as f:
-                config = json.load(f)
+    elif config or config_file:
+        if config_file:
+            with open(config_file) as f:
+                cfg = json.load(f)
         else:
-            config = json.loads(args.config)
+            cfg = json.loads(config)
 
-        num_runs = args.num_runs
-        print(f"[evaluator] Evaluating config: {json.dumps(config)} (num_runs={num_runs})")
-        result_json = evaluate.remote(json.dumps(config), sanity_check=False, num_runs=num_runs)
+        print(f"[evaluator] Evaluating config: {json.dumps(cfg)} (num_runs={num_runs})")
+        result_json = evaluate.remote(json.dumps(cfg), sanity_check=False, num_runs=num_runs)
         result = json.loads(result_json)
         print(json.dumps(result, indent=2))
 

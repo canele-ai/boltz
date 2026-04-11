@@ -6,9 +6,36 @@ metric:
     max_regression_pp: 2.0
     per_complex_max_regression_pp: 5.0
     note: pLDDT (predicted lDDT from Boltz confidence head) used as proxy. True lDDT
-      via OpenStructure validated on subset. Per-complex floor prevents masking
-      catastrophic single-case failures behind aggregate mean.
-baseline: null
+      via OpenStructure validated on subset. Per-complex floor prevents masking catastrophic
+      single-case failures behind aggregate mean.
+baseline:
+  config:
+    sampling_steps: 200
+    recycling_steps: 3
+    matmul_precision: highest
+    compile_pairformer: false
+    compile_structure: false
+    compile_confidence: false
+    compile_msa: false
+    diffusion_samples: 1
+    seed: 42
+  mean_wall_time_s: 70.37058646399998
+  total_wall_time_s: 211.11175939199995
+  mean_plddt: 0.7106718818346659
+  mean_iptm: 0.6259170596798261
+  per_complex:
+  - name: small_complex
+    wall_time_s: 53.011715594999984
+    complex_plddt: 0.8350332379341125
+    iptm: 0.8112627863883972
+  - name: medium_complex
+    wall_time_s: 70.52702137099999
+    complex_plddt: 0.4906079173088074
+    iptm: 0.9528667330741882
+  - name: large_complex
+    wall_time_s: 87.57302242599997
+    complex_plddt: 0.8063744902610779
+    iptm: 0.11362165957689285
 significance:
   num_seeds: 3
   min_relative_improvement: null
@@ -30,36 +57,45 @@ sanity_checks:
 - name: quality_in_range
   description: pLDDT values between 0 and 1
 metric_definition:
-  composite_metric: "speedup_at_iso_quality (in-house construction)"
-  formula: "speedup = T_baseline / T_optimized, subject to mean_pLDDT(optimized) >= mean_pLDDT(baseline) - 0.02"
+  composite_metric: speedup_at_iso_quality (in-house construction)
+  formula: speedup = T_baseline / T_optimized, subject to mean_pLDDT(optimized) >=
+    mean_pLDDT(baseline) - 0.02
   components:
     quality_gate:
-      source_paper: "Mariani et al. 2013"
-      source_url: "https://doi.org/10.1093/bioinformatics/btt473"
-      citation: "Mariani V, Biasini M, Barbato A, Schwede T. lDDT: a local superposition-free score for comparing protein structures and models using distance difference tests. Bioinformatics, 29(21):2722-2728, 2013."
+      source_paper: Mariani et al. 2013
+      source_url: https://doi.org/10.1093/bioinformatics/btt473
+      citation: 'Mariani V, Biasini M, Barbato A, Schwede T. lDDT: a local superposition-free
+        score for comparing protein structures and models using distance difference
+        tests. Bioinformatics, 29(21):2722-2728, 2013.'
     iso_quality_pattern:
-      precedent: "DDIM (Song et al. 2021), Consistency Models (Song et al. 2023)"
-      note: "Speedup-at-iso-quality is a standard engineering pattern; our contribution is applying it to biomolecular structure prediction with an lDDT gate."
+      precedent: DDIM (Song et al. 2021), Consistency Models (Song et al. 2023)
+      note: Speedup-at-iso-quality is a standard engineering pattern; our contribution
+        is applying it to biomolecular structure prediction with an lDDT gate.
   published_uses:
-    - citation: "Jumper J et al. Highly accurate protein structure prediction with AlphaFold. Nature, 596(7873):583-589, 2021."
-      url: "https://doi.org/10.1038/s41586-021-03819-2"
-      dataset: "CASP14"
-      reported_value: "median GDT_TS 92.4; pLDDT used as confidence proxy for lDDT-Ca"
-    - citation: "Abramson J et al. Accurate structure prediction of biomolecular interactions with AlphaFold 3. Nature, 630(8016):493-500, 2024."
-      url: "https://doi.org/10.1038/s41586-024-07487-w"
-      dataset: "CASP15, PDB test set, PoseBusters"
-      reported_value: "full-complex lDDT 82.8-83.0 on example complexes"
-    - citation: "Wohlwend J et al. Boltz-1: Democratizing Biomolecular Interaction Modeling. bioRxiv, 2024."
-      url: "https://doi.org/10.1101/2024.11.19.624167"
-      dataset: "CASP15, PDB test set"
-      reported_value: "comparable to AlphaFold3 on mean lDDT; RNA lDDT median 0.54"
-    - citation: "Lin Z et al. Evolutionary-scale prediction of atomic-level protein structure with a language model. Science, 379(6637):1123-1130, 2023."
-      url: "https://doi.org/10.1126/science.ade2574"
-      dataset: "CASP14, CAMEO"
-      reported_value: "mean lDDT ~0.68 on CASP14 (vs AlphaFold2 ~0.85)"
-    - citation: "Passaro S et al. Boltz-2: Towards Accurate and Efficient Binding Affinity Prediction. bioRxiv, 2025."
-      url: "https://doi.org/10.1101/2025.06.14.659707"
-      dataset: "PDB test set, CASP15"
-      reported_value: "average lDDT ~0.82 on PDB test set; modestly outperforms Boltz-1"
-  dataset_decision: "ADOPT"
-  dataset_name: "CASP15"
+  - citation: Jumper J et al. Highly accurate protein structure prediction with AlphaFold.
+      Nature, 596(7873):583-589, 2021.
+    url: https://doi.org/10.1038/s41586-021-03819-2
+    dataset: CASP14
+    reported_value: median GDT_TS 92.4; pLDDT used as confidence proxy for lDDT-Ca
+  - citation: Abramson J et al. Accurate structure prediction of biomolecular interactions
+      with AlphaFold 3. Nature, 630(8016):493-500, 2024.
+    url: https://doi.org/10.1038/s41586-024-07487-w
+    dataset: CASP15, PDB test set, PoseBusters
+    reported_value: full-complex lDDT 82.8-83.0 on example complexes
+  - citation: 'Wohlwend J et al. Boltz-1: Democratizing Biomolecular Interaction Modeling.
+      bioRxiv, 2024.'
+    url: https://doi.org/10.1101/2024.11.19.624167
+    dataset: CASP15, PDB test set
+    reported_value: comparable to AlphaFold3 on mean lDDT; RNA lDDT median 0.54
+  - citation: Lin Z et al. Evolutionary-scale prediction of atomic-level protein structure
+      with a language model. Science, 379(6637):1123-1130, 2023.
+    url: https://doi.org/10.1126/science.ade2574
+    dataset: CASP14, CAMEO
+    reported_value: mean lDDT ~0.68 on CASP14 (vs AlphaFold2 ~0.85)
+  - citation: 'Passaro S et al. Boltz-2: Towards Accurate and Efficient Binding Affinity
+      Prediction. bioRxiv, 2025.'
+    url: https://doi.org/10.1101/2025.06.14.659707
+    dataset: PDB test set, CASP15
+    reported_value: average lDDT ~0.82 on PDB test set; modestly outperforms Boltz-1
+  dataset_decision: ADOPT
+  dataset_name: CASP15
