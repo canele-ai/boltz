@@ -1,0 +1,58 @@
+{
+  "gpu": {
+    "name": "NVIDIA L40S",
+    "compute_capability": "8.9",
+    "total_memory_gb": 47.67,
+    "multi_processor_count": 142
+  },
+  "cuequivariance_torch": {
+    "available": false,
+    "error": "No module named 'cuequivariance_torch'"
+  },
+  "trifast": {
+    "available": false,
+    "error": "No module named 'trifast'"
+  },
+  "torch_compile": {
+    "available": true,
+    "torch_version": "2.5.1+cu124",
+    "cuda_version": "12.4"
+  },
+  "tf32_matmul": {
+    "time_highest_100iter": 0.0011,
+    "time_high_100iter": 0.0009,
+    "speedup": 1.158
+  },
+  "op_timing": {
+    "N=200": {
+      "tri_mul_fp32_highest_ms": 0.21,
+      "tri_mul_fp32_tf32_ms": 0.16,
+      "tri_mul_bf16_ms": 0.17,
+      "tri_attn_manual_bf16_ms": 0.3,
+      "tri_attn_sdpa_bf16_ms": 2.1,
+      "sdpa_vs_manual_speedup": 0.14,
+      "tf32_vs_highest_speedup": 1.31,
+      "bf16_vs_highest_speedup": 1.23
+    },
+    "N=400": {
+      "tri_mul_fp32_highest_ms": 1.57,
+      "tri_mul_fp32_tf32_ms": 1.32,
+      "tri_mul_bf16_ms": 0.81,
+      "tri_attn_manual_bf16_ms": 3.5,
+      "tri_attn_sdpa_bf16_ms": 15.77,
+      "sdpa_vs_manual_speedup": 0.22,
+      "tf32_vs_highest_speedup": 1.19,
+      "bf16_vs_highest_speedup": 1.94
+    }
+  },
+  "e2e_timing": {
+    "baseline_20s_0r": {
+      "wall_time_s": 97.94,
+      "status": "success"
+    },
+    "tf32_20s_0r": {
+      "wall_time_s": 43.5,
+      "status": "success"
+    }
+  }
+}
