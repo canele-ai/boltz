@@ -1,0 +1,97 @@
+{
+  "study": "cpu-gap-profile",
+  "config": "ODE-12 + TF32 + bf16",
+  "gpu": "NVIDIA L40S",
+  "runs": {
+    "run1_cold": {
+      "wall_time": 113.53,
+      "returncode": 0,
+      "parsed_timings": {
+        "boltz_import": 6.748,
+        "Patched diffusion: gamma_0": 0.0,
+        "checkpoint_load": 23.624,
+        "datamodule_setup": 0.0,
+        "strategy_setup_model_to_gpu": 0.423,
+        "predict_loop_start": 94.018814537,
+        "boltz_writer": 0.166,
+        "predict_loop_run": 20.107,
+        "predict_only_s": 22.694,
+        "pre_predict_s": 80.932,
+        "phases": {
+          "wrapper_start": 12.480958736,
+          "predict_start": 93.412919094,
+          "predict_end": 116.106764571
+        }
+      }
+    },
+    "run2_warm": {
+      "wall_time": 51.471,
+      "returncode": 0,
+      "parsed_timings": {
+        "boltz_import": 6.779,
+        "Patched diffusion: gamma_0": 0.0,
+        "checkpoint_load": 24.125,
+        "datamodule_setup": 0.0,
+        "strategy_setup_model_to_gpu": 0.444,
+        "predict_loop_start": 151.464198599,
+        "boltz_writer": 0.157,
+        "predict_loop_run": 14.046,
+        "predict_only_s": 16.884,
+        "pre_predict_s": 24.547,
+        "phases": {
+          "wrapper_start": 126.246181743,
+          "predict_start": 150.793208478,
+          "predict_end": 167.676840012
+        }
+      }
+    },
+    "run3_warm": {
+      "wall_time": 46.89,
+      "returncode": 0,
+      "parsed_timings": {
+        "boltz_import": 3.456,
+        "Patched diffusion: gamma_0": 0.0,
+        "checkpoint_load": 23.463,
+        "datamodule_setup": 0.0,
+        "strategy_setup_model_to_gpu": 0.446,
+        "predict_loop_start": 198.781657842,
+        "boltz_writer": 0.159,
+        "predict_loop_run": 13.887,
+        "predict_only_s": 16.452,
+        "pre_predict_s": 23.875,
+        "phases": {
+          "wrapper_start": 174.274057742,
+          "predict_start": 198.14902199,
+          "predict_end": 214.600979272
+        }
+      }
+    }
+  },
+  "analysis": {
+    "run1_cold": {
+      "predict_only_s": 22.694,
+      "pre_predict_s": 80.932,
+      "writer_s": 0.166,
+      "datamodule_setup_s": 0.0,
+      "checkpoint_load_s": 23.624,
+      "boltz_import_s": 6.748
+    },
+    "run2_warm": {
+      "predict_only_s": 16.884,
+      "pre_predict_s": 24.547,
+      "writer_s": 0.157,
+      "datamodule_setup_s": 0.0,
+      "checkpoint_load_s": 24.125,
+      "boltz_import_s": 6.779
+    },
+    "run3_warm": {
+      "predict_only_s": 16.452,
+      "pre_predict_s": 23.875,
+      "writer_s": 0.159,
+      "datamodule_setup_s": 0.0,
+      "checkpoint_load_s": 23.463,
+      "boltz_import_s": 3.456
+    },
+    "cuda_init_overhead_estimate_s": 5.81
+  }
+}
