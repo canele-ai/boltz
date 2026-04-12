@@ -89,15 +89,20 @@ BEST_CONFIG: dict[str, Any] = {
 # Core: Lightning-stripped single-load inference
 # ---------------------------------------------------------------------------
 
-def _patch_diffusion_params(gamma_0: float, noise_scale: float):
+def _patch_diffusion_params(gamma_0_val: float, noise_scale_val: float):
     """Monkey-patch diffusion params before model loading."""
     import boltz.main as boltz_main
+    from dataclasses import field
+
+    # Capture values in local scope to avoid dataclass field name collision
+    _g0 = gamma_0_val
+    _ns = noise_scale_val
 
     @dataclass
     class PatchedBoltz2DiffusionParams:
-        gamma_0: float = gamma_0
+        gamma_0: float = field(default_factory=lambda: _g0)
         gamma_min: float = 1.0
-        noise_scale: float = noise_scale
+        noise_scale: float = field(default_factory=lambda: _ns)
         rho: float = 7
         step_scale: float = 1.5
         sigma_min: float = 0.0001
