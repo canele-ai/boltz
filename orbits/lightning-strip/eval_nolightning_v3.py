@@ -56,9 +56,6 @@ boltz_image = (
     .add_local_dir(str(EVAL_DIR), remote_path="/eval")
 )
 
-# Persistent volume for model weights (avoids re-downloading each run)
-model_cache = modal.Volume.from_name("boltz-model-cache", create_if_missing=True)
-
 app = modal.App("boltz-eval-nolightning-v3", image=boltz_image)
 
 # ---------------------------------------------------------------------------
@@ -326,7 +323,6 @@ def _compute_aggregates(results: dict, eval_config: dict) -> dict:
 @app.function(
     gpu="L40S",
     timeout=7200,
-    volumes={"/model-cache": model_cache},
 )
 def evaluate_single_load(config_json: str) -> str:
     """Run all test cases with a SINGLE model load, cached model volume."""
@@ -369,21 +365,18 @@ def evaluate_single_load(config_json: str) -> str:
     except ImportError:
         use_kernels = False
 
-    # Use persistent volume for model cache
-    cache = Path("/model-cache/boltz")
+    # Use container-local cache (no shared volume to avoid race conditions)
+    cache = Path("~/.boltz").expanduser()
     cache.mkdir(parents=True, exist_ok=True)
 
     # ===================================================================
-    # PHASE 1: Download (cached in volume)
+    # PHASE 1: Download
     # ===================================================================
     t_download_start = time.perf_counter()
     boltz_main.download_boltz2(cache)
     t_download_end = time.perf_counter()
     download_time = t_download_end - t_download_start
     print(f"[v3] Download/cache check: {download_time:.1f}s")
-
-    # Commit volume so cache persists
-    model_cache.commit()
 
     # ===================================================================
     # PHASE 2: Load model to GPU
