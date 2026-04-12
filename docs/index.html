@@ -141,17 +141,18 @@
 <section>
   <h2>Result</h2>
   <div class="hero-metric">
-    <span class="number" id="hero-number">3.50×</span>
-    <span class="label">speedup at iso-quality<br><span style="font-size:0.85rem">7.16s vs 25.04s baseline &middot; pLDDT +0.17pp &middot; 3 seeds validated</span></span>
+    <span class="number">1.60×</span>
+    <span class="label">speedup at iso-quality (conservative)<br><span style="font-size:0.85rem">15.66s vs 25.04s baseline &middot; all 3 recycling passes preserved &middot; pLDDT +0.24pp</span></span>
   </div>
-  <p>Five optimizations stack multiplicatively to reduce per-prediction time from 25s to 7.2s, without retraining or changing the model weights. Quality is fully preserved (pLDDT within 0.2 percentage points of baseline).</p>
+  <p>Three optimizations — ODE sampling, precision tuning, and framework bypass — reduce per-prediction time from 25s to 15.7s without retraining, weight changes, or removing recycling passes. A more aggressive configuration that skips recycling reaches 3.50× (7.2s) but trades away the iterative trunk refinement that recycling provides.</p>
 </section>
 
 <!-- Incremental Stack -->
 <section>
   <h2>The Optimization Stack</h2>
-  <p>Each optimization was measured independently on the eval-v4 harness (L40S GPU, pre-cached MSAs, model loading excluded from timing).</p>
+  <p>Each optimization was measured independently on the eval-v4 harness (L40S GPU, pre-cached MSAs, model loading excluded from timing). All configurations preserve the default 3 recycling passes unless noted.</p>
 
+  <h3>Conservative (recycling=3 preserved)</h3>
   <table>
     <thead>
       <tr><th>Configuration</th><th class="num">Time (s)</th><th class="num">Speedup</th><th class="num">Δ pLDDT</th><th>Gate</th></tr>
@@ -163,18 +164,18 @@
         <td><span class="tag tag-pass">ref</span></td>
       </tr>
       <tr>
-        <td>+ ODE sampling (γ₀=0) + 12 steps + recycling=0 + TF32 + bf16</td>
-        <td class="num">12.26</td><td class="num speedup">2.04×</td><td class="num">+0.95pp</td>
+        <td>+ ODE sampling (γ₀=0) + 12 steps</td>
+        <td class="num">21.22</td><td class="num speedup">1.18×</td><td class="num">−0.75pp</td>
         <td><span class="tag tag-pass">pass</span></td>
       </tr>
       <tr>
-        <td>+ Bypass Lightning Trainer</td>
-        <td class="num">8.62</td><td class="num speedup">2.91×</td><td class="num">+0.95pp</td>
+        <td>+ TF32 matmul + bf16 trunk</td>
+        <td class="num">19.78</td><td class="num speedup">1.27×</td><td class="num">−0.75pp</td>
         <td><span class="tag tag-pass">pass</span></td>
       </tr>
       <tr class="winner">
-        <td><strong>+ CUDA warmup</strong></td>
-        <td class="num"><strong>7.16</strong></td><td class="num speedup"><strong>3.50×</strong></td><td class="num">+0.17pp</td>
+        <td><strong>+ Bypass Lightning + CUDA warmup</strong></td>
+        <td class="num"><strong>15.66</strong></td><td class="num speedup"><strong>1.60×</strong></td><td class="num">+0.24pp</td>
         <td><span class="tag tag-pass">pass</span></td>
       </tr>
     </tbody>
@@ -186,17 +187,41 @@
       <div class="bar-track"><div class="bar-fill baseline" style="width:100%">25.0s</div></div>
     </div>
     <div class="bar-row">
-      <span class="bar-label">+ ODE-12 + TF32 + bf16</span>
-      <div class="bar-track"><div class="bar-fill opt2" style="width:49%">12.3s</div></div>
+      <span class="bar-label">+ ODE-12</span>
+      <div class="bar-track"><div class="bar-fill opt1" style="width:84.7%">21.2s</div></div>
     </div>
     <div class="bar-row">
-      <span class="bar-label">+ Bypass Trainer</span>
-      <div class="bar-track"><div class="bar-fill opt3" style="width:34.4%">8.6s</div></div>
+      <span class="bar-label">+ TF32 + bf16</span>
+      <div class="bar-track"><div class="bar-fill opt2" style="width:79%">19.8s</div></div>
     </div>
     <div class="bar-row">
-      <span class="bar-label"><strong>+ CUDA warmup</strong></span>
-      <div class="bar-track"><div class="bar-fill winner" style="width:28.6%"><strong>7.2s</strong></div></div>
+      <span class="bar-label"><strong>+ Bypass + warmup</strong></span>
+      <div class="bar-track"><div class="bar-fill winner" style="width:62.5%"><strong>15.7s</strong></div></div>
     </div>
+  </div>
+
+  <h3>Aggressive (recycling=0)</h3>
+  <p>Skipping all recycling passes eliminates 3 extra Pairformer trunk passes (~9s), but removes the iterative refinement that recycling provides. Quality still passes on our 3-complex test set, but may degrade on harder targets.</p>
+  <table>
+    <thead>
+      <tr><th>Configuration</th><th class="num">Time (s)</th><th class="num">Speedup</th><th class="num">Δ pLDDT</th><th>Gate</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ODE-12 + TF32 + bf16 + recycling=0</td>
+        <td class="num">12.26</td><td class="num speedup">2.04×</td><td class="num">+0.95pp</td>
+        <td><span class="tag tag-pass">pass</span></td>
+      </tr>
+      <tr>
+        <td>+ Bypass Lightning + CUDA warmup</td>
+        <td class="num">7.16</td><td class="num speedup">3.50×</td><td class="num">+0.17pp</td>
+        <td><span class="tag tag-pass">pass</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="insight">
+    <strong>The recycling question:</strong> Setting recycling=0 accounts for 9s of the total 18s savings (1.00× → 3.50×). It passes quality on our test set, but recycling exists to iteratively refine the trunk's pair representation — skipping it is a bet that may not generalize. The conservative 1.60× is the safer recommendation; the aggressive 3.50× is available when speed is critical.
   </div>
 </section>
 
@@ -242,18 +267,22 @@
 <!-- Per-complex -->
 <section>
   <h2>Per-Complex Scaling</h2>
-  <p>The optimization stack scales consistently across protein complex sizes (200–600 residues).</p>
+  <p>Both the conservative and aggressive stacks scale consistently across protein complex sizes.</p>
   <table>
     <thead>
-      <tr><th>Complex</th><th class="num">Baseline</th><th class="num">Optimized</th><th class="num">Speedup</th></tr>
+      <tr><th>Complex</th><th class="num">Baseline</th><th class="num">Conservative (1.60×)</th><th class="num">Aggressive (3.50×)</th></tr>
     </thead>
     <tbody>
-      <tr><td>Small (~200 residues)</td><td class="num">12.4s</td><td class="num">3.31s</td><td class="num speedup">3.75×</td></tr>
-      <tr><td>Medium (~400 residues)</td><td class="num">24.2s</td><td class="num">6.37s</td><td class="num speedup">3.80×</td></tr>
-      <tr><td>Large (~600 residues)</td><td class="num">38.5s</td><td class="num">11.78s</td><td class="num speedup">3.27×</td></tr>
+      <tr><td>Small (~200 residues)</td><td class="num">12.4s</td><td class="num">5.63s</td><td class="num">3.31s</td></tr>
+      <tr><td>Medium (~400 residues)</td><td class="num">24.2s</td><td class="num">15.07s</td><td class="num">6.37s</td></tr>
+      <tr><td>Large (~600 residues)</td><td class="num">38.5s</td><td class="num">26.27s</td><td class="num">11.78s</td></tr>
     </tbody>
   </table>
-  <p style="font-size:0.88rem;color:var(--muted)">All measurements: eval-v4, L40S GPU, pre-cached MSAs, median of 3 runs. Quality gate passes for all complexes (per-complex pLDDT regression &lt; 5pp).</p>
+  <p style="font-size:0.88rem;color:var(--muted)">All measurements: eval-v4, L40S GPU, pre-cached MSAs, median of 3 runs. Quality gate passes for all complexes and configurations.</p>
+
+  <div class="insight">
+    <strong>Recycling cost scales with complex size.</strong> The 3 extra trunk passes add ~2.3s for small complexes but ~14.5s for large ones — the Pairformer's O(n²) cost means recycling is proportionally more expensive for larger proteins.
+  </div>
 </section>
 
 <!-- Dead Ends -->
