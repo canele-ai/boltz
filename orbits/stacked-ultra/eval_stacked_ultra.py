@@ -620,10 +620,20 @@ def evaluate_stacked(config_json: str) -> str:
         pairformer_args=asdict(pairformer_args),
         msa_args=asdict(msa_args),
         steering_args=asdict(steering_args),
-        compile_structure=compile_score,
+        compile_structure=False,  # compile after load to avoid state_dict key mismatch
     )
     model.eval()
     model = model.to(device)
+
+    # Apply torch.compile AFTER loading weights (avoids _orig_mod key mismatch)
+    if compile_score:
+        print("[stacked-ultra] Compiling score model with mode='reduce-overhead'...")
+        model.structure_module.score_model = torch.compile(
+            model.structure_module.score_model,
+            dynamic=False,
+            fullgraph=False,
+            mode="reduce-overhead",
+        )
     t_load_end = time.perf_counter()
     load_time = t_load_end - t_load_start
     print(f"[stacked-ultra] Model loaded to GPU: {load_time:.1f}s")
