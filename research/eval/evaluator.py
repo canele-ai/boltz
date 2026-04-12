@@ -1,11 +1,18 @@
 """Evaluation harness for Boltz-2 inference speedup research.
 
-Known limitations (eval-v3):
-- matmul_precision and compile_* flags in config are recorded for documentation
-  but NOT applied to the subprocess. To test these, patch src/boltz/main.py directly.
+Known limitations (eval-v4):
 - pLDDT (model confidence) is used as proxy for true lDDT.
-- eval-v3 uses torch 2.6.0 + cuequivariance kernels + pre-cached MSAs.
-  Metrics recorded under eval-v1 or eval-v2 are NOT directly comparable.
+- eval-v4 uses torch 2.6.0 + cuequivariance kernels + pre-cached MSAs.
+  Metrics recorded under eval-v1, eval-v2, or eval-v3 are NOT directly comparable.
+
+eval-v4 changes (from eval-v3):
+- Model loading (~20s) is excluded from timing. The boltz_wrapper.py emits
+  phase timestamps around Trainer.predict(), and the evaluator uses
+  predict_only_s as the primary timing metric. This matches production
+  deployment where model loading is a one-time startup cost.
+- Config flags (gamma_0, noise_scale, bf16_trunk) are now supported by
+  boltz_wrapper.py via monkey-patching, in addition to matmul_precision
+  and compile_* flags from eval-v3.
 
 Runs Boltz-2 inference on a fixed test set, measures wall-clock time and
 quality metrics (pLDDT, iPTM), and compares against a stored baseline.
@@ -289,8 +296,17 @@ def _run_boltz_prediction(
     if config.get("compile_msa"):
         cmd.append("--compile_msa")
 
+    # eval-v4: pass gamma_0, noise_scale, bf16_trunk to wrapper
+    if config.get("gamma_0") is not None:
+        cmd.extend(["--gamma_0", str(config["gamma_0"])])
+    if config.get("noise_scale") is not None:
+        cmd.extend(["--noise_scale", str(config["noise_scale"])])
+    if config.get("bf16_trunk"):
+        cmd.append("--bf16_trunk")
+
     result: dict[str, Any] = {
         "wall_time_s": None,
+        "predict_only_s": None,
         "quality": {},
         "error": None,
     }
@@ -309,6 +325,22 @@ def _run_boltz_prediction(
 
         t_end = time.perf_counter()
         result["wall_time_s"] = t_end - t_start
+
+        # Parse phase timestamps from stderr (eval-v4 wrapper emits these)
+        # predict_start fires just before Trainer.predict() (after model loading + data processing)
+        # predict_end fires just after Trainer.predict() returns
+        predict_start = None
+        predict_end = None
+        if proc.stderr:
+            for line in proc.stderr.split('\n'):
+                if '[PHASE] predict_start=' in line:
+                    predict_start = float(line.split('=')[1])
+                elif '[PHASE] predict_end=' in line:
+                    predict_end = float(line.split('=')[1])
+
+        # Compute prediction-only time (excludes model loading + data processing)
+        if predict_start is not None and predict_end is not None:
+            result["predict_only_s"] = predict_end - predict_start
 
         if proc.returncode != 0:
             result["error"] = (
@@ -392,10 +424,15 @@ def _parse_confidence(out_dir: Path, input_yaml: Path) -> dict[str, Any]:
 def evaluate(config_json: str, sanity_check: bool = False, num_runs: int = 1) -> str:
     """Run evaluation on the test set and return JSON results.
 
+    eval-v4: Uses subprocess per prediction but times only the Trainer.predict()
+    phase (model loading excluded). The wrapper emits phase timestamps that the
+    evaluator parses to compute predict_only_s.
+
     Parameters
     ----------
     config_json : str
-        JSON-encoded configuration dict.
+        JSON-encoded configuration dict. Supports: sampling_steps, recycling_steps,
+        matmul_precision, gamma_0, noise_scale, bf16_trunk, compile_*, diffusion_samples.
     sanity_check : bool
         If True, only run the smallest test case with minimal steps.
     num_runs : int
@@ -444,8 +481,11 @@ def evaluate(config_json: str, sanity_check: bool = False, num_runs: int = 1) ->
     else:
         print("[eval] No MSA cache — using MSA server (adds network latency)")
 
+    print("[eval-v4] Mode: subprocess + phase timestamps (predict_only_s)")
+
     results: dict[str, Any] = {
         "config": merged,
+        "eval_version": "eval-v4",
         "sanity_check": sanity_check,
         "num_runs": num_runs,
         "msa_cached": use_msa_cache,
@@ -504,8 +544,10 @@ def evaluate(config_json: str, sanity_check: bool = False, num_runs: int = 1) ->
                 last_error = pred_result["error"]
                 break  # no point retrying on a hard error
 
-            if pred_result["wall_time_s"] is not None:
-                run_times.append(pred_result["wall_time_s"])
+            # eval-v4: use predict_only_s (excludes model loading) when available
+            timing_key = "predict_only_s" if pred_result.get("predict_only_s") else "wall_time_s"
+            if pred_result.get(timing_key) is not None:
+                run_times.append(pred_result[timing_key])
             run_qualities.append(pred_result["quality"])
 
         # Aggregate across runs: median time, mean quality
@@ -686,7 +728,9 @@ def run_baseline() -> str:
         (string to write back to config.yaml).
     """
     # Run evaluation with default config, 3 runs for stable timing
-    results_json = evaluate.local(json.dumps(DEFAULT_CONFIG), sanity_check=False, num_runs=3)
+    # eval-v4: predict_only_s excludes model loading via phase timestamps
+    results_json = evaluate.local(json.dumps(DEFAULT_CONFIG), sanity_check=False,
+                                   num_runs=3)
     results = json.loads(results_json)
 
     # Build baseline record for config.yaml
@@ -736,7 +780,11 @@ def main(
     num_runs: int = 1,
     validate: bool = False,
 ):
-    """Boltz-2 inference evaluation harness.
+    """Boltz-2 inference evaluation harness (eval-v4).
+
+    eval-v4: Uses subprocess per prediction but excludes model loading from
+    timing via phase timestamps emitted by boltz_wrapper.py. The wrapper
+    supports gamma_0, noise_scale, bf16_trunk, and compile flags.
 
     Usage:
         modal run research/eval/evaluator.py --sanity-check
@@ -744,10 +792,14 @@ def main(
         modal run research/eval/evaluator.py --config '{"sampling_steps": 20}'
         modal run research/eval/evaluator.py --config '{"sampling_steps": 20}' --validate
 
+    Config keys: sampling_steps, recycling_steps, matmul_precision, gamma_0,
+    noise_scale, bf16_trunk, compile_pairformer, compile_structure,
+    compile_confidence, compile_msa, diffusion_samples, seed.
+
     Cost guide (L40S):
-        --num-runs 1 (default):  ~3.5 min GPU / eval  — use for iteration
-        --validate (num_runs=3): ~10.5 min GPU / eval  — use for promising results
-        --baseline (num_runs=3): ~10.5 min GPU / eval  — run once to anchor metric
+        --num-runs 1 (default):  ~1-2 min GPU / eval  — use for iteration
+        --validate (num_runs=3): ~4-6 min GPU / eval   — use for promising results
+        --baseline (num_runs=3): ~4-6 min GPU / eval   — run once to anchor metric
     """
     if validate:
         num_runs = 3
@@ -786,7 +838,8 @@ def main(
             cfg = json.loads(config)
 
         print(f"[evaluator] Evaluating config: {json.dumps(cfg)} (num_runs={num_runs})")
-        result_json = evaluate.remote(json.dumps(cfg), sanity_check=False, num_runs=num_runs)
+        result_json = evaluate.remote(json.dumps(cfg), sanity_check=False,
+                                       num_runs=num_runs)
         result = json.loads(result_json)
         print(json.dumps(result, indent=2))
 
