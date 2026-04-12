@@ -341,17 +341,25 @@ def main(
         speedup = agg.get("speedup", 0)
         plddt = agg.get("mean_plddt")
         gate = agg.get("passes_quality_gate")
+        if plddt is not None:
+            plddt_str = f"{plddt:.4f}"
+        else:
+            plddt_str = "N/A"
+        gate_str = "PASS" if gate else "FAIL"
         print(f"\n[seed={seed_val}] speedup={speedup:.3f}x, "
-              f"pLDDT={plddt:.4f if plddt else 'N/A'}, "
-              f"gate={'PASS' if gate else 'FAIL'}")
+              f"pLDDT={plddt_str}, gate={gate_str}")
 
         # Print per-complex details
         for pc in result.get("per_complex", []):
             if pc.get("error"):
                 print(f"  {pc['name']}: ERROR: {pc['error'][:200]}")
             else:
-                print(f"  {pc['name']}: {pc['wall_time_s']:.1f}s, "
-                      f"pLDDT={pc['quality'].get('complex_plddt', 'N/A')}")
+                pc_plddt = pc['quality'].get('complex_plddt')
+                if pc_plddt is not None:
+                    pc_plddt_str = f"{pc_plddt:.4f}"
+                else:
+                    pc_plddt_str = "N/A"
+                print(f"  {pc['name']}: {pc['wall_time_s']:.1f}s, pLDDT={pc_plddt_str}")
 
     # Aggregate across seeds
     if len(all_results) > 1:
