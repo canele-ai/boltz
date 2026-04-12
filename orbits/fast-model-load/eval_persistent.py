@@ -155,17 +155,91 @@ def _parse_persistent_results(stdout: str) -> dict[str, Any]:
     volumes={"/msa_cache": msa_cache, "/boltz_cache": boltz_cache},
 )
 def prep_cache() -> str:
-    """Download model weights to persistent volume (run once)."""
+    """Download model weights and create pickle on persistent volume (run once)."""
+    import os
+    import warnings
+    from dataclasses import asdict, dataclass
+
+    import torch
+
     cache_dir = Path("/boltz_cache")
     ckpt_path = cache_dir / "boltz2_conf.ckpt"
-    if ckpt_path.exists():
-        return json.dumps({"status": "already cached", "files": [str(p) for p in cache_dir.iterdir()]})
+    pickle_path = cache_dir / "boltz2_full_model.pt"
 
-    # Download by importing boltz
+    if pickle_path.exists():
+        return json.dumps({"status": "pickle exists", "files": [str(p) for p in cache_dir.iterdir()]})
+
+    # Download model if needed
     import boltz.main as boltz_main
-    boltz_main.download_boltz2(cache_dir)
+    if not ckpt_path.exists():
+        boltz_main.download_boltz2(cache_dir)
+
+    # Create pickle for fast loading
+    warnings.filterwarnings("ignore", ".*that has Tensor Cores.*")
+    torch.set_float32_matmul_precision("high")
+    torch.set_grad_enabled(False)
+
+    from boltz.main import (
+        Boltz2, Boltz2DiffusionParams,
+        PairformerArgsV2, MSAModuleArgs, BoltzSteeringParams,
+    )
+
+    for key in ["CUEQ_DEFAULT_CONFIG", "CUEQ_DISABLE_AOT_TUNING"]:
+        os.environ[key] = os.environ.get(key, "1")
+
+    # Patch diffusion params for ODE mode
+    @dataclass
+    class PatchedBoltz2DiffusionParams:
+        gamma_0: float = 0.0
+        gamma_min: float = 1.0
+        noise_scale: float = 1.003
+        rho: float = 7
+        step_scale: float = 1.5
+        sigma_min: float = 0.0001
+        sigma_max: float = 160.0
+        sigma_data: float = 16.0
+        P_mean: float = -1.2
+        P_std: float = 1.5
+        coordinate_augmentation: bool = True
+        alignment_reverse_diff: bool = True
+        synchronize_sigmas: bool = True
+
+    boltz_main.Boltz2DiffusionParams = PatchedBoltz2DiffusionParams
+
+    diffusion_params = PatchedBoltz2DiffusionParams()
+    pairformer_args = PairformerArgsV2()
+    msa_args = MSAModuleArgs(subsample_msa=True, num_subsampled_msa=1024, use_paired_feature=True)
+    steering_args = BoltzSteeringParams()
+
+    predict_args = {
+        "recycling_steps": 0,
+        "sampling_steps": 12,
+        "diffusion_samples": 1,
+        "max_parallel_samples": None,
+        "write_confidence_summary": True,
+        "write_full_pae": False,
+        "write_full_pde": False,
+    }
+
+    print("[prep_cache] Creating model pickle...")
+    model = Boltz2.load_from_checkpoint(
+        ckpt_path,
+        strict=True,
+        predict_args=predict_args,
+        map_location="cpu",
+        diffusion_process_args=asdict(diffusion_params),
+        ema=False,
+        use_kernels=True,
+        pairformer_args=asdict(pairformer_args),
+        msa_args=asdict(msa_args),
+        steering_args=asdict(steering_args),
+    )
+    model.eval()
+    torch.save(model, pickle_path)
+    print(f"[prep_cache] Pickle saved: {os.path.getsize(pickle_path) / 1e9:.2f} GB")
+
     boltz_cache.commit()
-    return json.dumps({"status": "downloaded", "files": [str(p) for p in cache_dir.iterdir()]})
+    return json.dumps({"status": "pickle created", "files": [str(p) for p in cache_dir.iterdir()]})
 
 
 @app.function(
@@ -219,6 +293,7 @@ def evaluate_seed(seed: int) -> str:
         "--noise_scale", "1.003",
         "--matmul_precision", "high",
         "--bf16_trunk",
+        "--use_pickle",
         "--override",
         "--seed", str(seed),
     ]

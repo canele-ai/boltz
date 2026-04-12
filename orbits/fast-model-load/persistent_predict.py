@@ -70,6 +70,8 @@ def main():
     parser.add_argument("--bf16_trunk", action="store_true")
     parser.add_argument("--no_kernels", action="store_true")
     parser.add_argument("--use_msa_server", action="store_true")
+    parser.add_argument("--use_pickle", action="store_true",
+                        help="Load model from pickle instead of checkpoint (much faster)")
     parser.add_argument("--msa_directory", type=str, default=None)
 
     args = parser.parse_args()
@@ -246,19 +248,35 @@ def main():
     steering_args = BoltzSteeringParams()
 
     t_load_start = time.perf_counter()
-    model_module = Boltz2.load_from_checkpoint(
-        checkpoint,
-        strict=True,
-        predict_args=predict_args,
-        map_location="cpu",
-        diffusion_process_args=asdict(diffusion_params),
-        ema=False,
-        use_kernels=use_kernels,
-        pairformer_args=asdict(pairformer_args),
-        msa_args=asdict(msa_args),
-        steering_args=asdict(steering_args),
-    )
-    model_module.eval()
+
+    pickle_path = cache / "boltz2_full_model.pt"
+    if args.use_pickle and pickle_path.exists():
+        # Fast path: load pre-constructed model from pickle (~1.6s vs ~18s)
+        print("[persistent] Loading model from pickle (fast path)...",
+              file=sys.stderr, flush=True)
+        model_module = torch.load(pickle_path, map_location="cpu", weights_only=False)
+        # Update predict_args since the pickle may have different settings
+        model_module.predict_args = predict_args
+        model_module.hparams["predict_args"] = predict_args
+        model_module.eval()
+    else:
+        # Standard path: load from Lightning checkpoint
+        if args.use_pickle:
+            print("[persistent] Pickle not found, falling back to load_from_checkpoint",
+                  file=sys.stderr, flush=True)
+        model_module = Boltz2.load_from_checkpoint(
+            checkpoint,
+            strict=True,
+            predict_args=predict_args,
+            map_location="cpu",
+            diffusion_process_args=asdict(diffusion_params),
+            ema=False,
+            use_kernels=use_kernels,
+            pairformer_args=asdict(pairformer_args),
+            msa_args=asdict(msa_args),
+            steering_args=asdict(steering_args),
+        )
+        model_module.eval()
 
     # Move to GPU
     device = torch.device("cuda")
@@ -267,15 +285,74 @@ def main():
     t_load_end = time.perf_counter()
 
     model_load_time = t_load_end - t_load_start
-    print(f"[TIMING] model_load={model_load_time:.2f}s", file=sys.stderr, flush=True)
+    print(f"[TIMING] model_load={model_load_time:.2f}s (pickle={args.use_pickle})",
+          file=sys.stderr, flush=True)
 
     # -----------------------------------------------------------------------
-    # Phase 2: No explicit CUDA warmup. The first complex absorbs the JIT cost.
-    # This is fair because the per-subprocess baseline also has JIT in each run.
-    # The model load time is the one-time cost to amortize.
+    # Phase 2: CUDA warmup -- process first complex and run one forward pass
+    # to trigger kernel JIT compilation. This is a one-time cost amortized
+    # across all complexes.
     # -----------------------------------------------------------------------
-    warmup_time = 0.0
-    one_time_cost = model_load_time
+    first_yaml = Path(args.inputs[0])
+    first_stem = first_yaml.stem.replace("_cached", "")
+    warmup_dir = Path(args.out_dir) / "_warmup"
+    warmup_dir.mkdir(parents=True, exist_ok=True)
+
+    print("[persistent] Running CUDA warmup pass...", file=sys.stderr, flush=True)
+    t_warmup_start = time.perf_counter()
+
+    warmup_data = check_inputs(first_yaml)
+    warmup_out = warmup_dir / first_stem
+    warmup_out.mkdir(parents=True, exist_ok=True)
+    process_inputs(
+        data=warmup_data,
+        out_dir=warmup_out,
+        ccd_path=ccd_path,
+        mol_dir=mol_dir,
+        use_msa_server=args.use_msa_server,
+        msa_server_url="https://api.colabfold.com",
+        msa_pairing_strategy="greedy",
+        boltz2=True,
+        preprocessing_threads=1,
+        max_msa_seqs=8192,
+    )
+    warmup_manifest = Manifest.load(warmup_out / "processed" / "manifest.json")
+    warmup_filtered = filter_inputs_structure(manifest=warmup_manifest, outdir=warmup_out, override=True)
+    warmup_pd = warmup_out / "processed"
+    warmup_processed = BoltzProcessedInput(
+        manifest=warmup_filtered,
+        targets_dir=warmup_pd / "structures",
+        msa_dir=warmup_pd / "msa",
+        constraints_dir=(warmup_pd / "constraints") if (warmup_pd / "constraints").exists() else None,
+        template_dir=(warmup_pd / "templates") if (warmup_pd / "templates").exists() else None,
+        extra_mols_dir=(warmup_pd / "mols") if (warmup_pd / "mols").exists() else None,
+    )
+    warmup_dm = Boltz2InferenceDataModule(
+        manifest=warmup_processed.manifest,
+        target_dir=warmup_processed.targets_dir,
+        msa_dir=warmup_processed.msa_dir,
+        mol_dir=mol_dir,
+        num_workers=2,
+        constraints_dir=warmup_processed.constraints_dir,
+        template_dir=warmup_processed.template_dir,
+        extra_mols_dir=warmup_processed.extra_mols_dir,
+    )
+    warmup_dl = warmup_dm.predict_dataloader()
+    with torch.no_grad(), torch.autocast("cuda", dtype=torch.bfloat16):
+        for batch_idx, batch in enumerate(warmup_dl):
+            batch = _transfer_batch_to_device(batch, device)
+            _ = model_module.predict_step(batch, batch_idx)
+            break
+    torch.cuda.synchronize()
+    del warmup_dl, warmup_dm
+    gc.collect()
+    torch.cuda.empty_cache()
+
+    t_warmup_end = time.perf_counter()
+    warmup_time = t_warmup_end - t_warmup_start
+    print(f"[TIMING] cuda_warmup={warmup_time:.2f}s", file=sys.stderr, flush=True)
+
+    one_time_cost = model_load_time + warmup_time
     results = {
         "model_load_time_s": model_load_time,
         "warmup_time_s": warmup_time,
