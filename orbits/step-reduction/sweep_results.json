@@ -1,0 +1,510 @@
+{
+  "phase1_step_sweep": [
+    {
+      "config": {
+        "sampling_steps": 100,
+        "recycling_steps": 3,
+        "matmul_precision": "highest",
+        "compile_pairformer": false,
+        "compile_structure": false,
+        "compile_confidence": false,
+        "compile_msa": false,
+        "diffusion_samples": 1,
+        "seed": 42
+      },
+      "num_runs": 1,
+      "per_complex": [
+        {
+          "name": "small_complex",
+          "wall_time_s": 99.609484908,
+          "quality": {
+            "confidence_score": 0.8023554682731628,
+            "ptm": 0.7904418110847473,
+            "iptm": 0.7129320502281189,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.7129320502281189,
+            "complex_plddt": 0.8247113227844238,
+            "complex_iplddt": 0.7889097929000854,
+            "complex_pde": 1.0342271327972412,
+            "complex_ipde": 4.315040111541748
+          },
+          "error": null,
+          "run_times": [
+            99.609484908
+          ]
+        },
+        {
+          "name": "medium_complex",
+          "wall_time_s": 58.267610868999995,
+          "quality": {
+            "confidence_score": 0.47134533524513245,
+            "ptm": 0.4649243652820587,
+            "iptm": 0.45407766103744507,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.45407766103744507,
+            "complex_plddt": 0.4756622612476349,
+            "complex_iplddt": 0.4835853576660156,
+            "complex_pde": 2.799551248550415,
+            "complex_ipde": 9.043787956237793
+          },
+          "error": null,
+          "run_times": [
+            58.267610868999995
+          ]
+        },
+        {
+          "name": "large_complex",
+          "wall_time_s": 79.00170939200001,
+          "quality": {
+            "confidence_score": 0.6750482320785522,
+            "ptm": 0.3658345341682434,
+            "iptm": 0.11645106971263885,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.11645106971263885,
+            "complex_plddt": 0.8146975040435791,
+            "complex_iplddt": 0.7734245657920837,
+            "complex_pde": 1.1157013177871704,
+            "complex_ipde": 16.515262603759766
+          },
+          "error": null,
+          "run_times": [
+            79.00170939200001
+          ]
+        }
+      ],
+      "aggregate": {
+        "num_successful": 3,
+        "total_wall_time_s": 236.878805169,
+        "mean_wall_time_s": 78.959601723,
+        "mean_plddt": 0.7050236960252126,
+        "mean_iptm": 0.4278202603260676,
+        "speedup": 0.8912226623288787,
+        "plddt_delta_pp": -0.5648185809453254,
+        "passes_quality_gate": true
+      }
+    },
+    {
+      "config": {
+        "sampling_steps": 50,
+        "recycling_steps": 3,
+        "matmul_precision": "highest",
+        "compile_pairformer": false,
+        "compile_structure": false,
+        "compile_confidence": false,
+        "compile_msa": false,
+        "diffusion_samples": 1,
+        "seed": 42
+      },
+      "num_runs": 1,
+      "per_complex": [
+        {
+          "name": "small_complex",
+          "wall_time_s": 91.011878933,
+          "quality": {
+            "confidence_score": 0.8280469179153442,
+            "ptm": 0.8379372954368591,
+            "iptm": 0.8092384338378906,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.8092384338378906,
+            "complex_plddt": 0.8327490091323853,
+            "complex_iplddt": 0.7961758971214294,
+            "complex_pde": 0.9939206838607788,
+            "complex_ipde": 4.025613307952881
+          },
+          "error": null,
+          "run_times": [
+            91.011878933
+          ]
+        },
+        {
+          "name": "medium_complex",
+          "wall_time_s": 53.236095014,
+          "quality": {
+            "confidence_score": 0.49038106203079224,
+            "ptm": 0.5479704737663269,
+            "iptm": 0.5219880938529968,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.5219880938529968,
+            "complex_plddt": 0.4824793040752411,
+            "complex_iplddt": 0.47161436080932617,
+            "complex_pde": 2.5741021633148193,
+            "complex_ipde": 7.307971477508545
+          },
+          "error": null,
+          "run_times": [
+            53.236095014
+          ]
+        },
+        {
+          "name": "large_complex",
+          "wall_time_s": 70.729371576,
+          "quality": {
+            "confidence_score": 0.684100329875946,
+            "ptm": 0.4311111569404602,
+            "iptm": 0.1896030306816101,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.1896030306816101,
+            "complex_plddt": 0.8077245950698853,
+            "complex_iplddt": 0.7585592865943909,
+            "complex_pde": 1.017377495765686,
+            "complex_ipde": 15.525101661682129
+          },
+          "error": null,
+          "run_times": [
+            70.729371576
+          ]
+        }
+      ],
+      "aggregate": {
+        "num_successful": 3,
+        "total_wall_time_s": 214.977345523,
+        "mean_wall_time_s": 71.65911517433334,
+        "mean_plddt": 0.7076509694258372,
+        "mean_iptm": 0.5069431861241659,
+        "speedup": 0.9820186349329237,
+        "plddt_delta_pp": -0.30209124088287354,
+        "passes_quality_gate": true
+      }
+    },
+    {
+      "config": {
+        "sampling_steps": 20,
+        "recycling_steps": 3,
+        "matmul_precision": "highest",
+        "compile_pairformer": false,
+        "compile_structure": false,
+        "compile_confidence": false,
+        "compile_msa": false,
+        "diffusion_samples": 1,
+        "seed": 42
+      },
+      "num_runs": 1,
+      "per_complex": [
+        {
+          "name": "small_complex",
+          "wall_time_s": 89.138231364,
+          "quality": {
+            "confidence_score": 0.8159412741661072,
+            "ptm": 0.8455373048782349,
+            "iptm": 0.7766762971878052,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.7766762971878052,
+            "complex_plddt": 0.8257575035095215,
+            "complex_iplddt": 0.7904736399650574,
+            "complex_pde": 0.815786600112915,
+            "complex_ipde": 3.1589972972869873
+          },
+          "error": null,
+          "run_times": [
+            89.138231364
+          ]
+        },
+        {
+          "name": "medium_complex",
+          "wall_time_s": 58.64054447000001,
+          "quality": {
+            "confidence_score": 0.4275376498699188,
+            "ptm": 0.4066968858242035,
+            "iptm": 0.18809044361114502,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.18809044361114502,
+            "complex_plddt": 0.48739945888519287,
+            "complex_iplddt": 0.4787827432155609,
+            "complex_pde": 2.9029219150543213,
+            "complex_ipde": 10.573675155639648
+          },
+          "error": null,
+          "run_times": [
+            58.64054447000001
+          ]
+        },
+        {
+          "name": "large_complex",
+          "wall_time_s": 75.53451393,
+          "quality": {
+            "confidence_score": 0.7079107165336609,
+            "ptm": 0.3972952961921692,
+            "iptm": 0.3182118833065033,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.3182118833065033,
+            "complex_plddt": 0.8053354620933533,
+            "complex_iplddt": 0.7323779463768005,
+            "complex_pde": 0.9738251566886902,
+            "complex_ipde": 13.203411102294922
+          },
+          "error": null,
+          "run_times": [
+            75.53451393
+          ]
+        }
+      ],
+      "aggregate": {
+        "num_successful": 3,
+        "total_wall_time_s": 223.31328976400002,
+        "mean_wall_time_s": 74.43776325466668,
+        "mean_plddt": 0.7061641414960226,
+        "mean_iptm": 0.4276595413684845,
+        "speedup": 0.9453613782462531,
+        "plddt_delta_pp": -0.4507740338643318,
+        "passes_quality_gate": true
+      }
+    },
+    {
+      "config": {
+        "sampling_steps": 10,
+        "recycling_steps": 3,
+        "matmul_precision": "highest",
+        "compile_pairformer": false,
+        "compile_structure": false,
+        "compile_confidence": false,
+        "compile_msa": false,
+        "diffusion_samples": 1,
+        "seed": 42
+      },
+      "num_runs": 1,
+      "per_complex": [
+        {
+          "name": "small_complex",
+          "wall_time_s": 108.805859282,
+          "quality": {
+            "confidence_score": 0.43469199538230896,
+            "ptm": 0.48787280917167664,
+            "iptm": 0.42954257130622864,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.42954257130622864,
+            "complex_plddt": 0.43597936630249023,
+            "complex_iplddt": 0.43648868799209595,
+            "complex_pde": 1.7465518712997437,
+            "complex_ipde": 3.9891700744628906
+          },
+          "error": null,
+          "run_times": [
+            108.805859282
+          ]
+        },
+        {
+          "name": "medium_complex",
+          "wall_time_s": 65.01216305599999,
+          "quality": {
+            "confidence_score": 0.31830695271492004,
+            "ptm": 0.3010292947292328,
+            "iptm": 0.22161492705345154,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.22161492705345154,
+            "complex_plddt": 0.342479944229126,
+            "complex_iplddt": 0.34796077013015747,
+            "complex_pde": 4.4634528160095215,
+            "complex_ipde": 10.052007675170898
+          },
+          "error": null,
+          "run_times": [
+            65.01216305599999
+          ]
+        },
+        {
+          "name": "large_complex",
+          "wall_time_s": 79.675768049,
+          "quality": {
+            "confidence_score": 0.42593106627464294,
+            "ptm": 0.34078216552734375,
+            "iptm": 0.28700292110443115,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.28700292110443115,
+            "complex_plddt": 0.4606631100177765,
+            "complex_iplddt": 0.4337880611419678,
+            "complex_pde": 2.234668254852295,
+            "complex_ipde": 9.48699951171875
+          },
+          "error": null,
+          "run_times": [
+            79.675768049
+          ]
+        }
+      ],
+      "aggregate": {
+        "num_successful": 3,
+        "total_wall_time_s": 253.493790387,
+        "mean_wall_time_s": 84.497930129,
+        "mean_plddt": 0.41304080684979755,
+        "mean_iptm": 0.3127201398213704,
+        "speedup": 0.8328084055617422,
+        "plddt_delta_pp": -29.763107498486836,
+        "passes_quality_gate": false,
+        "per_complex_regression": {
+          "small_complex": "-39.9pp",
+          "medium_complex": "-14.8pp",
+          "large_complex": "-34.6pp"
+        }
+      }
+    }
+  ],
+  "phase2_recycle_sweep": [
+    {
+      "config": {
+        "sampling_steps": 50,
+        "recycling_steps": 1,
+        "matmul_precision": "highest",
+        "compile_pairformer": false,
+        "compile_structure": false,
+        "compile_confidence": false,
+        "compile_msa": false,
+        "diffusion_samples": 1,
+        "seed": 42
+      },
+      "num_runs": 1,
+      "per_complex": [
+        {
+          "name": "small_complex",
+          "wall_time_s": 39.41565470100005,
+          "quality": {
+            "confidence_score": 0.8419561386108398,
+            "ptm": 0.8550589084625244,
+            "iptm": 0.8113322257995605,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.8113322257995605,
+            "complex_plddt": 0.8496121168136597,
+            "complex_iplddt": 0.8199990391731262,
+            "complex_pde": 0.874474823474884,
+            "complex_ipde": 3.1144328117370605
+          },
+          "error": null,
+          "run_times": [
+            39.41565470100005
+          ]
+        },
+        {
+          "name": "medium_complex",
+          "wall_time_s": 47.82220267700001,
+          "quality": {
+            "confidence_score": 0.41297289729118347,
+            "ptm": 0.39090919494628906,
+            "iptm": 0.16965273022651672,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.16965273022651672,
+            "complex_plddt": 0.4738028943538666,
+            "complex_iplddt": 0.472302109003067,
+            "complex_pde": 3.099034070968628,
+            "complex_ipde": 10.529325485229492
+          },
+          "error": null,
+          "run_times": [
+            47.82220267700001
+          ]
+        },
+        {
+          "name": "large_complex",
+          "wall_time_s": 59.61012453000001,
+          "quality": {
+            "confidence_score": 0.6708568334579468,
+            "ptm": 0.3830629885196686,
+            "iptm": 0.11603055149316788,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.11603055149316788,
+            "complex_plddt": 0.809563398361206,
+            "complex_iplddt": 0.7798227071762085,
+            "complex_pde": 1.0145041942596436,
+            "complex_ipde": 16.472396850585938
+          },
+          "error": null,
+          "run_times": [
+            59.61012453000001
+          ]
+        }
+      ],
+      "aggregate": {
+        "num_successful": 3,
+        "total_wall_time_s": 146.84798190800007,
+        "mean_wall_time_s": 48.94932730266669,
+        "mean_plddt": 0.7109928031762441,
+        "mean_iptm": 0.3656718358397484,
+        "speedup": 1.4376211143593447,
+        "plddt_delta_pp": 0.03209213415782397,
+        "passes_quality_gate": true
+      }
+    },
+    {
+      "config": {
+        "sampling_steps": 50,
+        "recycling_steps": 0,
+        "matmul_precision": "highest",
+        "compile_pairformer": false,
+        "compile_structure": false,
+        "compile_confidence": false,
+        "compile_msa": false,
+        "diffusion_samples": 1,
+        "seed": 42
+      },
+      "num_runs": 1,
+      "per_complex": [
+        {
+          "name": "small_complex",
+          "wall_time_s": 35.713692261999995,
+          "quality": {
+            "confidence_score": 0.9108824133872986,
+            "ptm": 0.9414303302764893,
+            "iptm": 0.9184756875038147,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.9184756875038147,
+            "complex_plddt": 0.9089840054512024,
+            "complex_iplddt": 0.8838724493980408,
+            "complex_pde": 0.37111786007881165,
+            "complex_ipde": 0.7598829865455627
+          },
+          "error": null,
+          "run_times": [
+            35.713692261999995
+          ]
+        },
+        {
+          "name": "medium_complex",
+          "wall_time_s": 40.10384318399997,
+          "quality": {
+            "confidence_score": 0.41690775752067566,
+            "ptm": 0.3881530165672302,
+            "iptm": 0.16871899366378784,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.16871899366378784,
+            "complex_plddt": 0.47895491123199463,
+            "complex_iplddt": 0.4708423316478729,
+            "complex_pde": 2.7500858306884766,
+            "complex_ipde": 10.450976371765137
+          },
+          "error": null,
+          "run_times": [
+            40.10384318399997
+          ]
+        },
+        {
+          "name": "large_complex",
+          "wall_time_s": 45.21876585299998,
+          "quality": {
+            "confidence_score": 0.695304811000824,
+            "ptm": 0.4248310625553131,
+            "iptm": 0.20876257121562958,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.20876257121562958,
+            "complex_plddt": 0.8169403076171875,
+            "complex_iplddt": 0.8127688765525818,
+            "complex_pde": 0.9845120310783386,
+            "complex_ipde": 15.124110221862793
+          },
+          "error": null,
+          "run_times": [
+            45.21876585299998
+          ]
+        }
+      ],
+      "aggregate": {
+        "num_successful": 3,
+        "total_wall_time_s": 121.03630129899994,
+        "mean_wall_time_s": 40.345433766333315,
+        "mean_plddt": 0.7349597414334615,
+        "mean_iptm": 0.4319857507944107,
+        "speedup": 1.7442020049049884,
+        "plddt_delta_pp": 2.4287859598795647,
+        "passes_quality_gate": true
+      }
+    }
+  ],
+  "best_steps": 50
+}

@@ -1,0 +1,263 @@
+[
+  {
+    "label": "SDE-20-r0",
+    "result": {
+      "config": {
+        "sampling_steps": 20,
+        "recycling_steps": 0,
+        "gamma_0": 0.8,
+        "noise_scale": 1.003,
+        "seed": 42
+      },
+      "num_runs": 3,
+      "per_complex": [
+        {
+          "name": "small_complex",
+          "wall_time_s": 38.61840545800001,
+          "quality": {
+            "confidence_score": 0.8902489542961121,
+            "ptm": 0.9328784346580505,
+            "iptm": 0.9025626182556152,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.9025626182556152,
+            "complex_plddt": 0.8871705532073975,
+            "complex_iplddt": 0.8504923582077026,
+            "complex_pde": 0.4213079810142517,
+            "complex_ipde": 1.0011522769927979
+          },
+          "error": null,
+          "run_times": [
+            92.972665529,
+            37.35619538500001,
+            38.61840545800001
+          ]
+        },
+        {
+          "name": "medium_complex",
+          "wall_time_s": 40.54066609100002,
+          "quality": {
+            "confidence_score": 0.4082426130771637,
+            "ptm": 0.36272960901260376,
+            "iptm": 0.135481595993042,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.135481595993042,
+            "complex_plddt": 0.47643283009529114,
+            "complex_iplddt": 0.46016713976860046,
+            "complex_pde": 3.3342034816741943,
+            "complex_ipde": 11.380353927612305
+          },
+          "error": null,
+          "run_times": [
+            43.219743472000005,
+            40.54066609100002,
+            40.48538378500001
+          ]
+        },
+        {
+          "name": "large_complex",
+          "wall_time_s": 47.47314250900001,
+          "quality": {
+            "confidence_score": 0.6774444580078125,
+            "ptm": 0.37974444031715393,
+            "iptm": 0.1258619874715805,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.1258619874715805,
+            "complex_plddt": 0.8153401017189026,
+            "complex_iplddt": 0.7690467834472656,
+            "complex_pde": 0.9896849989891052,
+            "complex_ipde": 16.496028900146484
+          },
+          "error": null,
+          "run_times": [
+            47.206266314000004,
+            47.47314250900001,
+            48.23192745900002
+          ]
+        }
+      ],
+      "aggregate": {
+        "num_successful": 3,
+        "mean_wall_time_s": 42.21073801933335,
+        "mean_plddt": 0.726314495007197,
+        "mean_iptm": 0.3879687339067459,
+        "speedup": 1.6671252331994022,
+        "plddt_delta_pp": 1.5642613172531128,
+        "passes_quality_gate": true
+      }
+    }
+  },
+  {
+    "label": "ODE-20-r0",
+    "result": {
+      "config": {
+        "sampling_steps": 20,
+        "recycling_steps": 0,
+        "gamma_0": 0.0,
+        "noise_scale": 1.003,
+        "seed": 42
+      },
+      "num_runs": 3,
+      "per_complex": [
+        {
+          "name": "small_complex",
+          "wall_time_s": 33.191589545,
+          "quality": {
+            "confidence_score": 0.885104775428772,
+            "ptm": 0.9194336533546448,
+            "iptm": 0.8814082741737366,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.8814082741737366,
+            "complex_plddt": 0.8860288858413696,
+            "complex_iplddt": 0.8544087409973145,
+            "complex_pde": 0.48461201786994934,
+            "complex_ipde": 1.3317633867263794
+          },
+          "error": null,
+          "run_times": [
+            88.45290487400001,
+            33.023367866,
+            33.191589545
+          ]
+        },
+        {
+          "name": "medium_complex",
+          "wall_time_s": 39.980699929999986,
+          "quality": {
+            "confidence_score": 0.42106881737709045,
+            "ptm": 0.3741379678249359,
+            "iptm": 0.15020377933979034,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.15020377933979034,
+            "complex_plddt": 0.4887850880622864,
+            "complex_iplddt": 0.47427549958229065,
+            "complex_pde": 3.05083966255188,
+            "complex_ipde": 11.00967025756836
+          },
+          "error": null,
+          "run_times": [
+            39.980699929999986,
+            40.241786959999985,
+            39.53319072300002
+          ]
+        },
+        {
+          "name": "large_complex",
+          "wall_time_s": 44.837050974999954,
+          "quality": {
+            "confidence_score": 0.7065672874450684,
+            "ptm": 0.46046173572540283,
+            "iptm": 0.26844537258148193,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.26844537258148193,
+            "complex_plddt": 0.8160977959632874,
+            "complex_iplddt": 0.8176254034042358,
+            "complex_pde": 0.9185062646865845,
+            "complex_ipde": 14.071147918701172
+          },
+          "error": null,
+          "run_times": [
+            44.837050974999954,
+            45.14133723599997,
+            44.27311123100003
+          ]
+        }
+      ],
+      "aggregate": {
+        "num_successful": 3,
+        "mean_wall_time_s": 39.336446816666644,
+        "mean_plddt": 0.7303039232889811,
+        "mean_iptm": 0.43335247536500293,
+        "speedup": 1.78894110065336,
+        "plddt_delta_pp": 1.9632041454315186,
+        "passes_quality_gate": true
+      }
+    }
+  },
+  {
+    "label": "ODE-10-r0",
+    "result": {
+      "config": {
+        "sampling_steps": 10,
+        "recycling_steps": 0,
+        "gamma_0": 0.0,
+        "noise_scale": 1.003,
+        "seed": 42
+      },
+      "num_runs": 3,
+      "per_complex": [
+        {
+          "name": "small_complex",
+          "wall_time_s": 52.49604204900001,
+          "quality": {
+            "confidence_score": 0.8932290077209473,
+            "ptm": 0.9459335207939148,
+            "iptm": 0.9227686524391174,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.9227686524391174,
+            "complex_plddt": 0.8858441114425659,
+            "complex_iplddt": 0.8613941669464111,
+            "complex_pde": 0.38300058245658875,
+            "complex_ipde": 0.7851662635803223
+          },
+          "error": null,
+          "run_times": [
+            114.444931401,
+            52.49604204900001,
+            41.87045757499999
+          ]
+        },
+        {
+          "name": "medium_complex",
+          "wall_time_s": 48.315698118,
+          "quality": {
+            "confidence_score": 0.41344210505485535,
+            "ptm": 0.3707987368106842,
+            "iptm": 0.14574255049228668,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.14574255049228668,
+            "complex_plddt": 0.48036694526672363,
+            "complex_iplddt": 0.4733930826187134,
+            "complex_pde": 3.2756857872009277,
+            "complex_ipde": 11.248953819274902
+          },
+          "error": null,
+          "run_times": [
+            46.91478309399997,
+            48.315698118,
+            50.37250186900002
+          ]
+        },
+        {
+          "name": "large_complex",
+          "wall_time_s": 54.56980121700002,
+          "quality": {
+            "confidence_score": 0.7147238254547119,
+            "ptm": 0.47733503580093384,
+            "iptm": 0.30292651057243347,
+            "ligand_iptm": 0.0,
+            "protein_iptm": 0.30292651057243347,
+            "complex_plddt": 0.8176731467247009,
+            "complex_iplddt": 0.796543300151825,
+            "complex_pde": 0.9226645231246948,
+            "complex_ipde": 13.962392807006836
+          },
+          "error": null,
+          "run_times": [
+            56.47001128599999,
+            54.267876239999964,
+            54.56980121700002
+          ]
+        }
+      ],
+      "aggregate": {
+        "num_successful": 3,
+        "mean_wall_time_s": 51.79384712800001,
+        "mean_plddt": 0.7279614011446635,
+        "mean_iptm": 0.4571459045012792,
+        "speedup": 1.3586669144327241,
+        "plddt_delta_pp": 1.7289519309997559,
+        "passes_quality_gate": true
+      }
+    }
+  }
+]
