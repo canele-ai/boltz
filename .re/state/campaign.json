@@ -9,11 +9,36 @@
   "project_name": "boltz",
   "status": "ready",
   "setup_phase": 4,
-  "eval_version": "eval-v1",
+  "eval_version": "eval-v3",
   "direction": "maximize",
   "metric_name": "speedup_at_iso_quality",
-  "best_metric": null,
+  "best_metric": 1.0,
   "best_orbit": null,
   "campaign_url": "https://github.com/canele-ai/boltz/issues/2",
-  "campaign_issue": 2
+  "campaign_issue": 2,
+  "last_milestone": 7,
+  "milestone_number": 2,
+  "graduations": [
+    {
+      "at": "2026-04-12T02:04:15.771274Z",
+      "orbit": "torch-upgrade-kernels",
+      "kind": "eval-harness-change",
+      "target": "research/eval/evaluator.py",
+      "commit": "bd29c57"
+    },
+    {
+      "at": "2026-04-12T03:24:27.301844Z",
+      "orbit": "eval-v2-winner",
+      "kind": "winner-solution",
+      "target": "research/solutions/eval-v2-winner/",
+      "commit": "e2cc470"
+    },
+    {
+      "at": "2026-04-12T06:30:00.000000Z",
+      "orbit": "msa-cache-baseline",
+      "kind": "eval-harness-change",
+      "target": "research/eval/evaluator.py",
+      "commit": null
+    }
+  ]
 }

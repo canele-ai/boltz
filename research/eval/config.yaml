@@ -19,21 +19,21 @@ baseline:
     compile_msa: false
     diffusion_samples: 1
     seed: 42
-  mean_wall_time_s: 53.56664509866667
-  total_wall_time_s: 160.699935296
+  mean_wall_time_s: 47.54863438299998
+  total_wall_time_s: 142.64590314899993
   mean_plddt: 0.7169803380966187
   mean_iptm: 0.6292449856797854
   per_complex:
   - name: small_complex
-    wall_time_s: 42.805923546
+    wall_time_s: 35.743055229999996
     complex_plddt: 0.8344780802726746
     iptm: 0.8120198845863342
   - name: medium_complex
-    wall_time_s: 51.27919788899999
+    wall_time_s: 47.07561453599999
     complex_plddt: 0.5094943046569824
     iptm: 0.9584888815879822
   - name: large_complex
-    wall_time_s: 66.61481386100002
+    wall_time_s: 59.827233382999964
     complex_plddt: 0.806968629360199
     iptm: 0.11722619086503983
 significance:
