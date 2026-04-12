@@ -55,8 +55,9 @@ boltz_image = (
 app = modal.App("boltz-eval-multiseed", image=boltz_image)
 
 # Full-stack config
+# ODE-10 + full precision stack
 FULL_STACK_CONFIG = {
-    "sampling_steps": 20,
+    "sampling_steps": 10,
     "recycling_steps": 0,
     "gamma_0": 0.0,
     "matmul_precision": "high",
