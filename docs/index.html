@@ -144,7 +144,19 @@
     <span class="number">2.08×</span>
     <span class="label">speedup at iso-quality<br><span style="font-size:0.85rem">14.33s vs 29.78s baseline &middot; structural quality validated against PDB ground truth</span></span>
   </div>
-  <p>Two optimizations — ODE sampling and framework bypass — reduce per-prediction time from 30s to 14s without retraining or weight changes. Structural accuracy is validated against experimental crystal structures from the PDB (CA RMSD within 0.2Å of baseline predictions).</p>
+  <p>Two optimizations — ODE sampling and framework bypass — reduce per-prediction time from 30s to 14s without retraining or weight changes. Structural accuracy is validated against experimental crystal structures from the PDB.</p>
+
+  <table>
+    <thead>
+      <tr><th>Complex (PDB)</th><th class="num">Baseline</th><th class="num">Optimized</th><th class="num">Speedup</th><th class="num">CA RMSD baseline</th><th class="num">CA RMSD optimized</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Barnase-Barstar (1BRS)</td><td class="num">14.0s</td><td class="num">4.6s</td><td class="num speedup">3.04×</td><td class="num">0.33 Å</td><td class="num">0.30 Å</td></tr>
+      <tr><td>Fab + Lysozyme (1DQJ)</td><td class="num">33.5s</td><td class="num">13.7s</td><td class="num speedup">2.45×</td><td class="num">5.24 Å</td><td class="num">5.40 Å</td></tr>
+      <tr><td>Hemoglobin (2DN2)</td><td class="num">41.9s</td><td class="num">24.7s</td><td class="num speedup">1.70×</td><td class="num">0.47 Å</td><td class="num">0.53 Å</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.85rem;color:var(--muted)">Optimized = ODE-12 + bypass Lightning + CUDA warmup. All with 3 recycling passes preserved. CA RMSD computed against PDB crystal structures via BioPython.</p>
 </section>
 
 <!-- Incremental Stack -->
