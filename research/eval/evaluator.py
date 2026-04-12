@@ -1,10 +1,12 @@
 """Evaluation harness for Boltz-2 inference speedup research.
 
-Known limitations (eval-v1):
+Known limitations (eval-v2):
 - matmul_precision and compile_* flags in config are recorded for documentation
   but NOT applied to the subprocess. To test these, patch src/boltz/main.py directly.
 - pLDDT (model confidence) is used as proxy for true lDDT.
 - MSA server latency adds noise; pre-compute MSAs for precise GPU-only timing.
+- eval-v2 uses torch 2.6.0 + cuequivariance kernels enabled. Metrics recorded
+  under eval-v1 (torch 2.5.1, --no_kernels) are NOT directly comparable.
 
 Runs Boltz-2 inference on a fixed test set, measures wall-clock time and
 quality metrics (pLDDT, iPTM), and compares against a stored baseline.
@@ -65,10 +67,22 @@ boltz_image = (
     modal.Image.debian_slim(python_version="3.12")
     .apt_install("git", "wget", "build-essential")
     .pip_install(
-        "torch==2.5.1",
+        # torch 2.6.0 — ships with cublas 12.4 but allows upgrade to 12.9+
+        "torch==2.6.0",
         "numpy>=1.26,<2.0",
         "pyyaml==6.0.2",
+    )
+    .pip_install(
+        # Install boltz after torch to avoid torch version conflicts
         "boltz==2.2.1",
+    )
+    .pip_install(
+        # cuequivariance CUDA kernels require cublas >= 12.5; torch 2.6.0 allows
+        # the upgrade (pip warns about incompatibility but it works correctly).
+        "cuequivariance>=0.5.0",
+        "cuequivariance_torch>=0.5.0",
+        "cuequivariance_ops_cu12>=0.5.0",
+        "cuequivariance_ops_torch_cu12>=0.5.0",
     )
     .add_local_dir(str(EVAL_DIR), remote_path="/eval")
 )
@@ -151,7 +165,8 @@ def _run_boltz_prediction(
         "--recycling_steps", str(config.get("recycling_steps", 3)),
         "--diffusion_samples", str(config.get("diffusion_samples", 1)),
         "--override",
-        "--no_kernels",  # cuequivariance_torch conflicts with torch 2.5.1 CUDA 12.4
+        # cuequivariance kernels enabled: torch 2.6.0 resolves the cublas conflict
+        # that blocked kernel installation under torch 2.5.1 (eval-v1).
     ]
 
     # MSA handling: prefer a cached directory to avoid network variance
