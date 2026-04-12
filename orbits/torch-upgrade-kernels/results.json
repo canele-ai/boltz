@@ -1,0 +1,109 @@
+{
+  "experiment": "torch-upgrade-kernels",
+  "description": "Benchmark cuequivariance CUDA kernels on torch 2.6.0 vs no kernels",
+
+  "sanity_check": {
+    "status": "PASSED",
+    "torch_version": "2.6.0+cu124",
+    "cuda_version": "12.4",
+    "gpu": "NVIDIA L40S",
+    "cuequivariance_version": "0.9.1",
+    "cuequivariance_torch_version": "0.9.1",
+    "triangle_multiplicative_update": true,
+    "triangle_attention": true,
+    "boltz_version": "2.2.1"
+  },
+
+  "ode_20_0r_kernels_on": {
+    "config": {"sampling_steps": 20, "recycling_steps": 0, "gamma_0": 0.0, "enable_kernels": true},
+    "num_runs": 3,
+    "per_complex_median_times": {"small": 49.5, "medium": 51.9, "large": 57.7},
+    "per_complex_all_times": {
+      "small": [121.3, 48.7, 49.5],
+      "medium": [51.9, 51.8, 54.2],
+      "large": [58.7, 57.5, 57.7]
+    },
+    "per_complex_plddt": {"small": 0.8831, "medium": 0.4866, "large": 0.8175},
+    "aggregate": {"mean_wall_time_s": 53.0, "mean_plddt": 0.7291, "speedup": 1.33, "plddt_delta_pp": 1.84, "quality_gate": "PASS"}
+  },
+
+  "ode_20_0r_kernels_off": {
+    "config": {"sampling_steps": 20, "recycling_steps": 0, "gamma_0": 0.0, "enable_kernels": false},
+    "num_runs": 3,
+    "per_complex_median_times": {"small": 43.6, "medium": 50.5, "large": 60.0},
+    "per_complex_all_times": {
+      "small": [102.2, 43.6, 41.7],
+      "medium": [51.8, 48.9, 50.5],
+      "large": [57.6, 60.0, 64.7]
+    },
+    "per_complex_plddt": {"small": 0.8861, "medium": 0.4883, "large": 0.8179},
+    "aggregate": {"mean_wall_time_s": 51.4, "mean_plddt": 0.7308, "speedup": 1.37, "plddt_delta_pp": 2.01, "quality_gate": "PASS"}
+  },
+
+  "ode_20_0r_kernels_tf32": {
+    "config": {"sampling_steps": 20, "recycling_steps": 0, "gamma_0": 0.0, "enable_kernels": true, "matmul_precision": "high"},
+    "num_runs": 3,
+    "per_complex_median_times": {"small": 42.8, "medium": 40.5, "large": 48.5},
+    "per_complex_all_times": {
+      "small": [95.8, 42.8, 38.1],
+      "medium": [41.4, 39.8, 40.5],
+      "large": [46.9, 48.5, 56.8]
+    },
+    "per_complex_plddt": {"small": 0.8831, "medium": 0.4868, "large": 0.8180},
+    "aggregate": {"mean_wall_time_s": 43.9, "mean_plddt": 0.7293, "speedup": 1.60, "plddt_delta_pp": 1.86, "quality_gate": "PASS"}
+  },
+
+  "ode_20_1r_kernels_on": {
+    "config": {"sampling_steps": 20, "recycling_steps": 1, "gamma_0": 0.0, "enable_kernels": true},
+    "num_runs": 3,
+    "per_complex_median_times": {"small": 47.3, "medium": 56.0, "large": 59.8},
+    "per_complex_all_times": {
+      "small": [129.6, 45.7, 47.3],
+      "medium": [56.0, 52.5, 68.4],
+      "large": [60.0, 59.2, 59.8]
+    },
+    "per_complex_plddt": {"small": 0.8383, "medium": 0.4944, "large": 0.8113},
+    "aggregate": {"mean_wall_time_s": 54.3, "mean_plddt": 0.7147, "speedup": 1.29, "plddt_delta_pp": 0.40, "quality_gate": "PASS"}
+  },
+
+  "baseline_200_3r_kernels_on": {
+    "config": {"sampling_steps": 200, "recycling_steps": 3, "gamma_0": 0.8, "enable_kernels": true},
+    "num_runs": 3,
+    "per_complex_median_times": {"small": 41.7, "medium": 49.2, "large": 62.8},
+    "per_complex_all_times": {
+      "small": [86.5, 37.2, 41.7],
+      "medium": [50.6, 49.2, 47.3],
+      "large": [65.7, 62.8, 62.7]
+    },
+    "per_complex_plddt": {"small": 0.8345, "medium": 0.5095, "large": 0.8070},
+    "aggregate": {"mean_wall_time_s": 51.2, "mean_plddt": 0.7170, "speedup": 1.37, "plddt_delta_pp": 0.63, "quality_gate": "PASS"}
+  },
+
+  "baseline_200_3r_kernels_off": {
+    "config": {"sampling_steps": 200, "recycling_steps": 3, "gamma_0": 0.8, "enable_kernels": false},
+    "num_runs": 3,
+    "per_complex_median_times": {"small": 87.0, "medium": 56.0, "large": 74.7},
+    "per_complex_all_times": {
+      "small": [87.0, 87.6, 36.1],
+      "medium": [56.0, 56.3, 55.8],
+      "large": [74.7, 73.7, 76.8]
+    },
+    "per_complex_plddt": {"small": 0.8350, "medium": 0.4743, "large": 0.8044},
+    "aggregate": {"mean_wall_time_s": 72.6, "mean_plddt": 0.7046, "speedup": 0.97, "plddt_delta_pp": -0.61, "quality_gate": "PASS"},
+    "note": "small_complex median contaminated by MSA cache miss (2 of 3 runs)"
+  },
+
+  "reference_parent_ode_20_0r": {
+    "config": {"sampling_steps": 20, "recycling_steps": 0, "gamma_0": 0.0, "torch": "2.5.1"},
+    "source": "orbit/ode-sampler",
+    "per_complex_median_times": {"small": 33.2, "medium": 40.0, "large": 44.8},
+    "aggregate": {"mean_wall_time_s": 39.3, "mean_plddt": 0.7303, "speedup": 1.79}
+  },
+
+  "reference_original_baseline": {
+    "config": {"sampling_steps": 200, "recycling_steps": 3, "torch": "2.5.1"},
+    "source": "eval-v1 baseline",
+    "per_complex_median_times": {"small": 53.0, "medium": 70.5, "large": 87.6},
+    "aggregate": {"mean_wall_time_s": 70.37, "mean_plddt": 0.7107, "speedup": 1.00}
+  }
+}
