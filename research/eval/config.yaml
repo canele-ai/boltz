@@ -2,12 +2,14 @@ metric:
   name: speedup_at_iso_quality
   direction: maximize
   quality_gate:
-    metric: plddt
-    max_regression_pp: 2.0
-    per_complex_max_regression_pp: 5.0
-    note: pLDDT (predicted lDDT from Boltz confidence head) used as proxy. True lDDT
-      via OpenStructure validated on subset. Per-complex floor prevents masking catastrophic
-      single-case failures behind aggregate mean.
+    plddt:
+      max_regression_pp: 2.0
+      per_complex_max_regression_pp: 5.0
+    structural:
+      max_ca_rmsd_regression_A: 1.0
+      note: Optimized predictions must not deviate from ground truth more than the
+        baseline does. CA RMSD after optimal superposition, computed with BioPython
+        against PDB reference structures.
 baseline:
   config:
     sampling_steps: 200
@@ -19,36 +21,56 @@ baseline:
     compile_msa: false
     diffusion_samples: 1
     seed: 42
-  mean_wall_time_s: 25.038451922999997
-  total_wall_time_s: 75.11535576899999
-  mean_plddt: 0.7169803380966187
-  mean_iptm: 0.6292449856797854
+  mean_wall_time_s: 29.780199037
+  total_wall_time_s: 89.340597111
+  mean_plddt: 0.9649844169616699
+  mean_iptm: 0.948275069395701
   per_complex:
   - name: small_complex
-    wall_time_s: 12.395378592000014
-    complex_plddt: 0.8344780802726746
-    iptm: 0.8120198845863342
+    wall_time_s: 13.981386323999999
+    complex_plddt: 0.9671022891998291
+    iptm: 0.9567950963973999
+    ca_rmsd_vs_gt: 0.325
   - name: medium_complex
-    wall_time_s: 24.199500721999982
-    complex_plddt: 0.5094943046569824
-    iptm: 0.9584888815879822
+    wall_time_s: 33.497028753999984
+    complex_plddt: 0.9623260498046875
+    iptm: 0.940136730670929
+    ca_rmsd_vs_gt: 5.243
   - name: large_complex
-    wall_time_s: 38.520476454999994
-    complex_plddt: 0.806968629360199
-    iptm: 0.11722619086503983
+    wall_time_s: 41.86218203300001
+    complex_plddt: 0.9655249118804932
+    iptm: 0.9478933811187744
+    ca_rmsd_vs_gt: 0.474
 significance:
   num_seeds: 3
-  min_relative_improvement: null
 test_cases:
 - name: small_complex
-  description: Small protein-protein complex (~200 residues total)
+  description: "Barnase-Barstar (PDB 1BRS, 2.0 \xC5, 199 residues)"
   yaml: test_cases/small_complex.yaml
+  pdb_id: 1BRS
+  ground_truth: ground_truth/1BRS.cif
+  chain_mapping:
+    A: A
+    B: D
 - name: medium_complex
-  description: Medium protein-protein complex (~400 residues, typical binder design)
+  description: "Anti-lysozyme Fab HyHEL-63 + HEWL (PDB 1DQJ, 1.80 \xC5, 563 residues)"
   yaml: test_cases/medium_complex.yaml
+  pdb_id: 1DQJ
+  ground_truth: ground_truth/1DQJ.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
 - name: large_complex
-  description: Large protein complex (~600 residues)
+  description: "Human hemoglobin tetramer (PDB 2DN2, 1.25 \xC5, 574 residues)"
   yaml: test_cases/large_complex.yaml
+  pdb_id: 2DN2
+  ground_truth: ground_truth/2DN2.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
 sanity_checks:
 - name: evaluator_runs
   description: Evaluator completes without error on smallest test case
@@ -56,46 +78,5 @@ sanity_checks:
   description: All timing measurements are positive
 - name: quality_in_range
   description: pLDDT values between 0 and 1
-metric_definition:
-  composite_metric: speedup_at_iso_quality (in-house construction)
-  formula: speedup = T_baseline / T_optimized, subject to mean_pLDDT(optimized) >=
-    mean_pLDDT(baseline) - 0.02
-  components:
-    quality_gate:
-      source_paper: Mariani et al. 2013
-      source_url: https://doi.org/10.1093/bioinformatics/btt473
-      citation: 'Mariani V, Biasini M, Barbato A, Schwede T. lDDT: a local superposition-free
-        score for comparing protein structures and models using distance difference
-        tests. Bioinformatics, 29(21):2722-2728, 2013.'
-    iso_quality_pattern:
-      precedent: DDIM (Song et al. 2021), Consistency Models (Song et al. 2023)
-      note: Speedup-at-iso-quality is a standard engineering pattern; our contribution
-        is applying it to biomolecular structure prediction with an lDDT gate.
-  published_uses:
-  - citation: Jumper J et al. Highly accurate protein structure prediction with AlphaFold.
-      Nature, 596(7873):583-589, 2021.
-    url: https://doi.org/10.1038/s41586-021-03819-2
-    dataset: CASP14
-    reported_value: median GDT_TS 92.4; pLDDT used as confidence proxy for lDDT-Ca
-  - citation: Abramson J et al. Accurate structure prediction of biomolecular interactions
-      with AlphaFold 3. Nature, 630(8016):493-500, 2024.
-    url: https://doi.org/10.1038/s41586-024-07487-w
-    dataset: CASP15, PDB test set, PoseBusters
-    reported_value: full-complex lDDT 82.8-83.0 on example complexes
-  - citation: 'Wohlwend J et al. Boltz-1: Democratizing Biomolecular Interaction Modeling.
-      bioRxiv, 2024.'
-    url: https://doi.org/10.1101/2024.11.19.624167
-    dataset: CASP15, PDB test set
-    reported_value: comparable to AlphaFold3 on mean lDDT; RNA lDDT median 0.54
-  - citation: Lin Z et al. Evolutionary-scale prediction of atomic-level protein structure
-      with a language model. Science, 379(6637):1123-1130, 2023.
-    url: https://doi.org/10.1126/science.ade2574
-    dataset: CASP14, CAMEO
-    reported_value: mean lDDT ~0.68 on CASP14 (vs AlphaFold2 ~0.85)
-  - citation: 'Passaro S et al. Boltz-2: Towards Accurate and Efficient Binding Affinity
-      Prediction. bioRxiv, 2025.'
-    url: https://doi.org/10.1101/2025.06.14.659707
-    dataset: PDB test set, CASP15
-    reported_value: average lDDT ~0.82 on PDB test set; modestly outperforms Boltz-1
-  dataset_decision: ADOPT
-  dataset_name: CASP15
+- name: structural_comparison
+  description: Ground truth structures accessible and RMSD computable

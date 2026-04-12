@@ -29,6 +29,10 @@ def main():
                        help="Diffusion noise scale")
     parser.add_argument("--bf16_trunk", action="store_true",
                        help="Remove .float() upcast in triangular_mult for bf16")
+    parser.add_argument("--subsample_msa", action="store_true",
+                       help="Enable MSA subsampling in the model")
+    parser.add_argument("--num_subsampled_msa", type=int, default=None,
+                       help="Number of MSA sequences to subsample (default: 1024)")
 
     our_args, boltz_args = parser.parse_known_args()
 
@@ -114,6 +118,29 @@ def main():
         TriangleMultiplicationOutgoing.forward = forward_outgoing_bf16
         TriangleMultiplicationIncoming.forward = forward_incoming_bf16
         print("[wrapper] bf16 trunk patch applied", file=sys.stderr, flush=True)
+
+    # MSA subsampling patch
+    if our_args.subsample_msa or our_args.num_subsampled_msa is not None:
+        _sub = our_args.subsample_msa or (our_args.num_subsampled_msa is not None)
+        _num = our_args.num_subsampled_msa if our_args.num_subsampled_msa is not None else 1024
+
+        @dataclass
+        class PatchedMSAModuleArgs:
+            msa_s: int = 64
+            msa_blocks: int = 4
+            msa_dropout: float = 0.0
+            z_dropout: float = 0.0
+            use_paired_feature: bool = True
+            pairwise_head_width: int = 32
+            pairwise_num_heads: int = 4
+            activation_checkpointing: bool = False
+            offload_to_cpu: bool = False
+            subsample_msa: bool = _field(default_factory=lambda: _sub)
+            num_subsampled_msa: int = _field(default_factory=lambda: _num)
+
+        boltz_main.MSAModuleArgs = PatchedMSAModuleArgs
+        print(f"[wrapper] MSA subsampling: enabled, num_subsampled_msa={_num}",
+              file=sys.stderr, flush=True)
 
     # Monkey-patch Trainer.predict to emit a timestamp just before inference starts.
     # This fires AFTER model loading, data processing, and DataModule setup —
