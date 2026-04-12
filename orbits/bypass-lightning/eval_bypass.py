@@ -130,6 +130,56 @@ SWEEP_CONFIGS = {
 # Helpers
 # ---------------------------------------------------------------------------
 
+def _inject_cached_msas(input_yaml: Path, msa_cache_root: Path, work_dir: Path):
+    """Inject cached MSA paths into input YAML. Returns modified YAML path or None."""
+    import yaml
+    import shutil
+
+    target_name = input_yaml.stem
+    cache_dir = msa_cache_root / target_name
+    if not cache_dir.exists():
+        return None
+    msa_files = sorted(cache_dir.glob("*.csv"))
+    if not msa_files:
+        return None
+
+    with input_yaml.open() as f:
+        data = yaml.safe_load(f)
+
+    local_msa_dir = work_dir / "cached_msas"
+    local_msa_dir.mkdir(parents=True, exist_ok=True)
+
+    entity_msa_map = {}
+    for msa_file in msa_files:
+        local_path = local_msa_dir / msa_file.name
+        shutil.copy2(msa_file, local_path)
+        parts = msa_file.stem.split("_")
+        if len(parts) >= 2:
+            entity_msa_map[parts[-1]] = str(local_path)
+
+    if "sequences" not in data:
+        return None
+
+    entity_idx = 0
+    injected = 0
+    for seq_entry in data["sequences"]:
+        if "protein" in seq_entry:
+            entity_key = str(entity_idx)
+            if entity_key in entity_msa_map:
+                seq_entry["protein"]["msa"] = entity_msa_map[entity_key]
+                injected += 1
+            entity_idx += 1
+
+    if injected == 0:
+        return None
+
+    cached_yaml = work_dir / f"{target_name}_cached.yaml"
+    with cached_yaml.open("w") as f:
+        yaml.dump(data, f, default_flow_style=False)
+    print(f"[eval-bypass] MSA cache: injected {injected} cached MSA(s) for {target_name}")
+    return cached_yaml
+
+
 def _load_config_yaml() -> dict:
     import yaml
     config_path = Path("/eval/config.yaml")
@@ -170,11 +220,8 @@ def _run_boltz_bypass(
     if config.get("cuda_warmup", False):
         cmd.append("--cuda_warmup")
 
-    # MSA handling: use cached MSAs
-    msa_dir = config.get("msa_directory")
-    if msa_dir:
-        cmd.extend(["--msa_directory", str(msa_dir)])
-    else:
+    # MSA handling: cached MSAs are injected into the YAML upstream (not via CLI flag)
+    if not config.get("_msa_cached"):
         cmd.append("--use_msa_server")
 
     seed = config.get("seed")
@@ -260,10 +307,8 @@ def _run_boltz_trainer(
     if config.get("bf16_trunk", False):
         cmd.append("--bf16_trunk")
 
-    msa_dir = config.get("msa_directory")
-    if msa_dir:
-        cmd.extend(["--msa_directory", str(msa_dir)])
-    else:
+    # MSA handling: cached MSAs are injected into the YAML upstream
+    if not config.get("_msa_cached"):
         cmd.append("--use_msa_server")
 
     seed = config.get("seed")
@@ -451,11 +496,11 @@ def evaluate_config(
     config = json.loads(config_json)
     merged = {**DEFAULT_CONFIG, **config}
 
-    # Use cached MSAs if available
-    msa_cache_path = Path("/msa_cache")
-    if msa_cache_path.exists() and any(msa_cache_path.iterdir()):
-        merged["msa_directory"] = str(msa_cache_path)
-        print(f"[eval-bypass] Using cached MSAs from {msa_cache_path}")
+    # Check MSA cache availability
+    msa_cache_root = Path("/msa_cache")
+    use_msa_cache = msa_cache_root.exists() and any(msa_cache_root.iterdir())
+    if use_msa_cache:
+        print(f"[eval-bypass] Using cached MSAs from {msa_cache_root}")
     else:
         print("[eval-bypass] WARNING: No cached MSAs found, using MSA server")
 
@@ -506,16 +551,26 @@ def evaluate_config(
             work_dir = Path(f"/tmp/boltz_eval/{tc_name}_{uuid.uuid4().hex[:8]}")
             work_dir.mkdir(parents=True, exist_ok=True)
 
+            # Inject cached MSAs into input YAML
+            run_config = dict(merged)
+            effective_yaml = tc_yaml
+            if use_msa_cache:
+                cached_yaml = _inject_cached_msas(tc_yaml, msa_cache_root, work_dir)
+                if cached_yaml is not None:
+                    effective_yaml = cached_yaml
+                    run_config["_msa_cached"] = True
+
             mode_str = "Trainer" if use_trainer else "bypass"
             print(
                 f"[eval-bypass] Running {tc_name} run {run_idx + 1}/{num_runs} "
-                f"mode={mode_str}, steps={merged['sampling_steps']}, "
-                f"recycle={merged['recycling_steps']}, "
-                f"gamma_0={merged.get('gamma_0', 0.8)}, "
-                f"warmup={merged.get('cuda_warmup', False)}"
+                f"mode={mode_str}, steps={run_config['sampling_steps']}, "
+                f"recycle={run_config['recycling_steps']}, "
+                f"gamma_0={run_config.get('gamma_0', 0.8)}, "
+                f"warmup={run_config.get('cuda_warmup', False)}"
+                f"{' (MSA cached)' if run_config.get('_msa_cached') else ''}"
             )
 
-            pred_result = run_fn(tc_yaml, work_dir, merged)
+            pred_result = run_fn(effective_yaml, work_dir, run_config)
 
             if pred_result["error"] is not None:
                 last_error = pred_result["error"]

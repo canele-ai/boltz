@@ -65,6 +65,8 @@ def main():
     parser.add_argument("--bf16_trunk", action="store_true")
     parser.add_argument("--enable_kernels", action="store_true")
     parser.add_argument("--no_kernels_flag", action="store_true")
+    parser.add_argument("--msa_directory", type=str, default=None,
+                       help="Path to MSA cache directory (ignored, MSA injection handled upstream)")
     parser.add_argument("--cuda_warmup", action="store_true",
                         help="Run one forward pass before timing to warm CUDA kernels")
 
