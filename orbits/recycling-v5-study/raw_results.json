@@ -1,0 +1,686 @@
+[
+  {
+    "recycling_steps": 0,
+    "seed": 42,
+    "tc_name": "small_complex",
+    "wall_time_s": 96.085253341,
+    "predict_only_s": 3.051797143999991,
+    "quality": {
+      "confidence_score": 0.861273467540741,
+      "ptm": 0.8953957557678223,
+      "iptm": 0.868733286857605,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.868733286857605,
+      "complex_plddt": 0.8594084978103638,
+      "complex_iplddt": 0.8105019330978394,
+      "complex_pde": 0.6589450836181641,
+      "complex_ipde": 2.155996322631836
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 0,
+    "seed": 42,
+    "tc_name": "medium_complex",
+    "wall_time_s": 95.85242592499999,
+    "predict_only_s": 7.744326694000009,
+    "quality": {
+      "confidence_score": 0.4181179702281952,
+      "ptm": 0.39390695095062256,
+      "iptm": 0.18284651637077332,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.18284651637077332,
+      "complex_plddt": 0.47693580389022827,
+      "complex_iplddt": 0.47560936212539673,
+      "complex_pde": 3.1683361530303955,
+      "complex_ipde": 10.45538330078125
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 0,
+    "seed": 42,
+    "tc_name": "large_complex",
+    "wall_time_s": 116.956332436,
+    "predict_only_s": 11.408206611000011,
+    "quality": {
+      "confidence_score": 0.6772189736366272,
+      "ptm": 0.36786070466041565,
+      "iptm": 0.10784793645143509,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.10784793645143509,
+      "complex_plddt": 0.8195617198944092,
+      "complex_iplddt": 0.7621537446975708,
+      "complex_pde": 1.007620930671692,
+      "complex_ipde": 16.58009910583496
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 0,
+    "seed": 123,
+    "tc_name": "small_complex",
+    "wall_time_s": 95.088571403,
+    "predict_only_s": 3.092896695999997,
+    "quality": {
+      "confidence_score": 0.8867978453636169,
+      "ptm": 0.9208524227142334,
+      "iptm": 0.8834823369979858,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.8834823369979858,
+      "complex_plddt": 0.8876267075538635,
+      "complex_iplddt": 0.8499053716659546,
+      "complex_pde": 0.49594855308532715,
+      "complex_ipde": 1.3568320274353027
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 0,
+    "seed": 123,
+    "tc_name": "medium_complex",
+    "wall_time_s": 110.758551961,
+    "predict_only_s": 7.696761034000005,
+    "quality": {
+      "confidence_score": 0.4020330011844635,
+      "ptm": 0.37414485216140747,
+      "iptm": 0.15127530694007874,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.15127530694007874,
+      "complex_plddt": 0.4647223949432373,
+      "complex_iplddt": 0.46712440252304077,
+      "complex_pde": 3.60231614112854,
+      "complex_ipde": 11.750110626220703
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 0,
+    "seed": 123,
+    "tc_name": "large_complex",
+    "wall_time_s": 120.858751281,
+    "predict_only_s": 11.503299009999992,
+    "quality": {
+      "confidence_score": 0.6763010621070862,
+      "ptm": 0.36632704734802246,
+      "iptm": 0.1068640723824501,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.1068640723824501,
+      "complex_plddt": 0.818660318851471,
+      "complex_iplddt": 0.7494986653327942,
+      "complex_pde": 1.0051023960113525,
+      "complex_ipde": 16.327516555786133
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 0,
+    "seed": 7,
+    "tc_name": "small_complex",
+    "wall_time_s": 98.92756499000001,
+    "predict_only_s": 3.3089352829999967,
+    "quality": {
+      "confidence_score": 0.9122413992881775,
+      "ptm": 0.9499610066413879,
+      "iptm": 0.9295235276222229,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.9295235276222229,
+      "complex_plddt": 0.907920777797699,
+      "complex_iplddt": 0.8879697322845459,
+      "complex_pde": 0.3605562746524811,
+      "complex_ipde": 0.6827768683433533
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 0,
+    "seed": 7,
+    "tc_name": "medium_complex",
+    "wall_time_s": 115.502977373,
+    "predict_only_s": 7.565435148000006,
+    "quality": {
+      "confidence_score": 0.4155057966709137,
+      "ptm": 0.38833919167518616,
+      "iptm": 0.1688336879014969,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.1688336879014969,
+      "complex_plddt": 0.4771738052368164,
+      "complex_iplddt": 0.4828477203845978,
+      "complex_pde": 3.230884313583374,
+      "complex_ipde": 10.899511337280273
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 0,
+    "seed": 7,
+    "tc_name": "large_complex",
+    "wall_time_s": 105.582022156,
+    "predict_only_s": 11.850585139999993,
+    "quality": {
+      "confidence_score": 0.6764351725578308,
+      "ptm": 0.3668750524520874,
+      "iptm": 0.10119885951280594,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.10119885951280594,
+      "complex_plddt": 0.8202442526817322,
+      "complex_iplddt": 0.7666281461715698,
+      "complex_pde": 0.9905643463134766,
+      "complex_ipde": 16.16588020324707
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 1,
+    "seed": 42,
+    "tc_name": "small_complex",
+    "wall_time_s": 95.887554131,
+    "predict_only_s": 3.4579841949999945,
+    "quality": {
+      "confidence_score": 0.8610536456108093,
+      "ptm": 0.8703658580780029,
+      "iptm": 0.8142075538635254,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.8142075538635254,
+      "complex_plddt": 0.8727651834487915,
+      "complex_iplddt": 0.8286221623420715,
+      "complex_pde": 0.7255062460899353,
+      "complex_ipde": 2.4783287048339844
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 1,
+    "seed": 42,
+    "tc_name": "medium_complex",
+    "wall_time_s": 110.663217583,
+    "predict_only_s": 9.023459868999993,
+    "quality": {
+      "confidence_score": 0.4287404716014862,
+      "ptm": 0.3901630938053131,
+      "iptm": 0.16950593888759613,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.16950593888759613,
+      "complex_plddt": 0.49354907870292664,
+      "complex_iplddt": 0.4930471181869507,
+      "complex_pde": 3.215416669845581,
+      "complex_ipde": 10.936108589172363
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 1,
+    "seed": 42,
+    "tc_name": "large_complex",
+    "wall_time_s": 122.008133279,
+    "predict_only_s": 16.348969837999988,
+    "quality": {
+      "confidence_score": 0.670240581035614,
+      "ptm": 0.3669678568840027,
+      "iptm": 0.10201005637645721,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.10201005637645721,
+      "complex_plddt": 0.8122982382774353,
+      "complex_iplddt": 0.7530061602592468,
+      "complex_pde": 1.1160897016525269,
+      "complex_ipde": 17.15084457397461
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 1,
+    "seed": 123,
+    "tc_name": "small_complex",
+    "wall_time_s": 94.222445694,
+    "predict_only_s": 3.5359844359999926,
+    "quality": {
+      "confidence_score": 0.8334080576896667,
+      "ptm": 0.8357734680175781,
+      "iptm": 0.787799060344696,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.787799060344696,
+      "complex_plddt": 0.8448103666305542,
+      "complex_iplddt": 0.8111559748649597,
+      "complex_pde": 0.9018137454986572,
+      "complex_ipde": 3.3828563690185547
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 1,
+    "seed": 123,
+    "tc_name": "medium_complex",
+    "wall_time_s": 113.940100899,
+    "predict_only_s": 9.283354684000003,
+    "quality": {
+      "confidence_score": 0.42227789759635925,
+      "ptm": 0.3898099362850189,
+      "iptm": 0.17832529544830322,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.17832529544830322,
+      "complex_plddt": 0.48326602578163147,
+      "complex_iplddt": 0.4808104336261749,
+      "complex_pde": 3.4031457901000977,
+      "complex_ipde": 10.88577651977539
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 1,
+    "seed": 123,
+    "tc_name": "large_complex",
+    "wall_time_s": 125.192378204,
+    "predict_only_s": 16.748188663999997,
+    "quality": {
+      "confidence_score": 0.6747825145721436,
+      "ptm": 0.37580424547195435,
+      "iptm": 0.11265196651220322,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.11265196651220322,
+      "complex_plddt": 0.8153151273727417,
+      "complex_iplddt": 0.7677729725837708,
+      "complex_pde": 1.0762830972671509,
+      "complex_ipde": 16.32988739013672
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 1,
+    "seed": 7,
+    "tc_name": "small_complex",
+    "wall_time_s": 95.274614055,
+    "predict_only_s": 3.541247022999997,
+    "quality": {
+      "confidence_score": 0.8306209444999695,
+      "ptm": 0.8306523561477661,
+      "iptm": 0.7759846448898315,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.7759846448898315,
+      "complex_plddt": 0.8442800641059875,
+      "complex_iplddt": 0.8005542755126953,
+      "complex_pde": 0.8869228959083557,
+      "complex_ipde": 3.3279953002929688
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 1,
+    "seed": 7,
+    "tc_name": "medium_complex",
+    "wall_time_s": 134.649462475,
+    "predict_only_s": 9.162429099999983,
+    "quality": {
+      "confidence_score": 0.42194151878356934,
+      "ptm": 0.3839302957057953,
+      "iptm": 0.16134898364543915,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.16134898364543915,
+      "complex_plddt": 0.4870896637439728,
+      "complex_iplddt": 0.4797763228416443,
+      "complex_pde": 3.386138916015625,
+      "complex_ipde": 11.103748321533203
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 1,
+    "seed": 7,
+    "tc_name": "large_complex",
+    "wall_time_s": 122.487657223,
+    "predict_only_s": 17.112949611999994,
+    "quality": {
+      "confidence_score": 0.674707293510437,
+      "ptm": 0.36680957674980164,
+      "iptm": 0.11210714280605316,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.11210714280605316,
+      "complex_plddt": 0.8153573274612427,
+      "complex_iplddt": 0.7613817453384399,
+      "complex_pde": 1.1212224960327148,
+      "complex_ipde": 17.14638900756836
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 2,
+    "seed": 42,
+    "tc_name": "small_complex",
+    "wall_time_s": 94.73982396400001,
+    "predict_only_s": 4.3805137359999975,
+    "quality": {
+      "confidence_score": 0.8246305584907532,
+      "ptm": 0.8104164600372314,
+      "iptm": 0.7310843467712402,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.7310843467712402,
+      "complex_plddt": 0.8480170965194702,
+      "complex_iplddt": 0.8036418557167053,
+      "complex_pde": 0.9908917546272278,
+      "complex_ipde": 4.250759601593018
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 2,
+    "seed": 42,
+    "tc_name": "medium_complex",
+    "wall_time_s": 119.939301002,
+    "predict_only_s": 12.60212661300001,
+    "quality": {
+      "confidence_score": 0.4427812993526459,
+      "ptm": 0.4196214973926544,
+      "iptm": 0.2361735999584198,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.2361735999584198,
+      "complex_plddt": 0.4944332242012024,
+      "complex_iplddt": 0.49253708124160767,
+      "complex_pde": 2.923783302307129,
+      "complex_ipde": 9.798133850097656
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 2,
+    "seed": 42,
+    "tc_name": "large_complex",
+    "wall_time_s": 130.676951137,
+    "predict_only_s": 21.369830569,
+    "quality": {
+      "confidence_score": 0.6747220754623413,
+      "ptm": 0.3849826455116272,
+      "iptm": 0.15335877239704132,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.15335877239704132,
+      "complex_plddt": 0.8050628900527954,
+      "complex_iplddt": 0.7679198980331421,
+      "complex_pde": 1.1581547260284424,
+      "complex_ipde": 16.648096084594727
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 2,
+    "seed": 123,
+    "tc_name": "small_complex",
+    "wall_time_s": 101.075722435,
+    "predict_only_s": 4.461862933000006,
+    "quality": {
+      "confidence_score": 0.8369006514549255,
+      "ptm": 0.8527411222457886,
+      "iptm": 0.7914817929267883,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.7914817929267883,
+      "complex_plddt": 0.8482553362846375,
+      "complex_iplddt": 0.8024512529373169,
+      "complex_pde": 0.774877667427063,
+      "complex_ipde": 2.7654943466186523
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 2,
+    "seed": 123,
+    "tc_name": "medium_complex",
+    "wall_time_s": 112.817165488,
+    "predict_only_s": 12.277630822999996,
+    "quality": {
+      "confidence_score": 0.43222805857658386,
+      "ptm": 0.4026990830898285,
+      "iptm": 0.21415823698043823,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.21415823698043823,
+      "complex_plddt": 0.4867454767227173,
+      "complex_iplddt": 0.47963863611221313,
+      "complex_pde": 3.249957799911499,
+      "complex_ipde": 10.415068626403809
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 2,
+    "seed": 123,
+    "tc_name": "large_complex",
+    "wall_time_s": 132.236924719,
+    "predict_only_s": 21.42577677499999,
+    "quality": {
+      "confidence_score": 0.671772301197052,
+      "ptm": 0.36991649866104126,
+      "iptm": 0.11330214887857437,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.11330214887857437,
+      "complex_plddt": 0.8113898038864136,
+      "complex_iplddt": 0.7316717505455017,
+      "complex_pde": 1.1387025117874146,
+      "complex_ipde": 16.867162704467773
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 2,
+    "seed": 7,
+    "tc_name": "small_complex",
+    "wall_time_s": 97.875488779,
+    "predict_only_s": 3.9288628620000026,
+    "quality": {
+      "confidence_score": 0.8464037179946899,
+      "ptm": 0.8489253520965576,
+      "iptm": 0.7776013612747192,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.7776013612747192,
+      "complex_plddt": 0.8636042475700378,
+      "complex_iplddt": 0.822862982749939,
+      "complex_pde": 0.7710196375846863,
+      "complex_ipde": 2.830321788787842
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 2,
+    "seed": 7,
+    "tc_name": "medium_complex",
+    "wall_time_s": 113.884977857,
+    "predict_only_s": 11.233063986999994,
+    "quality": {
+      "confidence_score": 0.4421845078468323,
+      "ptm": 0.4212825894355774,
+      "iptm": 0.23384316265583038,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.23384316265583038,
+      "complex_plddt": 0.49426984786987305,
+      "complex_iplddt": 0.494804322719574,
+      "complex_pde": 3.1093335151672363,
+      "complex_ipde": 10.213517189025879
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 2,
+    "seed": 7,
+    "tc_name": "large_complex",
+    "wall_time_s": 125.660339287,
+    "predict_only_s": 21.310663136000002,
+    "quality": {
+      "confidence_score": 0.669532060623169,
+      "ptm": 0.3621179461479187,
+      "iptm": 0.10631541162729263,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.10631541162729263,
+      "complex_plddt": 0.8103362321853638,
+      "complex_iplddt": 0.7368922829627991,
+      "complex_pde": 1.138936996459961,
+      "complex_ipde": 17.066465377807617
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 3,
+    "seed": 42,
+    "tc_name": "small_complex",
+    "wall_time_s": 101.97760031099999,
+    "predict_only_s": 4.668498305,
+    "quality": {
+      "confidence_score": 0.8415366411209106,
+      "ptm": 0.8220979571342468,
+      "iptm": 0.771587073802948,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.771587073802948,
+      "complex_plddt": 0.8590239882469177,
+      "complex_iplddt": 0.8200777173042297,
+      "complex_pde": 1.0262240171432495,
+      "complex_ipde": 4.290769577026367
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 3,
+    "seed": 42,
+    "tc_name": "medium_complex",
+    "wall_time_s": 114.039004794,
+    "predict_only_s": 13.145433463000003,
+    "quality": {
+      "confidence_score": 0.4341958463191986,
+      "ptm": 0.40725359320640564,
+      "iptm": 0.20931264758110046,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.20931264758110046,
+      "complex_plddt": 0.49041667580604553,
+      "complex_iplddt": 0.48422637581825256,
+      "complex_pde": 3.1326253414154053,
+      "complex_ipde": 10.53093147277832
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 3,
+    "seed": 42,
+    "tc_name": "large_complex",
+    "wall_time_s": 135.469953634,
+    "predict_only_s": 26.516843284000004,
+    "quality": {
+      "confidence_score": 0.6706222295761108,
+      "ptm": 0.3727876842021942,
+      "iptm": 0.11171460151672363,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.11171460151672363,
+      "complex_plddt": 0.8103491067886353,
+      "complex_iplddt": 0.7407084107398987,
+      "complex_pde": 1.1337958574295044,
+      "complex_ipde": 17.18270492553711
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 3,
+    "seed": 123,
+    "tc_name": "small_complex",
+    "wall_time_s": 99.545480072,
+    "predict_only_s": 4.408364937000002,
+    "quality": {
+      "confidence_score": 0.8266698718070984,
+      "ptm": 0.8156247735023499,
+      "iptm": 0.768952488899231,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.768952488899231,
+      "complex_plddt": 0.841099202632904,
+      "complex_iplddt": 0.8031459450721741,
+      "complex_pde": 1.075921893119812,
+      "complex_ipde": 4.420162200927734
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 3,
+    "seed": 123,
+    "tc_name": "medium_complex",
+    "wall_time_s": 118.553493256,
+    "predict_only_s": 14.812255577000002,
+    "quality": {
+      "confidence_score": 0.42716947197914124,
+      "ptm": 0.41103827953338623,
+      "iptm": 0.21590684354305267,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.21590684354305267,
+      "complex_plddt": 0.47998514771461487,
+      "complex_iplddt": 0.4688777029514313,
+      "complex_pde": 3.2485272884368896,
+      "complex_ipde": 10.281620979309082
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 3,
+    "seed": 123,
+    "tc_name": "large_complex",
+    "wall_time_s": 82.33040060300002,
+    "predict_only_s": 26.229436805000006,
+    "quality": {
+      "confidence_score": 0.6719974279403687,
+      "ptm": 0.3761919140815735,
+      "iptm": 0.12169337272644043,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.12169337272644043,
+      "complex_plddt": 0.8095734119415283,
+      "complex_iplddt": 0.7537441253662109,
+      "complex_pde": 1.1172888278961182,
+      "complex_ipde": 16.21372413635254
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 3,
+    "seed": 7,
+    "tc_name": "small_complex",
+    "wall_time_s": 36.49769546500001,
+    "predict_only_s": 4.390123868999979,
+    "quality": {
+      "confidence_score": 0.842561662197113,
+      "ptm": 0.8430110216140747,
+      "iptm": 0.7989177107810974,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.7989177107810974,
+      "complex_plddt": 0.8534725904464722,
+      "complex_iplddt": 0.8218861222267151,
+      "complex_pde": 0.90848308801651,
+      "complex_ipde": 3.447704792022705
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 3,
+    "seed": 7,
+    "tc_name": "medium_complex",
+    "wall_time_s": 59.31406776900002,
+    "predict_only_s": 14.537987950000002,
+    "quality": {
+      "confidence_score": 0.4173845946788788,
+      "ptm": 0.3912445902824402,
+      "iptm": 0.1709100604057312,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.1709100604057312,
+      "complex_plddt": 0.4790031909942627,
+      "complex_iplddt": 0.4594642221927643,
+      "complex_pde": 3.443068265914917,
+      "complex_ipde": 10.855725288391113
+    },
+    "error": null
+  },
+  {
+    "recycling_steps": 3,
+    "seed": 7,
+    "tc_name": "large_complex",
+    "wall_time_s": 82.085804179,
+    "predict_only_s": 26.820170492000017,
+    "quality": {
+      "confidence_score": 0.6730579733848572,
+      "ptm": 0.37332648038864136,
+      "iptm": 0.13029435276985168,
+      "ligand_iptm": 0.0,
+      "protein_iptm": 0.13029435276985168,
+      "complex_plddt": 0.8087488412857056,
+      "complex_iplddt": 0.7358494997024536,
+      "complex_pde": 1.1890015602111816,
+      "complex_ipde": 17.220535278320312
+    },
+    "error": null
+  }
+]
