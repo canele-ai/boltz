@@ -181,6 +181,39 @@ def patch_outer_product_mean_bf16():
     print("[sdpa-wrapper] bf16 outer product mean patch applied")
 
 
+def patch_compile_score_model():
+    """Compile the diffusion score model for inference speedup.
+
+    The score model runs 20 times per prediction (once per diffusion step),
+    so compilation overhead amortizes. We monkey-patch Boltz2's predict_step
+    to compile the score model on first invocation.
+
+    torch.compile with mode='reduce-overhead' uses CUDA graphs which
+    eliminate kernel launch overhead for the repeated diffusion loop.
+    """
+    from boltz.model.models.boltz2 import Boltz2
+
+    _original_predict_step = Boltz2.predict_step
+    _compiled = [False]
+
+    def predict_step_with_compile(self, batch, batch_idx, dataloader_idx=0):
+        if not _compiled[0]:
+            # Compile the score model inside AtomDiffusion
+            if hasattr(self, 'structure_module') and hasattr(self.structure_module, 'score_model'):
+                print("[sdpa-wrapper] Compiling score model with torch.compile...")
+                self.structure_module.score_model = torch.compile(
+                    self.structure_module.score_model,
+                    dynamic=False,
+                    fullgraph=False,
+                )
+                print("[sdpa-wrapper] Score model compiled")
+            _compiled[0] = True
+        return _original_predict_step(self, batch, batch_idx, dataloader_idx)
+
+    Boltz2.predict_step = predict_step_with_compile
+    print("[sdpa-wrapper] Score model compile patch registered")
+
+
 def patch_predict_matmul_precision(target_precision):
     """Prevent boltz.main.predict() from resetting matmul precision.
 
@@ -216,6 +249,8 @@ def main():
                        help="Remove .float() upcast in outer_product_mean.py")
     parser.add_argument("--sdpa_attention", action="store_true",
                        help="Replace manual einsum attention with F.scaled_dot_product_attention")
+    parser.add_argument("--compile_score", action="store_true",
+                       help="Compile the diffusion score model with torch.compile")
     parser.add_argument("--enable_kernels", action="store_true")
     parser.add_argument("--no_kernels_flag", action="store_true")
 
@@ -282,6 +317,10 @@ def main():
     if our_args.sdpa_attention:
         patch_attention_sdpa()
 
+    # Apply score model compilation
+    if our_args.compile_score:
+        patch_compile_score_model()
+
     # Handle kernel flags
     try:
         import cuequivariance_torch
@@ -308,7 +347,8 @@ def main():
           f"matmul_precision={our_args.matmul_precision}, "
           f"bf16_trunk={our_args.bf16_trunk}, "
           f"bf16_opm={our_args.bf16_opm}, "
-          f"sdpa_attention={our_args.sdpa_attention}")
+          f"sdpa_attention={our_args.sdpa_attention}, "
+          f"compile_score={our_args.compile_score}")
 
     sys.argv = [sys.argv[0]] + boltz_args
     boltz_main.predict()

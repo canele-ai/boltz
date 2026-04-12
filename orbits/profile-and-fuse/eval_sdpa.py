@@ -84,22 +84,12 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "bf16_trunk": False,
     "bf16_opm": False,
     "sdpa_attention": False,
+    "compile_score": False,
 }
 
 # Configurations to test
 SWEEP_CONFIGS = {
-    # Current best: ODE-20/0r + TF32 + bf16 (eval-v2-winner baseline)
-    "baseline-stacked": {
-        "sampling_steps": 20,
-        "recycling_steps": 0,
-        "gamma_0": 0.0,
-        "matmul_precision": "high",
-        "bf16_trunk": True,
-        "bf16_opm": False,
-        "sdpa_attention": False,
-        "enable_kernels": True,
-    },
-    # Full stack: SDPA + bf16 OPM + TF32 fix
+    # Full stack: ODE + bf16 + TF32fix + SDPA + bf16 OPM
     "full-stack": {
         "sampling_steps": 20,
         "recycling_steps": 0,
@@ -108,6 +98,7 @@ SWEEP_CONFIGS = {
         "bf16_trunk": True,
         "bf16_opm": True,
         "sdpa_attention": True,
+        "compile_score": False,
         "enable_kernels": True,
     },
 }
@@ -160,6 +151,10 @@ def _run_boltz_prediction(
     # SDPA attention
     if config.get("sdpa_attention", False):
         cmd.append("--sdpa_attention")
+
+    # Compile score model
+    if config.get("compile_score", False):
+        cmd.append("--compile_score")
 
     # MSA handling
     msa_dir = config.get("msa_directory")
@@ -388,7 +383,8 @@ def evaluate_config(config_json: str, num_runs: int = 1) -> str:
                 f"gamma_0={merged.get('gamma_0', 0.8)}, TF32={merged.get('matmul_precision') == 'high'}, "
                 f"bf16_trunk={merged.get('bf16_trunk', False)}, "
                 f"bf16_opm={merged.get('bf16_opm', False)}, "
-                f"sdpa={merged.get('sdpa_attention', False)}"
+                f"sdpa={merged.get('sdpa_attention', False)}, "
+                f"compile_score={merged.get('compile_score', False)}"
             )
 
             pred_result = _run_boltz_prediction(tc_yaml, work_dir, merged)
