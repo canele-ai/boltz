@@ -1,0 +1,315 @@
+[
+  {
+    "label": "ODE-20-r0 (eval-v2 baseline)",
+    "config": {
+      "sampling_steps": 20,
+      "recycling_steps": 0,
+      "gamma_0": 0.0,
+      "noise_scale": 1.003,
+      "seed": 42
+    },
+    "per_complex": [
+      {
+        "name": "small_complex",
+        "wall_time_s": 101.832152774,
+        "quality": {
+          "confidence_score": 0.8816727995872498,
+          "ptm": 0.9164125919342041,
+          "iptm": 0.8760229349136353,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.8760229349136353,
+          "complex_plddt": 0.8830852508544922,
+          "complex_iplddt": 0.8429568409919739,
+          "complex_pde": 0.5064694285392761,
+          "complex_ipde": 1.432564616203308
+        },
+        "error": null
+      },
+      {
+        "name": "medium_complex",
+        "wall_time_s": 42.039219562000014,
+        "quality": {
+          "confidence_score": 0.4192006289958954,
+          "ptm": 0.37303707003593445,
+          "iptm": 0.14879953861236572,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.14879953861236572,
+          "complex_plddt": 0.4868009090423584,
+          "complex_iplddt": 0.4730001389980316,
+          "complex_pde": 3.1354472637176514,
+          "complex_ipde": 11.081324577331543
+        },
+        "error": null
+      },
+      {
+        "name": "large_complex",
+        "wall_time_s": 47.30949262499999,
+        "quality": {
+          "confidence_score": 0.7063857316970825,
+          "ptm": 0.4545978605747223,
+          "iptm": 0.25994107127189636,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.25994107127189636,
+          "complex_plddt": 0.8179968595504761,
+          "complex_iplddt": 0.8190661668777466,
+          "complex_pde": 0.9249752759933472,
+          "complex_ipde": 14.19964599609375
+        },
+        "error": null
+      }
+    ],
+    "aggregate": {
+      "total_wall_time_s": 191.180864961,
+      "mean_wall_time_s": 63.726954987,
+      "mean_plddt": 0.7292943398157755,
+      "mean_iptm": 0.42825451493263245,
+      "speedup": 0.8405649557490078,
+      "plddt_delta_pp": 1.2314001719156864,
+      "passes_quality_gate": true
+    }
+  },
+  {
+    "label": "ODE-10-r0",
+    "config": {
+      "sampling_steps": 10,
+      "recycling_steps": 0,
+      "gamma_0": 0.0,
+      "noise_scale": 1.003,
+      "seed": 42
+    },
+    "per_complex": [
+      {
+        "name": "small_complex",
+        "wall_time_s": 35.89233303899999,
+        "quality": {
+          "confidence_score": 0.8977972269058228,
+          "ptm": 0.9471283555030823,
+          "iptm": 0.9249563217163086,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.9249563217163086,
+          "complex_plddt": 0.8910074830055237,
+          "complex_iplddt": 0.870994508266449,
+          "complex_pde": 0.3740212023258209,
+          "complex_ipde": 0.744696855545044
+        },
+        "error": null
+      },
+      {
+        "name": "medium_complex",
+        "wall_time_s": 40.10015613799996,
+        "quality": {
+          "confidence_score": 0.4144783020019531,
+          "ptm": 0.37155357003211975,
+          "iptm": 0.14657528698444366,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.14657528698444366,
+          "complex_plddt": 0.481454074382782,
+          "complex_iplddt": 0.4731385111808777,
+          "complex_pde": 3.237086296081543,
+          "complex_ipde": 11.220160484313965
+        },
+        "error": null
+      },
+      {
+        "name": "large_complex",
+        "wall_time_s": 45.597036575999994,
+        "quality": {
+          "confidence_score": 0.7186669707298279,
+          "ptm": 0.4879201352596283,
+          "iptm": 0.3221745789051056,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.3221745789051056,
+          "complex_plddt": 0.8177900910377502,
+          "complex_iplddt": 0.8041074275970459,
+          "complex_pde": 0.9118819236755371,
+          "complex_ipde": 13.689318656921387
+        },
+        "error": null
+      }
+    ],
+    "aggregate": {
+      "total_wall_time_s": 121.58952575299995,
+      "mean_wall_time_s": 40.52984191766665,
+      "mean_plddt": 0.7300838828086853,
+      "mean_iptm": 0.46456872920195263,
+      "speedup": 1.3216593641663668,
+      "plddt_delta_pp": 1.310354471206665,
+      "passes_quality_gate": true
+    }
+  },
+  {
+    "label": "ODE-20-r0-tf32",
+    "config": {
+      "sampling_steps": 20,
+      "recycling_steps": 0,
+      "gamma_0": 0.0,
+      "noise_scale": 1.003,
+      "matmul_precision": "high",
+      "seed": 42
+    },
+    "per_complex": [
+      {
+        "name": "small_complex",
+        "wall_time_s": 37.47242579499999,
+        "quality": {
+          "confidence_score": 0.8816727995872498,
+          "ptm": 0.9164125919342041,
+          "iptm": 0.8760229349136353,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.8760229349136353,
+          "complex_plddt": 0.8830852508544922,
+          "complex_iplddt": 0.8429568409919739,
+          "complex_pde": 0.5064694285392761,
+          "complex_ipde": 1.432564616203308
+        },
+        "error": null
+      },
+      {
+        "name": "medium_complex",
+        "wall_time_s": 40.263807369000006,
+        "quality": {
+          "confidence_score": 0.4192006289958954,
+          "ptm": 0.37303707003593445,
+          "iptm": 0.14879953861236572,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.14879953861236572,
+          "complex_plddt": 0.4868009090423584,
+          "complex_iplddt": 0.4730001389980316,
+          "complex_pde": 3.1354472637176514,
+          "complex_ipde": 11.081324577331543
+        },
+        "error": null
+      },
+      {
+        "name": "large_complex",
+        "wall_time_s": 46.25164592799996,
+        "quality": {
+          "confidence_score": 0.7063857316970825,
+          "ptm": 0.4545978605747223,
+          "iptm": 0.25994107127189636,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.25994107127189636,
+          "complex_plddt": 0.8179968595504761,
+          "complex_iplddt": 0.8190661668777466,
+          "complex_pde": 0.9249752759933472,
+          "complex_ipde": 14.19964599609375
+        },
+        "error": null
+      }
+    ],
+    "aggregate": {
+      "total_wall_time_s": 123.98787909199996,
+      "mean_wall_time_s": 41.329293030666655,
+      "mean_plddt": 0.7292943398157755,
+      "mean_iptm": 0.42825451493263245,
+      "speedup": 1.2960939123473465,
+      "plddt_delta_pp": 1.2314001719156864,
+      "passes_quality_gate": true
+    }
+  },
+  {
+    "label": "ODE-20-r0-compile",
+    "config": {
+      "sampling_steps": 20,
+      "recycling_steps": 0,
+      "gamma_0": 0.0,
+      "noise_scale": 1.003,
+      "compile_structure": true,
+      "seed": 42
+    },
+    "per_complex": [
+      {
+        "name": "small_complex",
+        "wall_time_s": 9.884378663999996,
+        "quality": {},
+        "error": "boltz predict exited with code 1.\nSTDERR: .89s/it]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:04<00:00,  4.89s/it]\nUsing bfloat16 Automatic Mixed Precision (AMP)\nGPU available: True (cuda), used: True\nTPU available: False, using: 0 TPU cores\nHPU available: False, using: 0 HPUs\n/usr/local/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default\nTraceback (most recent call last):\n  File \"/eval/boltz_wrapper_opt.py\", line 98, in <module>\n    main()\n  File \"/eval/boltz_wrapper_opt.py\", line 94, in main\n    boltz_main.predict()\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 1157, in __call__\n    return self.main(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 1078, in main\n    rv = self.invoke(ctx)\n         ^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 1434, in invoke\n    return ctx.invoke(self.callback, **ctx.params)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 783, in invoke\n    return __callback(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/boltz/main.py\", line 1314, in predict\n    model_module = model_cls.load_from_checkpoint(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/eval/boltz_wrapper_opt.py\", line 66, in patched_load\n    return original_load.__func__(cls, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'function' object has no attribute '__func__'. Did you mean: '__doc__'?\n"
+      },
+      {
+        "name": "medium_complex",
+        "wall_time_s": 9.360764165000035,
+        "quality": {},
+        "error": "boltz predict exited with code 1.\nSTDERR: .44s/it]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:04<00:00,  4.44s/it]\nUsing bfloat16 Automatic Mixed Precision (AMP)\nGPU available: True (cuda), used: True\nTPU available: False, using: 0 TPU cores\nHPU available: False, using: 0 HPUs\n/usr/local/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default\nTraceback (most recent call last):\n  File \"/eval/boltz_wrapper_opt.py\", line 98, in <module>\n    main()\n  File \"/eval/boltz_wrapper_opt.py\", line 94, in main\n    boltz_main.predict()\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 1157, in __call__\n    return self.main(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 1078, in main\n    rv = self.invoke(ctx)\n         ^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 1434, in invoke\n    return ctx.invoke(self.callback, **ctx.params)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 783, in invoke\n    return __callback(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/boltz/main.py\", line 1314, in predict\n    model_module = model_cls.load_from_checkpoint(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/eval/boltz_wrapper_opt.py\", line 66, in patched_load\n    return original_load.__func__(cls, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'function' object has no attribute '__func__'. Did you mean: '__doc__'?\n"
+      },
+      {
+        "name": "large_complex",
+        "wall_time_s": 11.22734998499999,
+        "quality": {},
+        "error": "boltz predict exited with code 1.\nSTDERR: .28s/it]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:06<00:00,  6.28s/it]\nUsing bfloat16 Automatic Mixed Precision (AMP)\nGPU available: True (cuda), used: True\nTPU available: False, using: 0 TPU cores\nHPU available: False, using: 0 HPUs\n/usr/local/lib/python3.12/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default\nTraceback (most recent call last):\n  File \"/eval/boltz_wrapper_opt.py\", line 98, in <module>\n    main()\n  File \"/eval/boltz_wrapper_opt.py\", line 94, in main\n    boltz_main.predict()\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 1157, in __call__\n    return self.main(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 1078, in main\n    rv = self.invoke(ctx)\n         ^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 1434, in invoke\n    return ctx.invoke(self.callback, **ctx.params)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/click/core.py\", line 783, in invoke\n    return __callback(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/boltz/main.py\", line 1314, in predict\n    model_module = model_cls.load_from_checkpoint(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/eval/boltz_wrapper_opt.py\", line 66, in patched_load\n    return original_load.__func__(cls, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'function' object has no attribute '__func__'. Did you mean: '__doc__'?\n"
+      }
+    ],
+    "aggregate": {
+      "error": "Failed test cases: ['small_complex', 'medium_complex', 'large_complex']",
+      "passes_quality_gate": false
+    }
+  },
+  {
+    "label": "ODE-10-r0-tf32",
+    "config": {
+      "sampling_steps": 10,
+      "recycling_steps": 0,
+      "gamma_0": 0.0,
+      "noise_scale": 1.003,
+      "matmul_precision": "high",
+      "seed": 42
+    },
+    "per_complex": [
+      {
+        "name": "small_complex",
+        "wall_time_s": 36.11958355799999,
+        "quality": {
+          "confidence_score": 0.8977972269058228,
+          "ptm": 0.9471283555030823,
+          "iptm": 0.9249563217163086,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.9249563217163086,
+          "complex_plddt": 0.8910074830055237,
+          "complex_iplddt": 0.870994508266449,
+          "complex_pde": 0.3740212023258209,
+          "complex_ipde": 0.744696855545044
+        },
+        "error": null
+      },
+      {
+        "name": "medium_complex",
+        "wall_time_s": 39.834174493000035,
+        "quality": {
+          "confidence_score": 0.4144783020019531,
+          "ptm": 0.37155357003211975,
+          "iptm": 0.14657528698444366,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.14657528698444366,
+          "complex_plddt": 0.481454074382782,
+          "complex_iplddt": 0.4731385111808777,
+          "complex_pde": 3.237086296081543,
+          "complex_ipde": 11.220160484313965
+        },
+        "error": null
+      },
+      {
+        "name": "large_complex",
+        "wall_time_s": 48.72612458900005,
+        "quality": {
+          "confidence_score": 0.7186669707298279,
+          "ptm": 0.4879201352596283,
+          "iptm": 0.3221745789051056,
+          "ligand_iptm": 0.0,
+          "protein_iptm": 0.3221745789051056,
+          "complex_plddt": 0.8177900910377502,
+          "complex_iplddt": 0.8041074275970459,
+          "complex_pde": 0.9118819236755371,
+          "complex_ipde": 13.689318656921387
+        },
+        "error": null
+      }
+    ],
+    "aggregate": {
+      "total_wall_time_s": 124.67988264000007,
+      "mean_wall_time_s": 41.55996088000003,
+      "mean_plddt": 0.7300838828086853,
+      "mean_iptm": 0.46456872920195263,
+      "speedup": 1.2889002772003244,
+      "plddt_delta_pp": 1.310354471206665,
+      "passes_quality_gate": true
+    }
+  }
+]

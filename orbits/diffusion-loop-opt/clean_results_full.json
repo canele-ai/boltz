@@ -1,0 +1,788 @@
+[
+  {
+    "label": "ODE-20-r0",
+    "config": {
+      "sampling_steps": 20,
+      "recycling_steps": 0,
+      "gamma_0": 0.0,
+      "noise_scale": 1.003
+    },
+    "seeds": [
+      42,
+      123,
+      7
+    ],
+    "per_seed": [
+      {
+        "seed": 42,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 40.14670330499999,
+            "quality": {
+              "confidence_score": 0.8816727995872498,
+              "ptm": 0.9164125919342041,
+              "iptm": 0.8760229349136353,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.8760229349136353,
+              "complex_plddt": 0.8830852508544922,
+              "complex_iplddt": 0.8429568409919739,
+              "complex_pde": 0.5064694285392761,
+              "complex_ipde": 1.432564616203308
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 40.99752234800002,
+            "quality": {
+              "confidence_score": 0.4192006289958954,
+              "ptm": 0.37303707003593445,
+              "iptm": 0.14879953861236572,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.14879953861236572,
+              "complex_plddt": 0.4868009090423584,
+              "complex_iplddt": 0.4730001389980316,
+              "complex_pde": 3.1354472637176514,
+              "complex_ipde": 11.081324577331543
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 47.559925246000006,
+            "quality": {
+              "confidence_score": 0.7063857316970825,
+              "ptm": 0.4545978605747223,
+              "iptm": 0.25994107127189636,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.25994107127189636,
+              "complex_plddt": 0.8179968595504761,
+              "complex_iplddt": 0.8190661668777466,
+              "complex_pde": 0.9249752759933472,
+              "complex_ipde": 14.19964599609375
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 42.901383633,
+        "mean_plddt": 0.7292943398157755,
+        "speedup": 1.2485994754132566
+      },
+      {
+        "seed": 123,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 40.54592071600001,
+            "quality": {
+              "confidence_score": 0.8570343255996704,
+              "ptm": 0.9130743741989136,
+              "iptm": 0.8798546195030212,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.8798546195030212,
+              "complex_plddt": 0.8513292670249939,
+              "complex_iplddt": 0.8070448040962219,
+              "complex_pde": 0.5754321813583374,
+              "complex_ipde": 1.6974003314971924
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 41.97194938300004,
+            "quality": {
+              "confidence_score": 0.43121203780174255,
+              "ptm": 0.4078027307987213,
+              "iptm": 0.20463129878044128,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.20463129878044128,
+              "complex_plddt": 0.48785725235939026,
+              "complex_iplddt": 0.5015910267829895,
+              "complex_pde": 2.9480457305908203,
+              "complex_ipde": 10.128012657165527
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 45.90051187300003,
+            "quality": {
+              "confidence_score": 0.6818631887435913,
+              "ptm": 0.3809409737586975,
+              "iptm": 0.13392575085163116,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.13392575085163116,
+              "complex_plddt": 0.8188475370407104,
+              "complex_iplddt": 0.7668859362602234,
+              "complex_pde": 0.9881218671798706,
+              "complex_ipde": 15.515040397644043
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 42.80612732400002,
+        "mean_plddt": 0.7193446854750315,
+        "speedup": 1.2513779789799757
+      },
+      {
+        "seed": 7,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 35.294180678999965,
+            "quality": {
+              "confidence_score": 0.9127055406570435,
+              "ptm": 0.9507208466529846,
+              "iptm": 0.9300598502159119,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.9300598502159119,
+              "complex_plddt": 0.9083669185638428,
+              "complex_iplddt": 0.8913977742195129,
+              "complex_pde": 0.3529874086380005,
+              "complex_ipde": 0.6542153358459473
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 39.41740751200001,
+            "quality": {
+              "confidence_score": 0.4274098575115204,
+              "ptm": 0.4163956642150879,
+              "iptm": 0.20736289024353027,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.20736289024353027,
+              "complex_plddt": 0.4824216067790985,
+              "complex_iplddt": 0.4890584647655487,
+              "complex_pde": 2.8057868480682373,
+              "complex_ipde": 9.744197845458984
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 45.181506178999996,
+            "quality": {
+              "confidence_score": 0.7057163119316101,
+              "ptm": 0.4417586922645569,
+              "iptm": 0.24675901234149933,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.24675901234149933,
+              "complex_plddt": 0.8204556703567505,
+              "complex_iplddt": 0.8115236163139343,
+              "complex_pde": 0.9464071989059448,
+              "complex_ipde": 15.198917388916016
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 39.96436478999999,
+        "mean_plddt": 0.737081398566564,
+        "speedup": 1.3403602279216078
+      }
+    ],
+    "summary": {
+      "mean_time": 41.890625249,
+      "std_time": 1.6688702639903694,
+      "mean_plddt": 0.7285734746191237,
+      "std_plddt": 0.008890302739313365,
+      "mean_speedup": 1.2801125607716133,
+      "std_speedup": 0.05219450228022064,
+      "num_seeds": 3,
+      "num_successful": 3,
+      "plddt_delta_pp": 1.1593136522505043,
+      "passes_quality_gate": true
+    }
+  },
+  {
+    "label": "ODE-10-r0",
+    "config": {
+      "sampling_steps": 10,
+      "recycling_steps": 0,
+      "gamma_0": 0.0,
+      "noise_scale": 1.003
+    },
+    "seeds": [
+      42,
+      123,
+      7
+    ],
+    "per_seed": [
+      {
+        "seed": 42,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 38.407449748999966,
+            "quality": {
+              "confidence_score": 0.8977972269058228,
+              "ptm": 0.9471283555030823,
+              "iptm": 0.9249563217163086,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.9249563217163086,
+              "complex_plddt": 0.8910074830055237,
+              "complex_iplddt": 0.870994508266449,
+              "complex_pde": 0.3740212023258209,
+              "complex_ipde": 0.744696855545044
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 41.908695231000024,
+            "quality": {
+              "confidence_score": 0.4144783020019531,
+              "ptm": 0.37155357003211975,
+              "iptm": 0.14657528698444366,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.14657528698444366,
+              "complex_plddt": 0.481454074382782,
+              "complex_iplddt": 0.4731385111808777,
+              "complex_pde": 3.237086296081543,
+              "complex_ipde": 11.220160484313965
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 44.64847370000007,
+            "quality": {
+              "confidence_score": 0.7186669707298279,
+              "ptm": 0.4879201352596283,
+              "iptm": 0.3221745789051056,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.3221745789051056,
+              "complex_plddt": 0.8177900910377502,
+              "complex_iplddt": 0.8041074275970459,
+              "complex_pde": 0.9118819236755371,
+              "complex_ipde": 13.689318656921387
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 41.654872893333355,
+        "mean_plddt": 0.7300838828086853,
+        "speedup": 1.2859634750497517
+      },
+      {
+        "seed": 123,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 34.82420249200004,
+            "quality": {
+              "confidence_score": 0.8794382214546204,
+              "ptm": 0.9117307662963867,
+              "iptm": 0.8679516315460205,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.8679516315460205,
+              "complex_plddt": 0.8823099136352539,
+              "complex_iplddt": 0.8468384146690369,
+              "complex_pde": 0.5376196503639221,
+              "complex_ipde": 1.5649293661117554
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 38.13658998400001,
+            "quality": {
+              "confidence_score": 0.4213812053203583,
+              "ptm": 0.3971823453903198,
+              "iptm": 0.2042073756456375,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.2042073756456375,
+              "complex_plddt": 0.47567465901374817,
+              "complex_iplddt": 0.4753548502922058,
+              "complex_pde": 3.3346307277679443,
+              "complex_ipde": 10.619422912597656
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 46.61877283499996,
+            "quality": {
+              "confidence_score": 0.6859037280082703,
+              "ptm": 0.38388940691947937,
+              "iptm": 0.14599989354610443,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.14599989354610443,
+              "complex_plddt": 0.8208796381950378,
+              "complex_iplddt": 0.7523484826087952,
+              "complex_pde": 0.987893283367157,
+              "complex_ipde": 15.508747100830078
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 39.85985510366667,
+        "mean_plddt": 0.7262880702813467,
+        "speedup": 1.3438745564767276
+      },
+      {
+        "seed": 7,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 35.59474479000005,
+            "quality": {
+              "confidence_score": 0.8406978845596313,
+              "ptm": 0.8601077795028687,
+              "iptm": 0.845360517501831,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.845360517501831,
+              "complex_plddt": 0.839532196521759,
+              "complex_iplddt": 0.7914513349533081,
+              "complex_pde": 0.8494817614555359,
+              "complex_ipde": 3.195183277130127
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 38.48576331900006,
+            "quality": {
+              "confidence_score": 0.41499051451683044,
+              "ptm": 0.38005179166793823,
+              "iptm": 0.15896916389465332,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.15896916389465332,
+              "complex_plddt": 0.47899582982063293,
+              "complex_iplddt": 0.4867790937423706,
+              "complex_pde": 3.332657814025879,
+              "complex_ipde": 11.164535522460938
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 44.51227250699992,
+            "quality": {
+              "confidence_score": 0.7118352651596069,
+              "ptm": 0.461646169424057,
+              "iptm": 0.282448947429657,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.282448947429657,
+              "complex_plddt": 0.8191817998886108,
+              "complex_iplddt": 0.8088337182998657,
+              "complex_pde": 0.9304903149604797,
+              "complex_ipde": 14.527870178222656
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 39.53092687200001,
+        "mean_plddt": 0.712569942077001,
+        "speedup": 1.3550566439313176
+      }
+    ],
+    "summary": {
+      "mean_time": 40.34855162300001,
+      "std_time": 1.143199410160288,
+      "mean_plddt": 0.7229806317223443,
+      "std_plddt": 0.009213516828791249,
+      "mean_speedup": 1.328298225152599,
+      "std_speedup": 0.03708683148589833,
+      "num_seeds": 3,
+      "num_successful": 3,
+      "plddt_delta_pp": 0.6000293625725628,
+      "passes_quality_gate": true
+    }
+  },
+  {
+    "label": "ODE-20-r0-tf32",
+    "config": {
+      "sampling_steps": 20,
+      "recycling_steps": 0,
+      "gamma_0": 0.0,
+      "noise_scale": 1.003,
+      "matmul_precision": "high"
+    },
+    "seeds": [
+      42,
+      123,
+      7
+    ],
+    "per_seed": [
+      {
+        "seed": 42,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 34.905822084999954,
+            "quality": {
+              "confidence_score": 0.8816727995872498,
+              "ptm": 0.9164125919342041,
+              "iptm": 0.8760229349136353,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.8760229349136353,
+              "complex_plddt": 0.8830852508544922,
+              "complex_iplddt": 0.8429568409919739,
+              "complex_pde": 0.5064694285392761,
+              "complex_ipde": 1.432564616203308
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 38.35440409900002,
+            "quality": {
+              "confidence_score": 0.4192006289958954,
+              "ptm": 0.37303707003593445,
+              "iptm": 0.14879953861236572,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.14879953861236572,
+              "complex_plddt": 0.4868009090423584,
+              "complex_iplddt": 0.4730001389980316,
+              "complex_pde": 3.1354472637176514,
+              "complex_ipde": 11.081324577331543
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 44.31203371999993,
+            "quality": {
+              "confidence_score": 0.7063857316970825,
+              "ptm": 0.4545978605747223,
+              "iptm": 0.25994107127189636,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.25994107127189636,
+              "complex_plddt": 0.8179968595504761,
+              "complex_iplddt": 0.8190661668777466,
+              "complex_pde": 0.9249752759933472,
+              "complex_ipde": 14.19964599609375
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 39.1907533013333,
+        "mean_plddt": 0.7292943398157755,
+        "speedup": 1.3668184606404157
+      },
+      {
+        "seed": 123,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 34.34519508999995,
+            "quality": {
+              "confidence_score": 0.8570343255996704,
+              "ptm": 0.9130743741989136,
+              "iptm": 0.8798546195030212,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.8798546195030212,
+              "complex_plddt": 0.8513292670249939,
+              "complex_iplddt": 0.8070448040962219,
+              "complex_pde": 0.5754321813583374,
+              "complex_ipde": 1.6974003314971924
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 38.940721881999934,
+            "quality": {
+              "confidence_score": 0.43121203780174255,
+              "ptm": 0.4078027307987213,
+              "iptm": 0.20463129878044128,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.20463129878044128,
+              "complex_plddt": 0.48785725235939026,
+              "complex_iplddt": 0.5015910267829895,
+              "complex_pde": 2.9480457305908203,
+              "complex_ipde": 10.128012657165527
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 46.04290463799998,
+            "quality": {
+              "confidence_score": 0.6818631887435913,
+              "ptm": 0.3809409737586975,
+              "iptm": 0.13392575085163116,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.13392575085163116,
+              "complex_plddt": 0.8188475370407104,
+              "complex_iplddt": 0.7668859362602234,
+              "complex_pde": 0.9881218671798706,
+              "complex_ipde": 15.515040397644043
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 39.776273869999955,
+        "mean_plddt": 0.7193446854750315,
+        "speedup": 1.3466984181006376
+      },
+      {
+        "seed": 7,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 34.64975943699983,
+            "quality": {
+              "confidence_score": 0.9127055406570435,
+              "ptm": 0.9507208466529846,
+              "iptm": 0.9300598502159119,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.9300598502159119,
+              "complex_plddt": 0.9083669185638428,
+              "complex_iplddt": 0.8913977742195129,
+              "complex_pde": 0.3529874086380005,
+              "complex_ipde": 0.6542153358459473
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 38.08891948600012,
+            "quality": {
+              "confidence_score": 0.4274098575115204,
+              "ptm": 0.4163956642150879,
+              "iptm": 0.20736289024353027,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.20736289024353027,
+              "complex_plddt": 0.4824216067790985,
+              "complex_iplddt": 0.4890584647655487,
+              "complex_pde": 2.8057868480682373,
+              "complex_ipde": 9.744197845458984
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 44.38838549299999,
+            "quality": {
+              "confidence_score": 0.7057163119316101,
+              "ptm": 0.4417586922645569,
+              "iptm": 0.24675901234149933,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.24675901234149933,
+              "complex_plddt": 0.8204556703567505,
+              "complex_iplddt": 0.8115236163139343,
+              "complex_pde": 0.9464071989059448,
+              "complex_ipde": 15.198917388916016
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 39.04235480533331,
+        "mean_plddt": 0.737081398566564,
+        "speedup": 1.3720136852849176
+      }
+    ],
+    "summary": {
+      "mean_time": 39.33646065888885,
+      "std_time": 0.38804931890760586,
+      "mean_plddt": 0.7285734746191237,
+      "std_plddt": 0.008890302739313365,
+      "mean_speedup": 1.3618435213419904,
+      "std_speedup": 0.01337079668232727,
+      "num_seeds": 3,
+      "num_successful": 3,
+      "plddt_delta_pp": 1.1593136522505043,
+      "passes_quality_gate": true
+    }
+  },
+  {
+    "label": "ODE-10-r0-tf32",
+    "config": {
+      "sampling_steps": 10,
+      "recycling_steps": 0,
+      "gamma_0": 0.0,
+      "noise_scale": 1.003,
+      "matmul_precision": "high"
+    },
+    "seeds": [
+      42,
+      123,
+      7
+    ],
+    "per_seed": [
+      {
+        "seed": 42,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 34.8817773799999,
+            "quality": {
+              "confidence_score": 0.8977972269058228,
+              "ptm": 0.9471283555030823,
+              "iptm": 0.9249563217163086,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.9249563217163086,
+              "complex_plddt": 0.8910074830055237,
+              "complex_iplddt": 0.870994508266449,
+              "complex_pde": 0.3740212023258209,
+              "complex_ipde": 0.744696855545044
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 38.54457821300002,
+            "quality": {
+              "confidence_score": 0.4144783020019531,
+              "ptm": 0.37155357003211975,
+              "iptm": 0.14657528698444366,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.14657528698444366,
+              "complex_plddt": 0.481454074382782,
+              "complex_iplddt": 0.4731385111808777,
+              "complex_pde": 3.237086296081543,
+              "complex_ipde": 11.220160484313965
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 44.05095418400015,
+            "quality": {
+              "confidence_score": 0.7186669707298279,
+              "ptm": 0.4879201352596283,
+              "iptm": 0.3221745789051056,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.3221745789051056,
+              "complex_plddt": 0.8177900910377502,
+              "complex_iplddt": 0.8041074275970459,
+              "complex_pde": 0.9118819236755371,
+              "complex_ipde": 13.689318656921387
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 39.15910325900003,
+        "mean_plddt": 0.7300838828086853,
+        "speedup": 1.3679231810895802
+      },
+      {
+        "seed": 123,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 34.20864991799999,
+            "quality": {
+              "confidence_score": 0.8794382214546204,
+              "ptm": 0.9117307662963867,
+              "iptm": 0.8679516315460205,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.8679516315460205,
+              "complex_plddt": 0.8823099136352539,
+              "complex_iplddt": 0.8468384146690369,
+              "complex_pde": 0.5376196503639221,
+              "complex_ipde": 1.5649293661117554
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 38.106566853000004,
+            "quality": {
+              "confidence_score": 0.4213812053203583,
+              "ptm": 0.3971823453903198,
+              "iptm": 0.2042073756456375,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.2042073756456375,
+              "complex_plddt": 0.47567465901374817,
+              "complex_iplddt": 0.4753548502922058,
+              "complex_pde": 3.3346307277679443,
+              "complex_ipde": 10.619422912597656
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 43.53385123199996,
+            "quality": {
+              "confidence_score": 0.6859037280082703,
+              "ptm": 0.38388940691947937,
+              "iptm": 0.14599989354610443,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.14599989354610443,
+              "complex_plddt": 0.8208796381950378,
+              "complex_iplddt": 0.7523484826087952,
+              "complex_pde": 0.987893283367157,
+              "complex_ipde": 15.508747100830078
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 38.616356000999986,
+        "mean_plddt": 0.7262880702813467,
+        "speedup": 1.3871491421220463
+      },
+      {
+        "seed": 7,
+        "per_complex": [
+          {
+            "name": "small_complex",
+            "wall_time_s": 36.89277789599987,
+            "quality": {
+              "confidence_score": 0.8406978845596313,
+              "ptm": 0.8601077795028687,
+              "iptm": 0.845360517501831,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.845360517501831,
+              "complex_plddt": 0.839532196521759,
+              "complex_iplddt": 0.7914513349533081,
+              "complex_pde": 0.8494817614555359,
+              "complex_ipde": 3.195183277130127
+            },
+            "error": null
+          },
+          {
+            "name": "medium_complex",
+            "wall_time_s": 43.580542469999955,
+            "quality": {
+              "confidence_score": 0.41499051451683044,
+              "ptm": 0.38005179166793823,
+              "iptm": 0.15896916389465332,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.15896916389465332,
+              "complex_plddt": 0.47899582982063293,
+              "complex_iplddt": 0.4867790937423706,
+              "complex_pde": 3.332657814025879,
+              "complex_ipde": 11.164535522460938
+            },
+            "error": null
+          },
+          {
+            "name": "large_complex",
+            "wall_time_s": 48.961203307000005,
+            "quality": {
+              "confidence_score": 0.7118352651596069,
+              "ptm": 0.461646169424057,
+              "iptm": 0.282448947429657,
+              "ligand_iptm": 0.0,
+              "protein_iptm": 0.282448947429657,
+              "complex_plddt": 0.8191817998886108,
+              "complex_iplddt": 0.8088337182998657,
+              "complex_pde": 0.9304903149604797,
+              "complex_ipde": 14.527870178222656
+            },
+            "error": null
+          }
+        ],
+        "mean_wall_time_s": 43.14484122433328,
+        "mean_plddt": 0.712569942077001,
+        "speedup": 1.2415538817293317
+      }
+    ],
+    "summary": {
+      "mean_time": 40.306766828111094,
+      "std_time": 2.4727804907402438,
+      "mean_plddt": 0.7229806317223443,
+      "std_plddt": 0.009213516828791249,
+      "mean_speedup": 1.3322087349803193,
+      "std_speedup": 0.07909574076948812,
+      "num_seeds": 3,
+      "num_successful": 3,
+      "plddt_delta_pp": 0.6000293625725628,
+      "passes_quality_gate": true
+    }
+  }
+]
