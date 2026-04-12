@@ -1,9 +1,9 @@
 ---
 strategy: eval-v2-winner
 type: experiment
-status: in-progress
+status: complete
 eval_version: eval-v2
-metric: 1.48
+metric: 1.34
 issue: 13
 parents:
   - orbit/ode-sampler
@@ -24,13 +24,13 @@ parents:
 
 ## Results
 
-**Best configuration: ODE-20/0r + TF32 + bf16 = 1.48x speedup, pLDDT 0.7293, quality gate PASS**
+**Best configuration: ODE-20/0r + TF32 + bf16 = 1.34x speedup (mean across containers), quality gate PASS.**
 
-The eval-v2 baseline (torch 2.6.0 + cuequivariance kernels) is 24% faster than eval-v1 (53.57s vs 70.37s). Against this faster baseline, the stacked optimization ODE-20/0r + TF32 + bf16 achieves 1.48x speedup (36.2s mean), with all quality metrics preserved (+1.23pp pLDDT vs baseline).
+The stacked optimization achieves a cross-container mean of 39.9s against the 53.57s eval-v2 baseline, giving 1.34x speedup with pLDDT 0.7293 (+1.23pp above baseline). However, cross-container MSA latency variance is substantial: the same configuration ranged from 36.2s (1.48x) to 42.0s (1.28x) across three independent Modal containers. Within a single container, the stacked config consistently outperforms ODE-alone by ~13%.
 
-Importantly, stacking TF32 and bf16 on top of ODE-20/0r provides a meaningful additional 15% speedup (41.6s to 36.2s) beyond ODE alone. However, each optimization alone (TF32 alone or bf16 alone) shows no measurable benefit at this configuration -- the benefit appears only when both are combined. This suggests the two optimizations target different bottlenecks that are only visible when the other is also relieved.
+The eval-v2 baseline (torch 2.6.0 + cuequivariance kernels) is 24% faster than eval-v1 (53.57s vs 70.37s). This raised the bar: the parent orbit's 1.79x speedup (eval-v1) translates to 1.29-1.48x on eval-v2, because cuequivariance kernels accelerate the baseline's trunk (4 recycles x Pairformer) but not the step-reduced config (1 trunk pass).
 
-### Validated Sweep (3 runs each, L40S, eval-v2)
+### Within-Container Sweep (3 runs each, L40S, same container)
 
 | Config | Steps | Recycle | gamma_0 | TF32 | bf16 | Time(s) | pLDDT | Delta(pp) | Speedup | Gate |
 |--------|-------|---------|---------|------|------|---------|-------|-----------|---------|------|
@@ -42,57 +42,69 @@ Importantly, stacking TF32 and bf16 on top of ODE-20/0r provides a meaningful ad
 | ODE-10/0r | 10 | 0 | 0.0 | no | no | 39.1 | 0.7301 | +1.31 | 1.37x | PASS |
 | ODE-10/0r+TF32+bf16 | 10 | 0 | 0.0 | yes | yes | 39.0 | 0.7301 | +1.31 | 1.37x | PASS |
 
-### Per-Complex Timing (median of 3 runs, seconds)
+### Per-Complex Timing (median of 3 runs, same container)
 
 | Config | Small | Medium | Large |
 |--------|-------|--------|-------|
 | baseline | 42.8 | 51.3 | 66.6 |
 | ODE-20/0r | 37.7 | 40.2 | 47.0 |
-| ODE-20/0r+TF32 | 39.4 | 40.7 | 44.8 |
-| ODE-20/0r+bf16 | 39.5 | 42.2 | 49.9 |
 | ODE-20/0r+TF32+bf16 | 32.5 | 35.5 | 40.5 |
 | ODE-10/0r | 34.5 | 38.2 | 44.6 |
-| ODE-10/0r+TF32+bf16 | 35.1 | 37.9 | 44.1 |
 
-Note: first run of small_complex consistently shows 90-99s (MSA cache miss). The median of 3 filters this out for all configs except where all 3 runs are affected.
+### Cross-Container Replication (3 independent containers)
+
+| Run | Config | Small | Medium | Large | Mean(s) | Speedup |
+|-----|--------|-------|--------|-------|---------|---------|
+| Container 1 (sweep) | ODE-20/0r+TF32+bf16 | 32.5 | 35.5 | 40.5 | 36.2 | 1.48x |
+| Container 2 | ODE-20/0r+TF32+bf16 | 36.7 | 40.7 | 48.4 | 42.0 | 1.28x |
+| Container 3 | ODE-20/0r+TF32+bf16 | 36.8 | 40.9 | 46.5 | 41.4 | 1.29x |
+| **Mean +/- std** | | | | | **39.9 +/- 3.2** | **1.34 +/- 0.11** |
+| Container 1 (sweep) | ODE-20/0r | 37.7 | 40.2 | 47.0 | 41.6 | 1.29x |
+| Container 4 | ODE-20/0r | 51.3 | 52.9 | 56.4 | 53.5 | 1.00x |
 
 ### Comparison to eval-v1 Results
 
-The parent orbit (ode-sampler) measured ODE-20/0r at 1.79x against the eval-v1 baseline (39.3s / 70.37s). On eval-v2, the same configuration gives 1.29x (41.6s / 53.57s). The absolute GPU time is similar (41.6s vs 39.3s), but the baseline shrank from 70.37s to 53.57s due to cuequivariance kernels accelerating the trunk (4 recycles x Pairformer) in the baseline configuration.
+| Config | eval-v1 (torch 2.5.1, no kernels) | eval-v2 (torch 2.6.0, kernels) |
+|--------|-----------------------------------|----------------------------------|
+| Baseline (200s/3r) | 70.37s | 53.57s (-24%) |
+| ODE-20/0r | 39.3s (1.79x) | 41.6s (1.29x) |
+| ODE-20/0r+TF32+bf16 | N/A | 36.2-42.0s (1.28-1.48x) |
+
+The absolute GPU time for ODE-20/0r is similar across eval versions (39-42s), but the baseline shrank from 70.37s to 53.57s, reducing the relative speedup.
 
 ## Approach
 
-This orbit stacks three independently proven optimizations:
+This orbit stacks three independently proven optimizations and measures their combined effect against the eval-v2 baseline:
 
-1. **ODE sampling (gamma_0=0)** -- Setting gamma_0=0 in the EDM/Karras sampler converts it from a stochastic SDE to a deterministic first-order Euler ODE solver. This was proven safe by orbit/ode-sampler: 20 ODE steps produce equal or better pLDDT than 200 stochastic steps.
+1. **ODE sampling (gamma_0=0)** -- Setting gamma_0=0 in the EDM/Karras sampler converts it from a stochastic SDE to a deterministic first-order Euler ODE solver. Proven safe by orbit/ode-sampler with 20 steps.
 
-2. **TF32 matmul precision** -- Switching from `torch.set_float32_matmul_precision("highest")` to `"high"` enables TF32 on Ada Lovelace GPUs (L40S). TF32 uses 19-bit precision for matmuls, which is sufficient for the score model and trunk computations.
+2. **TF32 matmul precision** -- Switching `torch.set_float32_matmul_precision("highest")` to `"high"` enables TF32 on Ada Lovelace GPUs. TF32 uses 19-bit precision for matmuls.
 
-3. **bf16 trunk** -- The triangular multiplication in the Pairformer trunk explicitly upcasts to float32 via `.float()` before the einsum. Removing this upcast keeps the computation in bf16, saving memory bandwidth. When cuequivariance kernels are active, this code path is bypassed entirely (the kernel handles precision internally), so the patch only affects the non-kernel code paths in the score model transformer.
+3. **bf16 trunk** -- The triangular multiplication explicitly upcasts to float32 via `.float()` before the einsum. Removing this keeps the computation in bf16, saving memory bandwidth. When cuequivariance kernels are active for the trunk, this code path is bypassed.
 
-The wrapper (`boltz_wrapper_stacked.py`) applies all three as monkey-patches before `boltz.main.predict()`:
-- gamma_0 override via `Boltz2DiffusionParams` replacement
-- `torch.set_float32_matmul_precision("high")` call
-- Runtime replacement of `TriangleMultiplication{Outgoing,Incoming}.forward` methods
+The wrapper (`boltz_wrapper_stacked.py`) applies all three as monkey-patches before `boltz.main.predict()`. The evaluator (`eval_stacked.py`) runs all configurations in parallel via Modal `.map()`.
 
 ## What I Learned
 
-1. **TF32 and bf16 only help when combined.** Individually, TF32 alone shows 0% improvement (41.6s vs 41.6s for ODE-20/0r), and bf16 alone is actually 5% slower (43.9s vs 41.6s). But together they cut time by 13% (36.2s vs 41.6s). This nonlinear interaction suggests the two optimizations relieve different bottlenecks in the compute/memory pipeline, and only when both are active does the system shift to a faster regime.
+1. **Cross-container MSA variance is the dominant noise source.** The same ODE-20/0r config ranges from 41.6s to 53.5s across containers -- a 29% spread. This overwhelms any 5-15% GPU optimization. Production deployments must pre-cache MSAs to get meaningful benchmarks.
 
-2. **ODE-10 does not beat ODE-20+TF32+bf16.** With 10 steps, the GPU compute savings are offset by the same MSA/model-loading overhead. ODE-10 (39.1s) is faster than ODE-20 alone (41.6s) but slower than ODE-20+TF32+bf16 (36.2s). The per-step optimization (TF32+bf16) matters more than halving the step count at this regime.
+2. **Within a single container, TF32+bf16 stacking provides a consistent ~13% speedup on top of ODE.** In the sweep (same container for all configs), ODE-20/0r+TF32+bf16 = 36.2s vs ODE-20/0r = 41.6s. This holds across all three complexes (small: 14%, medium: 12%, large: 14%).
 
-3. **The eval-v2 baseline absorbed the cuequivariance speedup.** The baseline went from 70.37s to 53.57s (24% faster) thanks to fused Pairformer kernels at 200s/3r. Since ODE-20/0r runs the trunk only once, these kernels provide minimal benefit to the optimized config but dramatically help the baseline -- effectively raising the bar for relative speedup.
+3. **TF32 and bf16 only help when combined.** Individually, TF32 alone shows 0% improvement (41.6s vs 41.6s), and bf16 alone is 5% slower (43.9s). But together they cut time by 13%. This nonlinear interaction suggests the two optimizations relieve different bottlenecks that are only visible when the other is also active.
 
-4. **MSA cache misses dominate first-run timing.** Every first run for small_complex shows 90-99s, while subsequent runs are 32-40s. This 60s+ overhead is the MSA server latency for cache population. Production deployments should pre-cache MSAs.
+4. **ODE-10 does not beat ODE-20+TF32+bf16.** With 10 steps, ODE-10 (39.1s) is faster than ODE-20 alone (41.6s) but slower than ODE-20+TF32+bf16 (36.2s). The per-step optimization matters more than halving the step count.
 
-5. **pLDDT is identical across all optimization variants.** All configs produce pLDDT=0.7293 (20-step) or 0.7301 (10-step), confirming that TF32 and bf16 trunk have zero quality impact for this model.
+5. **The eval-v2 baseline absorbed the cuequivariance speedup.** The kernels accelerate the Pairformer trunk, which runs 4 times in the baseline (3 recycles + 1) but only once in ODE-20/0r. The baseline went from 70.37s to 53.57s (24% faster), while ODE-20/0r barely changed (~40s both versions).
+
+6. **torch.compile does not help at 20 steps.** The compilation overhead is not amortized with only 20 diffusion steps per prediction. Compile might help at 200 steps, but that is the baseline config we are trying to beat.
 
 ## Limitations
 
-- The 1.48x speedup includes MSA latency (unavoidable in production end-to-end measurements). GPU-only timing would show a larger speedup factor.
-- Only 3 test complexes. The optimization benefit may vary for different protein sizes and types.
-- The bf16 trunk patch removes a safety upcast. While quality is preserved on our test set, edge cases with very large pair representations could potentially show numerical instability.
-- MSA cache miss noise affects the first-run timing even with median-of-3 aggregation. A 5+ run validation would be more robust.
+- Cross-container variance (+/- 3.2s, +/- 8% relative) limits the precision of speedup claims. The 1.34x +/- 0.11 confidence interval is wide.
+- Only 3 test complexes in the evaluation set. Larger benchmarks would reduce the per-complex noise.
+- The bf16 trunk patch removes a safety upcast. Quality is preserved on our test set, but edge cases with large pair representations could potentially show numerical instability.
+- The MSA cache miss on the first run (~90-120s vs ~35-55s steady-state) is a confound. Pre-cached MSA evaluations would give cleaner GPU-only timing.
+- The "1.48x" same-container result may be the favorable tail of the container distribution. The conservative estimate is 1.29-1.34x.
 
 ![Stacked comparison](figures/stacked_comparison.png)
 
@@ -101,20 +113,22 @@ The wrapper (`boltz_wrapper_stacked.py`) applies all three as monkey-patches bef
 ### What is already known
 - ODE sampling (gamma_0=0) was established by orbit/ode-sampler (#6), building on DDIM (Song et al. 2020) and EDM (Karras et al. 2022)
 - TF32 matmul precision is a standard PyTorch optimization for Ampere+ GPUs
-- bf16 trunk precision was identified as safe by prior profiling (orbit #11 reference in the campaign issue)
+- bf16 mixed precision for transformer models is widely used (Micikevicius et al. 2017)
 - cuequivariance kernels were validated by orbit/torch-upgrade-kernels (#12)
 
 ### What this orbit adds
 - First measurement of stacked ODE + TF32 + bf16 against the eval-v2 baseline with cuequivariance kernels
-- Demonstration of nonlinear interaction between TF32 and bf16 optimizations (neither helps alone, both together give 13%)
-- Quantified that cuequivariance kernels raised the baseline bar, reducing relative ODE speedup from 1.79x to 1.29x
+- Demonstration that TF32 and bf16 interact nonlinearly (neither helps alone, both together give 13%)
+- Quantified cross-container MSA variance as the dominant noise source (29% spread)
+- Showed that eval-v2 baseline improvement (24% from kernels) largely offsets ODE speedup gains, reducing 1.79x to 1.29-1.48x
 
 ### Honest positioning
-This orbit applies known techniques in combination and measures their stacked effect against a new baseline. There is no algorithmic novelty. The main finding -- that TF32 and bf16 interact nonlinearly -- is an empirical observation specific to the Boltz-2 model architecture and deserves further investigation.
+This orbit applies known techniques in combination and honestly characterizes their stacked effect including noise. There is no algorithmic novelty. The main contribution is the empirical measurement and the finding that cross-container variance dominates GPU-level optimizations in end-to-end benchmarks with MSA.
 
 ## References
 
 - Song J, Meng C, Ermon S. Denoising Diffusion Implicit Models. ICLR, 2021. https://arxiv.org/abs/2010.02502
 - Karras T et al. Elucidating the Design Space of Diffusion-Based Generative Models. NeurIPS, 2022. https://arxiv.org/abs/2206.00364
+- Micikevicius P et al. Mixed Precision Training. ICLR, 2018. https://arxiv.org/abs/1710.03740
 - Parent orbit: orbit/ode-sampler (#6) -- ODE-20/0r at 1.79x on eval-v1
 - Related orbit: orbit/torch-upgrade-kernels (#12) -- cuequivariance kernel validation
