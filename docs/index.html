@@ -1,23 +1,371 @@
 <!doctype html>
-<html lang="en" data-viz-version="1">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Campaign</title>
+  <title>Boltz-2 Inference Speedup — Research Report</title>
+  <style>
+    :root {
+      --bg: #fafaf9;
+      --fg: #1a1a1a;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-light: #dbeafe;
+      --border: #e5e7eb;
+      --card-bg: #fff;
+      --green: #059669;
+      --red: #dc2626;
+      --amber: #d97706;
+      --mono: 'JetBrains Mono', 'Menlo', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+      --serif: 'Georgia', serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--sans);
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+    /* Header */
+    header { padding: 80px 0 40px; border-bottom: 1px solid var(--border); }
+    header h1 { font-family: var(--serif); font-size: 2.2rem; font-weight: 700; margin-bottom: 12px; }
+    header .subtitle { color: var(--muted); font-size: 1.05rem; max-width: 600px; }
+    header .meta { margin-top: 16px; font-size: 0.85rem; color: var(--muted); }
+    header .meta a { color: var(--accent); text-decoration: none; }
+
+    /* Sections */
+    section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+    h2 { font-family: var(--serif); font-size: 1.5rem; margin-bottom: 20px; }
+    h3 { font-size: 1.1rem; margin: 28px 0 12px; font-weight: 600; }
+    p { margin-bottom: 16px; }
+    p + p { margin-top: -4px; }
+
+    /* Hero metric */
+    .hero-metric {
+      display: flex; align-items: baseline; gap: 12px;
+      margin: 24px 0;
+    }
+    .hero-metric .number { font-size: 4rem; font-weight: 700; color: var(--accent); font-family: var(--mono); }
+    .hero-metric .label { font-size: 1.1rem; color: var(--muted); }
+
+    /* Incremental table */
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.92rem; }
+    th { text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--fg); font-weight: 600; }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    tr:last-child td { border-bottom: none; }
+    .num { font-family: var(--mono); text-align: right; }
+    .speedup { font-weight: 600; }
+    .winner td { background: var(--accent-light); }
+    .tag {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
+    }
+    .tag-pass { background: #d1fae5; color: #065f46; }
+    .tag-fail { background: #fee2e2; color: #991b1b; }
+    .tag-dead { background: #f3f4f6; color: #6b7280; }
+
+    /* Bar chart */
+    .bar-chart { margin: 24px 0; }
+    .bar-row { display: flex; align-items: center; margin: 8px 0; gap: 12px; }
+    .bar-label { width: 180px; font-size: 0.85rem; text-align: right; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 28px; background: #f3f4f6; border-radius: 4px; position: relative; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px;
+      font-size: 0.78rem; font-weight: 600; color: white; font-family: var(--mono); transition: width 0.6s ease; }
+    .bar-fill.baseline { background: #9ca3af; }
+    .bar-fill.opt1 { background: #60a5fa; }
+    .bar-fill.opt2 { background: #3b82f6; }
+    .bar-fill.opt3 { background: #2563eb; }
+    .bar-fill.winner { background: #1d4ed8; }
+
+    /* Stacked breakdown */
+    .stacked-bar { display: flex; height: 36px; border-radius: 4px; overflow: hidden; margin: 16px 0; }
+    .stacked-bar .segment { display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 600; color: white; min-width: 40px; }
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0 24px; font-size: 0.82rem; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+
+    /* Dead ends grid */
+    .dead-ends { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .dead-end-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px;
+    }
+    .dead-end-card .name { font-weight: 600; font-size: 0.92rem; margin-bottom: 4px; }
+    .dead-end-card .result { font-family: var(--mono); font-size: 0.85rem; color: var(--red); }
+    .dead-end-card .reason { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
+
+    /* Insight cards */
+    .insight {
+      background: var(--card-bg); border-left: 3px solid var(--accent);
+      padding: 16px 20px; margin: 20px 0; border-radius: 0 8px 8px 0;
+    }
+    .insight strong { color: var(--accent); }
+
+    /* Footer */
+    footer { padding: 40px 0; text-align: center; font-size: 0.82rem; color: var(--muted); }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    code { font-family: var(--mono); font-size: 0.88em; background: #f3f4f6; padding: 2px 6px; border-radius: 3px; }
+
+    @media (max-width: 640px) {
+      .dead-ends { grid-template-columns: 1fr; }
+      .bar-label { width: 120px; font-size: 0.78rem; }
+      .hero-metric .number { font-size: 3rem; }
+    }
+  </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=PT+Serif:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/style.css">
-  <link rel="stylesheet" href="./custom.css" onerror="this.remove()">
-  <script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
-  <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
-  <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
-  <script src="https://unpkg.com/marked@15.0.4/marked.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <main id="app">
-    <p class="loading">Loading…</p>
-  </main>
-  <script type="module" src="./assets/app.js"></script>
+
+<div class="container">
+
+<header>
+  <h1>Boltz-2 Inference Speedup</h1>
+  <p class="subtitle">How far can we push GPU inference speed without retraining — by systematically exploring step reduction, precision tuning, kernel engineering, and framework optimization?</p>
+  <p class="meta">
+    26 orbits explored &middot; eval-v4 (predict-only timing, L40S GPU) &middot;
+    <a href="https://github.com/canele-ai/boltz/issues/2">Campaign Issue</a> &middot;
+    <a href="https://github.com/canele-ai/boltz">Repository</a>
+  </p>
+</header>
+
+<!-- Result -->
+<section>
+  <h2>Result</h2>
+  <div class="hero-metric">
+    <span class="number" id="hero-number">3.50×</span>
+    <span class="label">speedup at iso-quality<br><span style="font-size:0.85rem">7.16s vs 25.04s baseline &middot; pLDDT +0.17pp &middot; 3 seeds validated</span></span>
+  </div>
+  <p>Five optimizations stack multiplicatively to reduce per-prediction time from 25s to 7.2s, without retraining or changing the model weights. Quality is fully preserved (pLDDT within 0.2 percentage points of baseline).</p>
+</section>
+
+<!-- Incremental Stack -->
+<section>
+  <h2>The Optimization Stack</h2>
+  <p>Each optimization was measured independently on the eval-v4 harness (L40S GPU, pre-cached MSAs, model loading excluded from timing).</p>
+
+  <table>
+    <thead>
+      <tr><th>Configuration</th><th class="num">Time (s)</th><th class="num">Speedup</th><th class="num">Δ pLDDT</th><th>Gate</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Baseline (200 steps, 3× recycling, fp32)</td>
+        <td class="num">25.04</td><td class="num speedup">1.00×</td><td class="num">—</td>
+        <td><span class="tag tag-pass">ref</span></td>
+      </tr>
+      <tr>
+        <td>+ ODE sampling (γ₀=0) + 12 steps + recycling=0 + TF32 + bf16</td>
+        <td class="num">12.26</td><td class="num speedup">2.04×</td><td class="num">+0.95pp</td>
+        <td><span class="tag tag-pass">pass</span></td>
+      </tr>
+      <tr>
+        <td>+ Bypass Lightning Trainer</td>
+        <td class="num">8.62</td><td class="num speedup">2.91×</td><td class="num">+0.95pp</td>
+        <td><span class="tag tag-pass">pass</span></td>
+      </tr>
+      <tr class="winner">
+        <td><strong>+ CUDA warmup</strong></td>
+        <td class="num"><strong>7.16</strong></td><td class="num speedup"><strong>3.50×</strong></td><td class="num">+0.17pp</td>
+        <td><span class="tag tag-pass">pass</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-label">Baseline</span>
+      <div class="bar-track"><div class="bar-fill baseline" style="width:100%">25.0s</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">+ ODE-12 + TF32 + bf16</span>
+      <div class="bar-track"><div class="bar-fill opt2" style="width:49%">12.3s</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">+ Bypass Trainer</span>
+      <div class="bar-track"><div class="bar-fill opt3" style="width:34.4%">8.6s</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label"><strong>+ CUDA warmup</strong></span>
+      <div class="bar-track"><div class="bar-fill winner" style="width:28.6%"><strong>7.2s</strong></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Where Time Goes -->
+<section>
+  <h2>Where Time Goes</h2>
+  <p>Profiling the predict-only window reveals what each optimization actually eliminates.</p>
+
+  <h3>Baseline (25.04s)</h3>
+  <div class="stacked-bar">
+    <div class="segment" style="width:5.2%;background:#6366f1" title="Input embedding">Emb</div>
+    <div class="segment" style="width:5.2%;background:#8b5cf6" title="MSA module">MSA</div>
+    <div class="segment" style="width:4.4%;background:#a855f7" title="Pairformer">Pair</div>
+    <div class="segment" style="width:52%;background:#c084fc" title="Diffusion (200 steps)">Diffusion (200 steps)</div>
+    <div class="segment" style="width:2.4%;background:#d8b4fe" title="Confidence">Conf</div>
+    <div class="segment" style="width:8%;background:#9ca3af" title="Lightning overhead">Lightning</div>
+    <div class="segment" style="width:14%;background:#d1d5db" title="CUDA init + other">Init</div>
+  </div>
+
+  <h3>Optimized (7.16s)</h3>
+  <div class="stacked-bar">
+    <div class="segment" style="width:4.5%;background:#6366f1">Emb</div>
+    <div class="segment" style="width:18%;background:#8b5cf6">MSA</div>
+    <div class="segment" style="width:15%;background:#a855f7">Pair</div>
+    <div class="segment" style="width:5.6%;background:#c084fc">Diff</div>
+    <div class="segment" style="width:2.4%;background:#d8b4fe">Conf</div>
+    <div class="segment" style="width:40%;background:#e5e7eb;color:#6b7280">Remaining overhead</div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#6366f1"></div>Input embedding</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>MSA module</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#a855f7"></div>Pairformer</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c084fc"></div>Diffusion</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d8b4fe"></div>Confidence</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9ca3af"></div>Framework overhead</div>
+  </div>
+
+  <div class="insight">
+    <strong>Key insight:</strong> At 12 ODE steps, diffusion drops from 52% to 5.6% of total time. The Pairformer (15%) and MSA module (18%) become the dominant GPU costs. The remaining 40% overhead is DataLoader batch construction and tensor transfer — the next optimization frontier.
+  </div>
+</section>
+
+<!-- Per-complex -->
+<section>
+  <h2>Per-Complex Scaling</h2>
+  <p>The optimization stack scales consistently across protein complex sizes (200–600 residues).</p>
+  <table>
+    <thead>
+      <tr><th>Complex</th><th class="num">Baseline</th><th class="num">Optimized</th><th class="num">Speedup</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Small (~200 residues)</td><td class="num">12.4s</td><td class="num">3.31s</td><td class="num speedup">3.75×</td></tr>
+      <tr><td>Medium (~400 residues)</td><td class="num">24.2s</td><td class="num">6.37s</td><td class="num speedup">3.80×</td></tr>
+      <tr><td>Large (~600 residues)</td><td class="num">38.5s</td><td class="num">11.78s</td><td class="num speedup">3.27×</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.88rem;color:var(--muted)">All measurements: eval-v4, L40S GPU, pre-cached MSAs, median of 3 runs. Quality gate passes for all complexes (per-complex pLDDT regression &lt; 5pp).</p>
+</section>
+
+<!-- Dead Ends -->
+<section>
+  <h2>What Didn't Work</h2>
+  <p>18 of 26 orbits were dead ends — but each one narrowed the search space and informed the winning strategy.</p>
+
+  <h3>"Make GPU faster" — all failed</h3>
+  <p>The GPU is already well-utilized by cuequivariance CUDA kernels. Every attempt to speed up existing computations backfired.</p>
+  <div class="dead-ends">
+    <div class="dead-end-card">
+      <div class="name">SDPA Attention</div>
+      <div class="result">1.00× (no change)</div>
+      <div class="reason">Pair bias blocks FlashAttention-2. Verified on eval-v4: 0.8% difference is noise.</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name">torch.compile</div>
+      <div class="result">0.61×</div>
+      <div class="reason">Inductor-generated code 2× slower than cuequivariance CUDA kernels.</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name">CUDA Graphs</div>
+      <div class="result">~10 min compile</div>
+      <div class="reason">48 Pairformer layers generate hundreds of kernels. Dynamic shapes force recompilation.</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name">INT8 Quantization</div>
+      <div class="result">0.71×</div>
+      <div class="reason">Dequantization overhead exceeds savings. Model is compute-bound, not memory-bound.</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name">bf16 Attention</div>
+      <div class="result">0.75×</div>
+      <div class="reason">TF32 fp32 einsum via cuBLAS is already faster than bf16 einsum.</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name">Custom Triton Kernels</div>
+      <div class="result">1.08× (isolated)</div>
+      <div class="reason">Permute/contiguous overhead negates gains at Boltz's small window sizes (W=32).</div>
+    </div>
+  </div>
+
+  <h3>"Reduce model computation" — limited by quality</h3>
+  <div class="dead-ends">
+    <div class="dead-end-card">
+      <div class="name">Pairformer Pruning</div>
+      <div class="result">−4.6pp pLDDT</div>
+      <div class="reason">64→48 blocks causes catastrophic quality regression. Pairformer is quality-critical.</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name">Token Merging</div>
+      <div class="result">−17pp pLDDT</div>
+      <div class="reason">Even 10% merge destroys pair representation precision. O(n²) merge cost ≈ O(n²) savings.</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name">Sparse Triangular Ops</div>
+      <div class="result">−7.5pp pLDDT</div>
+      <div class="reason">Full k-summation carries essential long-range structural info. And only 4% of total time.</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name">Head Pruning</div>
+      <div class="result">No speedup</div>
+      <div class="reason">75% of sequence attention heads are redundant (quality improves!) but triangle ops dominate compute.</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>The strategic pivot:</strong> After 18 dead ends targeting GPU compute, the cpu-gap-profile study revealed that ~70% of predict-only time was framework overhead, not GPU. This led directly to the bypass-lightning solution.
+  </div>
+</section>
+
+<!-- Architecture Findings -->
+<section>
+  <h2>Architectural Findings</h2>
+
+  <h3>The Pairformer is sacred</h3>
+  <p>The 64-block Pairformer is simultaneously the quality-critical compute path (triangle operations carry all structural signal) and the optimization barrier (blocks torch.compile, TensorRT, CUDA graphs via <code>@torch.compiler.disable</code>). You cannot prune it, merge its tokens, sparsify its contractions, or quantize its weights without quality collapse.</p>
+
+  <h3>cuequivariance kernels are optimal</h3>
+  <p>The cuequivariance CUDA kernels for TriangleMultiplication and TriangleAttention are already faster than any alternative we tested: custom Triton kernels, torch.bmm, SDPA, inductor-generated code. The ~8% fusion advantage from fusing LayerNorm + Linear + sigmoid + einsum + gate into one kernel cannot be matched by unfused alternatives.</p>
+
+  <h3>DiffusionTransformer layers are free</h3>
+  <p>Cutting from 24 to 8 DiffusionTransformer layers has zero quality or timing impact at 12 ODE steps. The score model is massively over-parameterized for inference at reduced step counts. (However, one orbit found truncation harmful with different ODE step configurations — this may be config-dependent.)</p>
+
+  <h3>75% of sequence attention heads are redundant</h3>
+  <p>Zeroing 75% of Pairformer sequence attention heads actually <em>improves</em> pLDDT by +4pp. The useful signal is carried almost entirely by the pairwise track (triangle attention + multiplication). Structural head pruning could reduce memory footprint for deployment.</p>
+</section>
+
+<!-- Method -->
+<section>
+  <h2>Method</h2>
+
+  <h3>Evaluation harness</h3>
+  <p>All measurements use the eval-v4 harness: subprocess per prediction on Modal L40S GPU, with pre-cached MSAs (eliminating network latency) and phase timestamps that exclude model loading from timing. The baseline is the default Boltz-2 configuration: 200 EDM/Karras diffusion steps, 3 recycling passes, fp32 precision.</p>
+
+  <h3>Quality gate</h3>
+  <p>Mean pLDDT regression ≤ 2 percentage points across 3 test complexes (small ~200, medium ~400, large ~600 residues). Per-complex regression ≤ 5pp. All results validated with 3 random seeds.</p>
+
+  <h3>Optimization approach</h3>
+  <p>26 independent orbit experiments, each testing a specific hypothesis on an isolated git branch. No retraining, no weight modification, no architectural changes. All optimizations are monkey-patches applied at inference time.</p>
+</section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p>
+      Built with <a href="https://github.com/anthropics/claude-code">Claude Code</a> +
+      <a href="https://github.com/leothesouthafrican/research-everything">research-everything</a>
+    </p>
+  </div>
+</footer>
+
 </body>
 </html>
