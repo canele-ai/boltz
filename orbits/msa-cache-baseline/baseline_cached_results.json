@@ -1,0 +1,89 @@
+{
+  "config": {
+    "sampling_steps": 200,
+    "recycling_steps": 3,
+    "matmul_precision": "highest",
+    "diffusion_samples": 1,
+    "seed": 42,
+    "gamma_0": 0.8,
+    "noise_scale": 1.003
+  },
+  "num_runs": 3,
+  "msa_cached": true,
+  "per_complex": [
+    {
+      "name": "small_complex",
+      "wall_time_s": 37.73746203900001,
+      "quality": {
+        "confidence_score": 0.8302791714668274,
+        "ptm": 0.8582128286361694,
+        "iptm": 0.8112627863883972,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.8112627863883972,
+        "complex_plddt": 0.8350332379341125,
+        "complex_iplddt": 0.8013144731521606,
+        "complex_pde": 0.8275884985923767,
+        "complex_ipde": 3.334547281265259
+      },
+      "error": null,
+      "run_times": [
+        92.437928682,
+        36.70965273499999,
+        37.73746203900001
+      ]
+    },
+    {
+      "name": "medium_complex",
+      "wall_time_s": 56.02767895699998,
+      "quality": {
+        "confidence_score": 0.4796741008758545,
+        "ptm": 0.6145855784416199,
+        "iptm": 0.5011532306671143,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.5011532306671143,
+        "complex_plddt": 0.47430431842803955,
+        "complex_iplddt": 0.46813714504241943,
+        "complex_pde": 2.1416354179382324,
+        "complex_ipde": 6.592845439910889
+      },
+      "error": null,
+      "run_times": [
+        57.118332246999984,
+        55.888227718000024,
+        56.02767895699998
+      ]
+    },
+    {
+      "name": "large_complex",
+      "wall_time_s": 74.118312038,
+      "quality": {
+        "confidence_score": 0.6682623624801636,
+        "ptm": 0.3840698301792145,
+        "iptm": 0.12378375232219696,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.12378375232219696,
+        "complex_plddt": 0.8043819665908813,
+        "complex_iplddt": 0.8287977576255798,
+        "complex_pde": 1.0614911317825317,
+        "complex_ipde": 15.958657264709473
+      },
+      "error": null,
+      "run_times": [
+        75.04149744699998,
+        74.118312038,
+        73.85665687200003
+      ]
+    }
+  ],
+  "aggregate": {
+    "num_successful": 3,
+    "num_total": 3,
+    "total_wall_time_s": 167.88345303399998,
+    "mean_wall_time_s": 55.96115101133333,
+    "mean_plddt": 0.7045731743176779,
+    "mean_iptm": 0.47873325645923615,
+    "speedup_vs_msa_baseline": 1.2574899763900216,
+    "plddt_delta_pp": -0.6098707516988044,
+    "passes_quality_gate": true
+  }
+}
