@@ -9,11 +9,11 @@
   "project_name": "boltz",
   "status": "ready",
   "setup_phase": 4,
-  "eval_version": "eval-v3",
+  "eval_version": "eval-v4",
   "direction": "maximize",
   "metric_name": "speedup_at_iso_quality",
-  "best_metric": 1.0,
-  "best_orbit": null,
+  "best_metric": 3.5,
+  "best_orbit": "bypass-lightning (ODE-12/0r + TF32 + bf16 + bypass Trainer + CUDA warmup)",
   "campaign_url": "https://github.com/canele-ai/boltz/issues/2",
   "campaign_issue": 2,
   "last_milestone": 7,
@@ -39,6 +39,13 @@
       "kind": "eval-harness-change",
       "target": "research/eval/evaluator.py",
       "commit": null
+    },
+    {
+      "at": "2026-04-12T18:00:00.000000Z",
+      "orbit": "bypass-lightning",
+      "kind": "Winner solution",
+      "target": "research/solutions/bypass-lightning/",
+      "commit": "a5b3238"
     }
   ]
 }
