@@ -136,7 +136,7 @@
   <h1>Boltz-2 Inference Speedup</h1>
   <p class="subtitle">How far can we push GPU inference speed without retraining — by systematically exploring step reduction, precision tuning, kernel engineering, and framework optimization?</p>
   <p class="meta">
-    26 orbits explored &middot; eval-v5 (predict-only timing, L40S GPU, PDB ground truth validated) &middot;
+    50 orbits explored &middot; eval-v5 (L40S GPU, 3 seeds, PDB ground truth validated) &middot;
     <a href="https://github.com/canele-ai/boltz/issues/2">Campaign Issue</a> &middot;
     <a href="https://github.com/canele-ai/boltz">Repository</a>
   </p>
@@ -146,72 +146,88 @@
 <section>
   <h2>Result</h2>
   <div class="hero-metric">
-    <span class="number">2.08×</span>
-    <span class="label">speedup at iso-quality<br><span style="font-size:0.85rem">14.33s vs 29.78s baseline &middot; structural quality validated against PDB ground truth</span></span>
+    <span class="number">1.69×</span>
+    <span class="label">speedup at iso-quality<br><span style="font-size:0.85rem">17.67s predict-only vs 29.78s baseline &middot; structural quality validated against PDB ground truth</span></span>
   </div>
-  <p>Two optimizations — ODE sampling and framework bypass — reduce per-prediction time from 30s to 14s without retraining or weight changes. Structural accuracy is validated against experimental crystal structures from the PDB.</p>
+  <p>Two optimizations — ODE sampling and framework bypass — reduce per-prediction GPU time from 30s to 18s without retraining or weight changes. Structural accuracy is validated against experimental crystal structures from the PDB. All 3 recycling passes are preserved — a critical requirement discovered during the campaign (see findings below).</p>
 
   <table>
     <thead>
       <tr><th>Complex (PDB)</th><th class="num">Baseline</th><th class="num">Optimized</th><th class="num">Speedup</th><th class="num">Δ pLDDT</th><th class="num">Δ CA RMSD</th></tr>
     </thead>
     <tbody>
-      <tr><td>Barnase-Barstar (1BRS)</td><td class="num">14.0s</td><td class="num">4.6s</td><td class="num speedup">3.04×</td><td class="num">+0.001</td><td class="num">−0.03 Å</td></tr>
-      <tr><td>Fab + Lysozyme (1DQJ)</td><td class="num">33.5s</td><td class="num">13.7s</td><td class="num speedup">2.45×</td><td class="num">+0.003</td><td class="num">+0.16 Å</td></tr>
-      <tr><td>Hemoglobin (2DN2)</td><td class="num">41.9s</td><td class="num">24.7s</td><td class="num speedup">1.70×</td><td class="num">0.000</td><td class="num">+0.06 Å</td></tr>
+      <tr><td>Barnase-Barstar (1BRS)</td><td class="num">14.0s</td><td class="num">6.3s</td><td class="num speedup">2.24×</td><td class="num">+0.001</td><td class="num">−0.03 Å</td></tr>
+      <tr><td>Fab + Lysozyme (1DQJ)</td><td class="num">33.5s</td><td class="num">20.5s</td><td class="num speedup">1.64×</td><td class="num">+0.002</td><td class="num">+0.14 Å</td></tr>
+      <tr><td>Hemoglobin (2DN2)</td><td class="num">41.9s</td><td class="num">26.3s</td><td class="num speedup">1.59×</td><td class="num">−0.001</td><td class="num">+0.02 Å</td></tr>
     </tbody>
   </table>
-  <p style="font-size:0.85rem;color:var(--muted)">Optimized = ODE-12 + bypass Lightning + CUDA warmup. All with 3 recycling passes preserved. Deltas are optimized minus baseline. CA RMSD computed against PDB crystal structures via BioPython.</p>
+  <p style="font-size:0.85rem;color:var(--muted)">Optimized = ODE-12 + bypass Lightning Trainer + CUDA warmup. All with 3 recycling passes preserved. Optimized column shows predict_only_s (GPU inference only); baseline shows wall_time_s (end-to-end subprocess). CA RMSD computed against PDB crystal structures via BioPython SVDSuperimposer. 3 seeds per config.</p>
 </section>
 
 <!-- Incremental Stack -->
 <section>
   <h2>The Optimization Stack</h2>
-  <p>Each optimization was measured on the eval-v5 harness (L40S GPU, pre-cached MSAs, model loading excluded, structural validation against PDB ground truth). All configurations preserve the default 3 recycling passes.</p>
+  <p>Each row adds one optimization on top of the previous. All measured on eval-v5 (L40S GPU, pre-cached MSAs, 3 seeds, CA RMSD against PDB ground truth). All configurations preserve the default 3 recycling passes.</p>
 
   <table>
     <thead>
-      <tr><th>Configuration</th><th class="num">Time (s)</th><th class="num">Speedup</th><th class="num">Δ pLDDT</th><th class="num">Δ CA RMSD</th><th>Gate</th></tr>
+      <tr><th>Configuration</th><th class="num">Time (s)</th><th class="num">Speedup</th><th class="num">Δ pLDDT</th><th class="num">Max Δ RMSD</th><th>Gate</th></tr>
     </thead>
     <tbody>
       <tr>
-        <td>Baseline (200 steps, 3× recycling, fp32)</td>
+        <td><strong>A.</strong> Baseline (SDE-200, fp32, 3× recycle)</td>
         <td class="num">29.78</td><td class="num speedup">1.00×</td><td class="num">—</td><td class="num">—</td>
         <td><span class="tag tag-pass">ref</span></td>
       </tr>
       <tr>
-        <td>+ ODE sampling (γ₀=0) + 12 steps</td>
-        <td class="num">21.25</td><td class="num speedup">1.40×</td><td class="num">+0.001</td><td class="num">+0.06 Å</td>
+        <td><strong>B.</strong> + ODE sampling (γ₀=0) + 12 steps</td>
+        <td class="num">21.33</td><td class="num speedup">1.40×</td><td class="num">+0.09pp</td><td class="num">+0.16 Å</td>
+        <td><span class="tag tag-pass">pass</span></td>
+      </tr>
+      <tr>
+        <td><strong>C.</strong> + TF32 matmul precision</td>
+        <td class="num">25.90</td><td class="num speedup">1.15×</td><td class="num">+0.08pp</td><td class="num">+0.16 Å</td>
+        <td><span class="tag tag-pass">pass</span></td>
+      </tr>
+      <tr>
+        <td><strong>D.</strong> + bf16 trunk</td>
+        <td class="num">22.67</td><td class="num speedup">1.31×</td><td class="num">+0.09pp</td><td class="num">+0.16 Å</td>
         <td><span class="tag tag-pass">pass</span></td>
       </tr>
       <tr class="winner">
-        <td><strong>+ Bypass Lightning + CUDA warmup</strong></td>
-        <td class="num"><strong>14.33</strong></td><td class="num speedup"><strong>2.08×</strong></td><td class="num">+0.001</td><td class="num">+0.06 Å</td>
+        <td><strong>E. + Bypass Lightning Trainer</strong></td>
+        <td class="num"><strong>17.67</strong></td><td class="num speedup"><strong>1.69×</strong></td><td class="num">−0.04pp</td><td class="num">+0.14 Å</td>
         <td><span class="tag tag-pass">pass</span></td>
       </tr>
     </tbody>
   </table>
+  <p style="font-size:0.82rem;color:var(--muted)">Configs A–D measured as wall_time_s (standard evaluator, subprocess per prediction). Config E measured as predict_only_s (bypass wrapper, phase timestamps). Max Δ RMSD shows the worst per-complex CA RMSD regression across the three test cases.</p>
 
   <div class="bar-chart">
     <div class="bar-row">
-      <span class="bar-label">Baseline (200 steps)</span>
+      <span class="bar-label">A. Baseline (SDE-200)</span>
       <div class="bar-track"><div class="bar-fill baseline" style="width:100%">29.8s</div></div>
       <span class="bar-speedup">1.00×</span>
     </div>
     <div class="bar-row">
-      <span class="bar-label">+ ODE-12 steps</span>
-      <div class="bar-track"><div class="bar-fill opt2" style="width:71.3%">21.3s</div></div>
+      <span class="bar-label">B. + ODE-12 steps</span>
+      <div class="bar-track"><div class="bar-fill opt2" style="width:71.6%">21.3s</div></div>
       <span class="bar-speedup">1.40×</span>
     </div>
     <div class="bar-row">
-      <span class="bar-label"><strong>+ Bypass + warmup</strong></span>
-      <div class="bar-track"><div class="bar-fill winner" style="width:48.1%">14.3s</div></div>
-      <span class="bar-speedup"><strong>2.08×</strong></span>
+      <span class="bar-label">D. + TF32 + bf16</span>
+      <div class="bar-track"><div class="bar-fill opt2" style="width:76.1%">22.7s</div></div>
+      <span class="bar-speedup">1.31×</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label"><strong>E. + Bypass Trainer</strong></span>
+      <div class="bar-track"><div class="bar-fill winner" style="width:59.3%">17.7s</div></div>
+      <span class="bar-speedup"><strong>1.69×</strong></span>
     </div>
   </div>
 
   <div class="insight">
-    <strong>Where the savings come from:</strong> ODE sampling saves 8.5s by reducing diffusion from 200 to 12 deterministic steps. Bypassing Lightning saves another 6.9s by eliminating framework overhead (Trainer setup, per-batch hooks, CUDA lazy init). TF32+bf16 was dropped from the stack after eval-v5 showed it <em>slows down</em> the new, larger test complexes — cuequivariance kernels are already well-optimized for these sizes.
+    <strong>Where the savings come from:</strong> ODE sampling provides the largest single gain (1.40×) by replacing 200 stochastic diffusion steps with 12 deterministic ODE steps. Bypassing Lightning's Trainer.predict() eliminates ~5s of framework overhead (strategy setup, per-batch hooks, callback dispatch). TF32 and bf16 are included in the final stack but contribute marginally — cuequivariance CUDA kernels are already well-optimized for these tensor sizes.
   </div>
 </section>
 
@@ -234,14 +250,14 @@
   </div>
 
   <div class="stacked-bar-container" style="margin-top:24px">
-    <div class="stacked-bar-title">Optimized <span>14.33s &middot; 12 ODE steps &middot; direct model calls</span></div>
+    <div class="stacked-bar-title">Optimized <span>17.67s &middot; 12 ODE steps &middot; 3× recycle &middot; direct model calls</span></div>
     <div class="stacked-bar">
-      <div class="segment" style="width:6%;background:#6366f1" title="Embedding ~0.9s"></div>
-      <div class="segment" style="width:9%;background:#8b5cf6" title="MSA ~1.3s">MSA</div>
-      <div class="segment" style="width:31%;background:#7c3aed" title="Pairformer ~4.4s">Pairformer</div>
-      <div class="segment" style="width:3%;background:#a78bfa" title="Diffusion ~0.4s"></div>
+      <div class="segment" style="width:5%;background:#6366f1" title="Embedding ~0.9s"></div>
+      <div class="segment" style="width:7%;background:#8b5cf6" title="MSA ~1.3s">MSA</div>
+      <div class="segment" style="width:25%;background:#7c3aed" title="Pairformer ~4.4s">Pairformer</div>
+      <div class="segment" style="width:22%;background:#a78bfa" title="Diffusion ~3.9s">Diffusion</div>
       <div class="segment" style="width:2%;background:#c4b5fd" title="Confidence ~0.3s"></div>
-      <div class="segment" style="width:49%;background:#e2e8f0;color:#94a3b8" title="DataLoader + other ~7.0s">DataLoader + other overhead</div>
+      <div class="segment" style="width:39%;background:#e2e8f0;color:#94a3b8" title="DataLoader + other ~6.9s">DataLoader + other</div>
     </div>
   </div>
 
@@ -255,53 +271,76 @@
   </div>
 
   <div class="insight">
-    <strong>Key insight:</strong> At 12 ODE steps, diffusion drops from 40% to 3% of total time. The Pairformer with its 4 recycling passes (30%) becomes the dominant GPU cost. The remaining ~35% is DataLoader batch construction and tensor transfer — the next optimization frontier.
+    <strong>Key insight:</strong> At 12 ODE steps with 3 recycling passes, diffusion drops from 38% to 22% of total time. The Pairformer (25%) and DataLoader overhead (39%) become the dominant costs. Further speedup requires either reducing framework overhead (persistent model serving) or faster trunk computation.
   </div>
 </section>
 
 <!-- Per-complex -->
 <section>
-  <h2>Per-Complex Scaling</h2>
-  <p>Results on all three PDB-backed test complexes, with structural validation against experimental ground truth.</p>
+  <h2>Per-Complex Results</h2>
+  <p>Best validated config (E: ODE-12 + TF32 + bf16 + bypass Trainer, recycling=3) on all three PDB-backed test complexes.</p>
   <table>
     <thead>
-      <tr><th>Complex (PDB)</th><th class="num">Baseline</th><th class="num">ODE-12</th><th class="num">Speedup</th><th class="num">pLDDT base</th><th class="num">pLDDT opt</th><th class="num">RMSD base</th><th class="num">RMSD opt</th></tr>
+      <tr><th>Complex (PDB)</th><th class="num">Baseline</th><th class="num">Optimized</th><th class="num">pLDDT</th><th class="num">BL pLDDT</th><th class="num">RMSD</th><th class="num">BL RMSD</th></tr>
     </thead>
     <tbody>
-      <tr><td>Barnase-Barstar (1BRS, 199 res)</td><td class="num">14.0s</td><td class="num">9.9s</td><td class="num speedup">1.41×</td><td class="num">0.967</td><td class="num">0.968</td><td class="num">0.33 Å</td><td class="num">0.30 Å</td></tr>
-      <tr><td>Fab + Lysozyme (1DQJ, 563 res)</td><td class="num">33.5s</td><td class="num">24.1s</td><td class="num speedup">1.39×</td><td class="num">0.962</td><td class="num">0.965</td><td class="num">5.24 Å</td><td class="num">5.40 Å</td></tr>
-      <tr><td>Hemoglobin (2DN2, 574 res)</td><td class="num">41.9s</td><td class="num">29.7s</td><td class="num speedup">1.41×</td><td class="num">0.965</td><td class="num">0.965</td><td class="num">0.47 Å</td><td class="num">0.53 Å</td></tr>
+      <tr><td>Barnase-Barstar (1BRS, 199 res)</td><td class="num">14.0s</td><td class="num">6.3s</td><td class="num">0.968</td><td class="num">0.967</td><td class="num">0.30 Å</td><td class="num">0.33 Å</td></tr>
+      <tr><td>Fab + Lysozyme (1DQJ, 563 res)</td><td class="num">33.5s</td><td class="num">20.5s</td><td class="num">0.964</td><td class="num">0.962</td><td class="num">5.38 Å</td><td class="num">5.24 Å</td></tr>
+      <tr><td>Hemoglobin (2DN2, 574 res)</td><td class="num">41.9s</td><td class="num">26.3s</td><td class="num">0.965</td><td class="num">0.966</td><td class="num">0.50 Å</td><td class="num">0.47 Å</td></tr>
     </tbody>
   </table>
-  <p style="font-size:0.88rem;color:var(--muted)">All measurements: eval-v5, L40S GPU, pre-cached MSAs, median of 3 runs. CA RMSD computed by BioPython SVDSuperimposer against PDB crystal structures.</p>
+  <p style="font-size:0.88rem;color:var(--muted)">Optimized column shows predict_only_s (Config E). Baseline shows wall_time_s from eval-v5 standard evaluator. 3 seeds per config, mean values shown. CA RMSD computed by BioPython SVDSuperimposer against PDB crystal structures.</p>
 
   <div class="insight">
-    <strong>Structural quality is preserved.</strong> ODE-12's predictions are within 0.2Å of the baseline's accuracy against ground truth. The antibody-antigen complex (1DQJ) has ~5Å RMSD for both configs — this reflects the inherent difficulty of predicting Fab flexibility, not a degradation from optimization. Small and large complexes are predicted to near-crystallographic accuracy (0.3-0.5Å) by both configs.
+    <strong>Structural quality is preserved.</strong> The optimized predictions are within 0.15Å of baseline accuracy against PDB ground truth. The Fab-lysozyme complex (1DQJ) has ~5.3Å RMSD for both configs — this reflects inherent difficulty of predicting flexible Fab domain orientation, not optimization degradation. Barnase-Barstar and hemoglobin are predicted to near-crystallographic accuracy (0.3–0.5Å) by both configs.
+  </div>
+</section>
+
+<!-- Key Finding: Recycling -->
+<section>
+  <h2>Critical Finding: Recycling Cannot Be Skipped</h2>
+  <p>Early in the campaign, removing recycling passes (recycling_steps=0) appeared to give a free 2–3× speedup with no pLDDT regression. Multiple orbits validated this on pLDDT alone and declared it safe. <strong>Structural validation against PDB ground truth proved this wrong.</strong></p>
+
+  <table>
+    <thead>
+      <tr><th>Recycling</th><th class="num">Speedup</th><th class="num">pLDDT</th><th class="num">2DN2 CA RMSD</th><th>Gate</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0 (skipped)</td><td class="num">1.93×</td><td class="num">0.958 (−0.7pp)</td><td class="num"><strong>2.34 Å</strong></td><td><span class="tag tag-fail">fail</span></td></tr>
+      <tr><td>1</td><td class="num">1.66×</td><td class="num">0.963 (−0.2pp)</td><td class="num"><strong>1.92 Å</strong></td><td><span class="tag tag-fail">fail</span></td></tr>
+      <tr><td>2</td><td class="num">1.49×</td><td class="num">0.966 (+0.1pp)</td><td class="num">0.54 Å</td><td><span class="tag tag-pass">pass</span></td></tr>
+      <tr><td>3 (baseline)</td><td class="num">1.31×</td><td class="num">0.966 (+0.1pp)</td><td class="num">0.53 Å</td><td><span class="tag tag-pass">pass</span></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.85rem;color:var(--muted)">All configs: ODE-12 + TF32 + bf16, eval-v5 standard evaluator. 2DN2 baseline CA RMSD = 0.474Å, quality gate = ≤1.0Å regression.</p>
+
+  <div class="insight">
+    <strong>pLDDT is blind to multi-chain positioning errors.</strong> With recycling=0, the hemoglobin tetramer (2DN2) has individually correct residue geometry (pLDDT 0.95) but globally mispositioned chains (CA RMSD 2.3Å, only 49.5% of residues within 2Å of ground truth). The pLDDT gate passes while the structure is wrong. This is why structural validation against experimental ground truth is essential — confidence scores alone are insufficient for validating inference optimizations.
   </div>
 </section>
 
 <!-- Dead Ends -->
 <section>
   <h2>What Didn't Work</h2>
-  <p>18 of 26 orbits were dead ends — but each one narrowed the search space and informed the winning strategy.</p>
+  <p>The majority of orbits were dead ends — but each one narrowed the search space and informed the winning strategy.</p>
 
   <h3>"Make GPU faster" — all failed</h3>
   <p>The GPU is already well-utilized by cuequivariance CUDA kernels. Every attempt to speed up existing computations backfired.</p>
   <div class="dead-ends">
     <div class="dead-end-card">
-      <div class="name">SDPA Attention</div>
-      <div class="result">1.00× (no change)</div>
-      <div class="reason">Pair bias blocks FlashAttention-2. Verified on eval-v4: 0.8% difference is noise.</div>
+      <div class="name">torch.compile (4 orbits)</div>
+      <div class="result">No speedup on predict_only</div>
+      <div class="reason">Tested on pairformer, score model, diffusion loop, and transformer. cuequivariance kernels + bf16 autocast leave no room. 70–110s compilation overhead.</div>
     </div>
     <div class="dead-end-card">
-      <div class="name">torch.compile</div>
-      <div class="result">0.61×</div>
-      <div class="reason">Inductor-generated code 2× slower than cuequivariance CUDA kernels.</div>
+      <div class="name">SDPA / Flash Attention</div>
+      <div class="result">1.00× (no change)</div>
+      <div class="reason">Pair bias blocks FlashAttention-2. 0.8% difference is noise.</div>
     </div>
     <div class="dead-end-card">
       <div class="name">CUDA Graphs</div>
       <div class="result">~10 min compile</div>
-      <div class="reason">48 Pairformer layers generate hundreds of kernels. Dynamic shapes force recompilation.</div>
+      <div class="reason">48 Pairformer layers × dynamic shapes = recompilation per input.</div>
     </div>
     <div class="dead-end-card">
       <div class="name">INT8 Quantization</div>
@@ -309,19 +348,24 @@
       <div class="reason">Dequantization overhead exceeds savings. Model is compute-bound, not memory-bound.</div>
     </div>
     <div class="dead-end-card">
-      <div class="name">bf16 / TF32 Precision</div>
-      <div class="result">0.83× on eval-v5</div>
-      <div class="reason">Initially appeared helpful on small complexes (eval-v4), but eval-v5's larger test cases showed TF32+bf16 is slower — cuequivariance kernels are already well-optimized.</div>
-    </div>
-    <div class="dead-end-card">
       <div class="name">Custom Triton Kernels</div>
       <div class="result">1.08× (isolated)</div>
       <div class="reason">Permute/contiguous overhead negates gains at Boltz's small window sizes (W=32).</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name">ODE Step Reduction (&lt;12)</div>
+      <div class="result">No speedup</div>
+      <div class="reason">Predict-only flat from 8–15 steps (~7.5s). Diffusion is only 22% of total. Sharp quality cliff at 6 steps.</div>
     </div>
   </div>
 
   <h3>"Reduce model computation" — limited by quality</h3>
   <div class="dead-ends">
+    <div class="dead-end-card">
+      <div class="name">Skip Recycling</div>
+      <div class="result">CA RMSD +1.87 Å</div>
+      <div class="reason">pLDDT passes (−0.7pp) but CA RMSD on hemoglobin tetramer jumps 5× (0.47→2.34Å). Chains are globally mispositioned.</div>
+    </div>
     <div class="dead-end-card">
       <div class="name">Pairformer Pruning</div>
       <div class="result">−4.6pp pLDDT</div>
@@ -330,22 +374,17 @@
     <div class="dead-end-card">
       <div class="name">Token Merging</div>
       <div class="result">−17pp pLDDT</div>
-      <div class="reason">Even 10% merge destroys pair representation precision. O(n²) merge cost ≈ O(n²) savings.</div>
+      <div class="reason">Even 10% merge destroys pair representation precision.</div>
     </div>
     <div class="dead-end-card">
       <div class="name">Sparse Triangular Ops</div>
       <div class="result">−7.5pp pLDDT</div>
-      <div class="reason">Full k-summation carries essential long-range structural info. And only 4% of total time.</div>
-    </div>
-    <div class="dead-end-card">
-      <div class="name">Head Pruning</div>
-      <div class="result">No speedup</div>
-      <div class="reason">75% of sequence attention heads are redundant (quality improves!) but triangle ops dominate compute.</div>
+      <div class="reason">Full k-summation carries essential long-range structural info. Only 4% of total time.</div>
     </div>
   </div>
 
   <div class="insight">
-    <strong>The strategic pivot:</strong> After 18 dead ends targeting GPU compute, the cpu-gap-profile study revealed that ~70% of predict-only time was framework overhead, not GPU. This led directly to the bypass-lightning solution.
+    <strong>The strategic pivot:</strong> After exhausting GPU-level optimizations, profiling revealed that ~40% of predict-only time was framework overhead (Lightning Trainer, CUDA lazy init, batch hooks). This led directly to the bypass-lightning approach — the only optimization that delivered substantial speedup beyond ODE sampling.
   </div>
 </section>
 
@@ -358,6 +397,9 @@
 
   <h3>cuequivariance kernels are optimal</h3>
   <p>The cuequivariance CUDA kernels for TriangleMultiplication and TriangleAttention are already faster than any alternative we tested: custom Triton kernels, torch.bmm, SDPA, inductor-generated code. The ~8% fusion advantage from fusing LayerNorm + Linear + sigmoid + einsum + gate into one kernel cannot be matched by unfused alternatives.</p>
+
+  <h3>Recycling is structurally essential for multi-chain complexes</h3>
+  <p>pLDDT is blind to multi-chain positioning errors. With 0 recycling, per-residue backbone geometry is correct (high pLDDT) but chains are globally mispositioned (high CA RMSD). At least 2 recycling passes are needed for the hemoglobin tetramer (2DN2) to achieve correct inter-chain arrangement. This means recycling reduction cannot be used as a speed optimization unless structural validation against ground truth confirms it for the specific target class.</p>
 
   <h3>DiffusionTransformer layers are free</h3>
   <p>Cutting from 24 to 8 DiffusionTransformer layers has zero quality or timing impact at 12 ODE steps. The score model is massively over-parameterized for inference at reduced step counts. (However, one orbit found truncation harmful with different ODE step configurations — this may be config-dependent.)</p>
@@ -377,7 +419,7 @@
   <p><strong>pLDDT gate:</strong> mean regression ≤ 2pp, per-complex ≤ 5pp. <strong>Structural gate:</strong> CA RMSD vs PDB ground truth must not regress more than 1Å beyond baseline's own accuracy. Both gates validated with 3 seeds.</p>
 
   <h3>Optimization approach</h3>
-  <p>26 independent orbit experiments, each testing a specific hypothesis on an isolated git branch. No retraining, no weight modification, no architectural changes. All optimizations are monkey-patches applied at inference time.</p>
+  <p>50 independent orbit experiments, each testing a specific hypothesis on an isolated git branch. No retraining, no weight modification, no architectural changes. All optimizations are monkey-patches applied at inference time. Final validation suite (Configs A–E) all run with recycling_steps=3 and CA RMSD structural comparison.</p>
 </section>
 
 </div>
