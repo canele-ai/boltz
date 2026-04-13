@@ -3,7 +3,7 @@ strategy: deadend-other
 status: complete
 eval_version: eval-v5
 metric: 1.67
-issue: null
+issue: 55
 parents:
   - orbit/bypass-lightning
   - orbit/sparse-tri-ops
