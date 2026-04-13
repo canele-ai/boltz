@@ -72,7 +72,7 @@
     /* Bar chart */
     .bar-chart { margin: 28px 0; }
     .bar-row { display: flex; align-items: center; margin: 12px 0; gap: 16px; }
-    .bar-label { width: 200px; font-size: 0.88rem; text-align: right; flex-shrink: 0; color: var(--fg); }
+    .bar-label { width: 200px; font-size: 0.88rem; text-align: left; flex-shrink: 0; color: var(--fg); }
     .bar-track { flex: 1; height: 32px; background: #f3f4f6; border-radius: 6px; position: relative; overflow: hidden; }
     .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end;
       padding-right: 10px; font-size: 0.82rem; font-weight: 600; color: white; font-family: var(--mono); }
@@ -149,7 +149,7 @@
     <span class="number">1.69×</span>
     <span class="label">speedup at iso-quality<br><span style="font-size:0.85rem">17.67s predict-only vs 29.78s baseline &middot; structural quality validated against PDB ground truth</span></span>
   </div>
-  <p>Two optimizations — ODE sampling and framework bypass — reduce per-prediction GPU time from 30s to 18s without retraining or weight changes. Structural accuracy is validated against experimental crystal structures from the PDB. All 3 recycling passes are preserved — a critical requirement discovered during the campaign (see findings below).</p>
+  <p>Two optimizations — ODE sampling and framework bypass — reduce per-prediction GPU time from 30s to 18s without retraining or weight changes. Structural accuracy is validated against experimental crystal structures from the PDB.</p>
 
   <table>
     <thead>
@@ -167,7 +167,7 @@
 <!-- Incremental Stack -->
 <section>
   <h2>The Optimization Stack</h2>
-  <p>Each row adds one optimization on top of the previous. All measured on eval-v5 (L40S GPU, pre-cached MSAs, 3 seeds, CA RMSD against PDB ground truth). All configurations preserve the default 3 recycling passes.</p>
+  <p>Each row adds one optimization on top of the previous. All measured on eval-v5 (L40S GPU, pre-cached MSAs, 3 seeds, CA RMSD against PDB ground truth).</p>
 
   <table>
     <thead>
@@ -293,29 +293,6 @@
 
   <div class="insight">
     <strong>Structural quality is preserved.</strong> The optimized predictions are within 0.15Å of baseline accuracy against PDB ground truth. The Fab-lysozyme complex (1DQJ) has ~5.3Å RMSD for both configs — this reflects inherent difficulty of predicting flexible Fab domain orientation, not optimization degradation. Barnase-Barstar and hemoglobin are predicted to near-crystallographic accuracy (0.3–0.5Å) by both configs.
-  </div>
-</section>
-
-<!-- Key Finding: Recycling -->
-<section>
-  <h2>Critical Finding: Recycling Cannot Be Skipped</h2>
-  <p>Early in the campaign, removing recycling passes (recycling_steps=0) appeared to give a free 2–3× speedup with no pLDDT regression. Multiple orbits validated this on pLDDT alone and declared it safe. <strong>Structural validation against PDB ground truth proved this wrong.</strong></p>
-
-  <table>
-    <thead>
-      <tr><th>Recycling</th><th class="num">Speedup</th><th class="num">pLDDT</th><th class="num">2DN2 CA RMSD</th><th>Gate</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>0 (skipped)</td><td class="num">1.93×</td><td class="num">0.958 (−0.7pp)</td><td class="num"><strong>2.34 Å</strong></td><td><span class="tag tag-fail">fail</span></td></tr>
-      <tr><td>1</td><td class="num">1.66×</td><td class="num">0.963 (−0.2pp)</td><td class="num"><strong>1.92 Å</strong></td><td><span class="tag tag-fail">fail</span></td></tr>
-      <tr><td>2</td><td class="num">1.49×</td><td class="num">0.966 (+0.1pp)</td><td class="num">0.54 Å</td><td><span class="tag tag-pass">pass</span></td></tr>
-      <tr><td>3 (baseline)</td><td class="num">1.31×</td><td class="num">0.966 (+0.1pp)</td><td class="num">0.53 Å</td><td><span class="tag tag-pass">pass</span></td></tr>
-    </tbody>
-  </table>
-  <p style="font-size:0.85rem;color:var(--muted)">All configs: ODE-12 + TF32 + bf16, eval-v5 standard evaluator. 2DN2 baseline CA RMSD = 0.474Å, quality gate = ≤1.0Å regression.</p>
-
-  <div class="insight">
-    <strong>pLDDT is blind to multi-chain positioning errors.</strong> With recycling=0, the hemoglobin tetramer (2DN2) has individually correct residue geometry (pLDDT 0.95) but globally mispositioned chains (CA RMSD 2.3Å, only 49.5% of residues within 2Å of ground truth). The pLDDT gate passes while the structure is wrong. This is why structural validation against experimental ground truth is essential — confidence scores alone are insufficient for validating inference optimizations.
   </div>
 </section>
 
