@@ -70,25 +70,30 @@
     .tag-dead { background: #f3f4f6; color: #6b7280; }
 
     /* Bar chart */
-    .bar-chart { margin: 24px 0; }
-    .bar-row { display: flex; align-items: center; margin: 8px 0; gap: 12px; }
-    .bar-label { width: 180px; font-size: 0.85rem; text-align: right; flex-shrink: 0; }
-    .bar-track { flex: 1; height: 28px; background: #f3f4f6; border-radius: 4px; position: relative; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px;
-      font-size: 0.78rem; font-weight: 600; color: white; font-family: var(--mono); transition: width 0.6s ease; }
-    .bar-fill.baseline { background: #9ca3af; }
-    .bar-fill.opt1 { background: #60a5fa; }
+    .bar-chart { margin: 28px 0; }
+    .bar-row { display: flex; align-items: center; margin: 12px 0; gap: 16px; }
+    .bar-label { width: 200px; font-size: 0.88rem; text-align: right; flex-shrink: 0; color: var(--fg); }
+    .bar-track { flex: 1; height: 32px; background: #f3f4f6; border-radius: 6px; position: relative; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end;
+      padding-right: 10px; font-size: 0.82rem; font-weight: 600; color: white; font-family: var(--mono); }
+    .bar-fill.baseline { background: #94a3b8; }
     .bar-fill.opt2 { background: #3b82f6; }
-    .bar-fill.opt3 { background: #2563eb; }
     .bar-fill.winner { background: #1d4ed8; }
+    .bar-speedup { margin-left: 12px; font-size: 0.82rem; font-weight: 600; color: var(--accent); font-family: var(--mono); width: 50px; flex-shrink: 0; }
 
     /* Stacked breakdown */
-    .stacked-bar { display: flex; height: 36px; border-radius: 4px; overflow: hidden; margin: 16px 0; }
+    .stacked-bar-container { margin: 20px 0; }
+    .stacked-bar-title { font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
+    .stacked-bar-title span { font-weight: 400; color: var(--muted); }
+    .stacked-bar { display: flex; height: 40px; border-radius: 6px; overflow: hidden; }
     .stacked-bar .segment { display: flex; align-items: center; justify-content: center;
-      font-size: 0.72rem; font-weight: 600; color: white; min-width: 40px; }
-    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0 24px; font-size: 0.82rem; }
+      font-size: 0.72rem; font-weight: 600; color: white; min-width: 30px;
+      border-right: 1px solid rgba(255,255,255,0.3); }
+    .stacked-bar .segment:last-child { border-right: none; }
+    .stacked-bar .segment .seg-label { font-size: 0.68rem; opacity: 0.9; }
+    .legend { display: flex; gap: 20px; flex-wrap: wrap; margin: 12px 0 8px; font-size: 0.82rem; }
     .legend-item { display: flex; align-items: center; gap: 6px; }
-    .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
 
     /* Dead ends grid */
     .dead-ends { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
@@ -189,16 +194,19 @@
 
   <div class="bar-chart">
     <div class="bar-row">
-      <span class="bar-label">Baseline</span>
+      <span class="bar-label">Baseline (200 steps)</span>
       <div class="bar-track"><div class="bar-fill baseline" style="width:100%">29.8s</div></div>
+      <span class="bar-speedup">1.00×</span>
     </div>
     <div class="bar-row">
-      <span class="bar-label">+ ODE-12</span>
+      <span class="bar-label">+ ODE-12 steps</span>
       <div class="bar-track"><div class="bar-fill opt2" style="width:71.3%">21.3s</div></div>
+      <span class="bar-speedup">1.40×</span>
     </div>
     <div class="bar-row">
       <span class="bar-label"><strong>+ Bypass + warmup</strong></span>
-      <div class="bar-track"><div class="bar-fill winner" style="width:48.1%"><strong>14.3s</strong></div></div>
+      <div class="bar-track"><div class="bar-fill winner" style="width:48.1%">14.3s</div></div>
+      <span class="bar-speedup"><strong>2.08×</strong></span>
     </div>
   </div>
 
@@ -212,33 +220,38 @@
   <h2>Where Time Goes</h2>
   <p>Profiling the predict-only window reveals what each optimization actually eliminates.</p>
 
-  <h3>Baseline (29.78s)</h3>
-  <div class="stacked-bar">
-    <div class="segment" style="width:4%;background:#6366f1" title="Input embedding">Emb</div>
-    <div class="segment" style="width:4%;background:#8b5cf6" title="MSA module">MSA</div>
-    <div class="segment" style="width:15%;background:#a855f7" title="Pairformer (4× recycle)">Pairformer</div>
-    <div class="segment" style="width:40%;background:#c084fc" title="Diffusion (200 steps)">Diffusion (200 steps)</div>
-    <div class="segment" style="width:2%;background:#d8b4fe" title="Confidence">Conf</div>
-    <div class="segment" style="width:8%;background:#9ca3af" title="Lightning overhead">Lightning</div>
-    <div class="segment" style="width:15%;background:#d1d5db" title="CUDA init + other">Init + other</div>
+  <div class="stacked-bar-container">
+    <div class="stacked-bar-title">Baseline <span>29.78s &middot; 200 steps &middot; Lightning Trainer</span></div>
+    <div class="stacked-bar">
+      <div class="segment" style="width:4%;background:#6366f1" title="Embedding ~1.2s"></div>
+      <div class="segment" style="width:5%;background:#8b5cf6" title="MSA ~1.5s"></div>
+      <div class="segment" style="width:15%;background:#7c3aed" title="Pairformer ~4.5s">Pairformer</div>
+      <div class="segment" style="width:38%;background:#a78bfa" title="Diffusion ~11.3s">Diffusion (200 steps)</div>
+      <div class="segment" style="width:2%;background:#c4b5fd" title="Confidence ~0.6s"></div>
+      <div class="segment" style="width:22%;background:#cbd5e1;color:#64748b" title="Lightning + CUDA init ~6.5s">Framework</div>
+      <div class="segment" style="width:14%;background:#e2e8f0;color:#94a3b8" title="Other ~4.2s">Other</div>
+    </div>
   </div>
 
-  <h3>Optimized (14.33s)</h3>
-  <div class="stacked-bar">
-    <div class="segment" style="width:5%;background:#6366f1">Emb</div>
-    <div class="segment" style="width:8%;background:#8b5cf6">MSA</div>
-    <div class="segment" style="width:30%;background:#a855f7">Pairformer (4× recycle)</div>
-    <div class="segment" style="width:3%;background:#c084fc">Diff</div>
-    <div class="segment" style="width:2%;background:#d8b4fe">Conf</div>
-    <div class="segment" style="width:35%;background:#e5e7eb;color:#6b7280">Remaining overhead</div>
+  <div class="stacked-bar-container" style="margin-top:24px">
+    <div class="stacked-bar-title">Optimized <span>14.33s &middot; 12 ODE steps &middot; direct model calls</span></div>
+    <div class="stacked-bar">
+      <div class="segment" style="width:6%;background:#6366f1" title="Embedding ~0.9s"></div>
+      <div class="segment" style="width:9%;background:#8b5cf6" title="MSA ~1.3s">MSA</div>
+      <div class="segment" style="width:31%;background:#7c3aed" title="Pairformer ~4.4s">Pairformer</div>
+      <div class="segment" style="width:3%;background:#a78bfa" title="Diffusion ~0.4s"></div>
+      <div class="segment" style="width:2%;background:#c4b5fd" title="Confidence ~0.3s"></div>
+      <div class="segment" style="width:49%;background:#e2e8f0;color:#94a3b8" title="DataLoader + other ~7.0s">DataLoader + other overhead</div>
+    </div>
   </div>
+
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#6366f1"></div>Input embedding</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#6366f1"></div>Embedding</div>
     <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>MSA module</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#a855f7"></div>Pairformer</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#c084fc"></div>Diffusion</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#d8b4fe"></div>Confidence</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#9ca3af"></div>Framework overhead</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Pairformer (4× recycle)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>Diffusion</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#c4b5fd"></div>Confidence</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#cbd5e1"></div>Framework / overhead</div>
   </div>
 
   <div class="insight">
