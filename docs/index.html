@@ -184,24 +184,14 @@
         <td class="num">21.33</td><td class="num speedup">1.40×</td><td class="num">+0.09pp</td><td class="num">+0.16 Å</td>
         <td><span class="tag tag-pass">pass</span></td>
       </tr>
-      <tr>
-        <td><strong>C.</strong> + TF32 matmul precision</td>
-        <td class="num">25.90</td><td class="num speedup">1.15×</td><td class="num">+0.08pp</td><td class="num">+0.16 Å</td>
-        <td><span class="tag tag-pass">pass</span></td>
-      </tr>
-      <tr>
-        <td><strong>D.</strong> + bf16 trunk</td>
-        <td class="num">22.67</td><td class="num speedup">1.31×</td><td class="num">+0.09pp</td><td class="num">+0.16 Å</td>
-        <td><span class="tag tag-pass">pass</span></td>
-      </tr>
       <tr class="winner">
-        <td><strong>E. + Bypass Lightning Trainer</strong></td>
+        <td><strong>C. + TF32 + bf16 + bypass Lightning Trainer</strong></td>
         <td class="num"><strong>17.67</strong></td><td class="num speedup"><strong>1.69×</strong></td><td class="num">−0.04pp</td><td class="num">+0.14 Å</td>
         <td><span class="tag tag-pass">pass</span></td>
       </tr>
     </tbody>
   </table>
-  <p style="font-size:0.82rem;color:var(--muted)">Configs A–D measured as wall_time_s (standard evaluator, subprocess per prediction). Config E measured as predict_only_s (bypass wrapper, phase timestamps). Max Δ RMSD shows the worst per-complex CA RMSD regression across the three test cases.</p>
+  <p style="font-size:0.82rem;color:var(--muted)">Config A–B measured as wall_time_s (standard evaluator, subprocess per prediction). Config C measured as predict_only_s (bypass wrapper, phase timestamps). Max Δ RMSD shows the worst per-complex CA RMSD regression across the three test cases. All configs preserve 3 recycling passes.</p>
 
   <div class="bar-chart">
     <div class="bar-row">
@@ -215,19 +205,14 @@
       <span class="bar-speedup">1.40×</span>
     </div>
     <div class="bar-row">
-      <span class="bar-label">D. + TF32 + bf16</span>
-      <div class="bar-track"><div class="bar-fill opt2" style="width:76.1%">22.7s</div></div>
-      <span class="bar-speedup">1.31×</span>
-    </div>
-    <div class="bar-row">
-      <span class="bar-label"><strong>E. + Bypass Trainer</strong></span>
+      <span class="bar-label"><strong>C. + TF32 + bf16 + bypass</strong></span>
       <div class="bar-track"><div class="bar-fill winner" style="width:59.3%">17.7s</div></div>
       <span class="bar-speedup"><strong>1.69×</strong></span>
     </div>
   </div>
 
   <div class="insight">
-    <strong>Where the savings come from:</strong> ODE sampling provides the largest single gain (1.40×) by replacing 200 stochastic diffusion steps with 12 deterministic ODE steps. Bypassing Lightning's Trainer.predict() eliminates ~5s of framework overhead (strategy setup, per-batch hooks, callback dispatch). TF32 and bf16 are included in the final stack but contribute marginally — cuequivariance CUDA kernels are already well-optimized for these tensor sizes.
+    <strong>Where the savings come from:</strong> ODE sampling provides the largest single gain (1.40×) by replacing 200 stochastic diffusion steps with 12 deterministic ODE steps. Bypassing Lightning's Trainer.predict() with direct model calls eliminates ~5s of framework overhead (strategy setup, per-batch hooks, callback dispatch). TF32 and bf16 precision are required by the bypass wrapper to produce correct structures — without them, the 12-step ODE trajectory diverges.
   </div>
 </section>
 
@@ -328,6 +313,11 @@
       <div class="name">Custom Triton Kernels</div>
       <div class="result">1.08× (isolated)</div>
       <div class="reason">Permute/contiguous overhead negates gains at Boltz's small window sizes (W=32).</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name">TF32 + bf16 (standalone)</div>
+      <div class="result">0.94× (slower)</div>
+      <div class="reason">TF32 matmul is slower than fp32 on L40S for these tensor shapes. bf16 trunk recovers slightly (1.31×) but both are slower than ODE-12 alone (1.40×). However, TF32+bf16 are required when bypassing Lightning — without them the ODE trajectory diverges.</div>
     </div>
     <div class="dead-end-card">
       <div class="name">ODE Step Reduction (&lt;12)</div>
