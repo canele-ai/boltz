@@ -3,7 +3,7 @@ strategy: deadend-architecture
 status: complete
 eval_version: eval-v5
 metric: 0.17
-issue: 31
+issue: 56
 parents:
   - orbit/bypass-lightning
   - orbit/layer-prune
