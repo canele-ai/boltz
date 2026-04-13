@@ -284,74 +284,75 @@
 <!-- Dead Ends -->
 <section>
   <h2>What Didn't Work</h2>
-  <p>The majority of orbits were dead ends — but each one narrowed the search space and informed the winning strategy.</p>
+  <p>Every approach below was re-validated on eval-v5 stacked on the winning config (ODE-12 + TF32 + bf16 + bypass + recycle=3) with CA RMSD structural comparison. Numbers are from eval-v5 unless noted.</p>
 
   <h3>"Make GPU faster" — all failed</h3>
   <p>The GPU is already well-utilized by cuequivariance CUDA kernels. Every attempt to speed up existing computations backfired.</p>
   <div class="dead-ends">
     <div class="dead-end-card">
-      <div class="name">torch.compile (4 orbits)</div>
-      <div class="result">No speedup on predict_only</div>
-      <div class="reason">Tested on pairformer, score model, diffusion loop, and transformer. cuequivariance kernels + bf16 autocast leave no room. 70–110s compilation overhead.</div>
+      <div class="name"><a href="https://github.com/canele-ai/boltz/issues/4">torch.compile</a> (4 orbits)</div>
+      <div class="result">1.00× — no speedup on predict_only</div>
+      <div class="reason">Tested on pairformer (<a href="https://github.com/canele-ai/boltz/issues/4">#4</a>), score model (<a href="https://github.com/canele-ai/boltz/issues/20">#20</a>), diffusion loop (<a href="https://github.com/canele-ai/boltz/issues/48">#48</a>), fullgraph mode (<a href="https://github.com/canele-ai/boltz/issues/16">#16</a>). cuequivariance kernels + bf16 autocast leave no room. 70–110s compilation overhead.</div>
     </div>
     <div class="dead-end-card">
-      <div class="name">SDPA / Flash Attention</div>
-      <div class="result">1.00× (no change)</div>
-      <div class="reason">Pair bias blocks FlashAttention-2. 0.8% difference is noise.</div>
+      <div class="name"><a href="https://github.com/canele-ai/boltz/issues/36">SDPA / Flash Attention</a></div>
+      <div class="result">0.98× — eval-v5, CA RMSD identical</div>
+      <div class="reason">Pair bias tensor blocks FlashAttention-2 fused kernel; SDPA falls back to math backend. Tested across 3 orbits (<a href="https://github.com/canele-ai/boltz/issues/5">#5</a>, <a href="https://github.com/canele-ai/boltz/issues/19">#19</a>, <a href="https://github.com/canele-ai/boltz/issues/36">#36</a>).</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name"><a href="https://github.com/canele-ai/boltz/issues/35">BMM Triangle Mult</a></div>
+      <div class="result">0.69× — 1.45× slower than cuequivariance</div>
+      <div class="reason">Replacing cuequivariance CUDA kernels with torch.bmm rewrite loses fused LayerNorm+Linear+sigmoid+einsum optimization. Quality identical. (<a href="https://github.com/canele-ai/boltz/issues/35">#35</a>)</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name"><a href="https://github.com/canele-ai/boltz/issues/33">INT8 Quantization</a></div>
+      <div class="result">1.00× — quality-neutral but no real speedup</div>
+      <div class="reason">Simulated INT8 (quantize→dequantize) preserves quality (+0.04pp pLDDT, CA RMSD identical). But torchao's AffineQuantizedTensor is architecturally incompatible with Boltz-2's weight access patterns — real INT8 tensor cores cannot be activated. (<a href="https://github.com/canele-ai/boltz/issues/33">#33</a>, <a href="https://github.com/canele-ai/boltz/issues/23">#23</a>)</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name"><a href="https://github.com/canele-ai/boltz/issues/49">ODE Step Reduction (&lt;12)</a></div>
+      <div class="result">1.00× — predict-only flat from 8–15 steps</div>
+      <div class="reason">Diffusion is only 22% of predict-only time after bypass. Reducing from 12 to 8 steps saves ~0.5s on a 17s budget. Sharp quality cliff at 6 steps (pLDDT 0.40). (<a href="https://github.com/canele-ai/boltz/issues/49">#49</a>)</div>
     </div>
     <div class="dead-end-card">
       <div class="name">CUDA Graphs</div>
       <div class="result">~10 min compile</div>
-      <div class="reason">48 Pairformer layers × dynamic shapes = recompilation per input.</div>
-    </div>
-    <div class="dead-end-card">
-      <div class="name">INT8 Quantization</div>
-      <div class="result">0.71×</div>
-      <div class="reason">Dequantization overhead exceeds savings. Model is compute-bound, not memory-bound.</div>
-    </div>
-    <div class="dead-end-card">
-      <div class="name">Custom Triton Kernels</div>
-      <div class="result">1.08× (isolated)</div>
-      <div class="reason">Permute/contiguous overhead negates gains at Boltz's small window sizes (W=32).</div>
-    </div>
-    <div class="dead-end-card">
-      <div class="name">TF32 + bf16 (standalone)</div>
-      <div class="result">0.94× (slower)</div>
-      <div class="reason">TF32 matmul is slower than fp32 on L40S for these tensor shapes. bf16 trunk recovers slightly (1.31×) but both are slower than ODE-12 alone (1.40×). However, TF32+bf16 are required when bypassing Lightning — without them the ODE trajectory diverges.</div>
-    </div>
-    <div class="dead-end-card">
-      <div class="name">ODE Step Reduction (&lt;12)</div>
-      <div class="result">No speedup</div>
-      <div class="reason">Predict-only flat from 8–15 steps (~7.5s). Diffusion is only 22% of total. Sharp quality cliff at 6 steps.</div>
+      <div class="reason">48 Pairformer layers × dynamic shapes = recompilation per input. Covered by torch.compile reduce-overhead mode in <a href="https://github.com/canele-ai/boltz/issues/48">#48</a>.</div>
     </div>
   </div>
 
   <h3>"Reduce model computation" — limited by quality</h3>
+  <p>All re-validated on eval-v5 with CA RMSD. Quality regressions are consistent with or worse than earlier eval versions.</p>
   <div class="dead-ends">
     <div class="dead-end-card">
-      <div class="name">Skip Recycling</div>
-      <div class="result">CA RMSD +1.87 Å</div>
-      <div class="reason">pLDDT passes (−0.7pp) but CA RMSD on hemoglobin tetramer jumps 5× (0.47→2.34Å). Chains are globally mispositioned.</div>
+      <div class="name"><a href="https://github.com/canele-ai/boltz/issues/51">Skip Recycling</a></div>
+      <div class="result">CA RMSD 2.34 Å (baseline 0.47 Å)</div>
+      <div class="reason">pLDDT passes (−0.7pp) but hemoglobin tetramer chains are globally mispositioned. Only 49.5% of residues within 2Å of ground truth. (<a href="https://github.com/canele-ai/boltz/issues/46">#46</a>, <a href="https://github.com/canele-ai/boltz/issues/51">#51</a>)</div>
     </div>
     <div class="dead-end-card">
-      <div class="name">Pairformer Pruning</div>
-      <div class="result">−4.6pp pLDDT</div>
-      <div class="reason">64→48 blocks causes catastrophic quality regression. Pairformer is quality-critical.</div>
+      <div class="name"><a href="https://github.com/canele-ai/boltz/issues/25">Pairformer Pruning (64→48)</a></div>
+      <div class="result">−26.8pp pLDDT, CA RMSD 17.8 Å on 1DQJ</div>
+      <div class="reason">Catastrophic quality collapse. 0% of residues within 2Å on antibody-lysozyme complex. Pairformer is quality-critical. (<a href="https://github.com/canele-ai/boltz/issues/25">#25</a>)</div>
     </div>
     <div class="dead-end-card">
-      <div class="name">Token Merging</div>
-      <div class="result">−17pp pLDDT</div>
-      <div class="reason">Even 10% merge destroys pair representation precision.</div>
+      <div class="name"><a href="https://github.com/canele-ai/boltz/issues/27">Token Merging (10%)</a></div>
+      <div class="result">−40.1pp pLDDT, CA RMSD 26.5 Å on 1DQJ</div>
+      <div class="reason">Even 10% token merge destroys pair representation. Structures are essentially random on multi-chain complexes. (<a href="https://github.com/canele-ai/boltz/issues/27">#27</a>)</div>
     </div>
     <div class="dead-end-card">
-      <div class="name">Sparse Triangular Ops</div>
-      <div class="result">−7.5pp pLDDT</div>
-      <div class="reason">Full k-summation carries essential long-range structural info. Only 4% of total time.</div>
+      <div class="name"><a href="https://github.com/canele-ai/boltz/issues/37">Sparse Triangular Ops</a></div>
+      <div class="result">Dead end (~4% of compute)</div>
+      <div class="reason">Full k-summation carries essential long-range structural info. Even if sparsification worked, triangle mult is only 4% of predict-only time — ceiling too low. (<a href="https://github.com/canele-ai/boltz/issues/37">#37</a>)</div>
+    </div>
+    <div class="dead-end-card">
+      <div class="name"><a href="https://github.com/canele-ai/boltz/issues/34">Head Pruning (75%)</a></div>
+      <div class="result">1.00× — +2.2pp pLDDT (quality improves!)</div>
+      <div class="reason">75% of sequence attention heads are redundant — zeroing them slightly improves quality. But no speed gain because triangle operations, not attention, dominate Pairformer compute. (<a href="https://github.com/canele-ai/boltz/issues/34">#34</a>)</div>
     </div>
   </div>
 
   <div class="insight">
-    <strong>The strategic pivot:</strong> After exhausting GPU-level optimizations, profiling revealed that ~40% of predict-only time was framework overhead (Lightning Trainer, CUDA lazy init, batch hooks). This led directly to the bypass-lightning approach — the only optimization that delivered substantial speedup beyond ODE sampling.
+    <strong>The strategic pivot:</strong> After exhausting GPU-level and architecture-level optimizations across 50 orbits, profiling revealed that ~40% of predict-only time was framework overhead (Lightning Trainer, CUDA lazy init, batch hooks). This led directly to the bypass-lightning approach — the only optimization that delivered substantial speedup beyond ODE sampling.
   </div>
 </section>
 
@@ -369,10 +370,13 @@
   <p>pLDDT is blind to multi-chain positioning errors. With 0 recycling, per-residue backbone geometry is correct (high pLDDT) but chains are globally mispositioned (high CA RMSD). At least 2 recycling passes are needed for the hemoglobin tetramer (2DN2) to achieve correct inter-chain arrangement. This means recycling reduction cannot be used as a speed optimization unless structural validation against ground truth confirms it for the specific target class.</p>
 
   <h3>DiffusionTransformer layers are free</h3>
-  <p>Cutting from 24 to 8 DiffusionTransformer layers has zero quality or timing impact at 12 ODE steps. The score model is massively over-parameterized for inference at reduced step counts. (However, one orbit found truncation harmful with different ODE step configurations — this may be config-dependent.)</p>
+  <p>Cutting from 24 to 8 DiffusionTransformer layers has zero quality or timing impact at 12 ODE steps — confirmed on eval-v5 with CA RMSD identical to 4 decimal places (<a href="https://github.com/canele-ai/boltz/issues/25">#25</a>). The score model is massively over-parameterized for inference at reduced step counts.</p>
 
   <h3>75% of sequence attention heads are redundant</h3>
-  <p>Zeroing 75% of Pairformer sequence attention heads actually <em>improves</em> pLDDT by +4pp. The useful signal is carried almost entirely by the pairwise track (triangle attention + multiplication). Structural head pruning could reduce memory footprint for deployment.</p>
+  <p>Zeroing 75% of Pairformer sequence attention heads actually <em>improves</em> pLDDT by +2.2pp on eval-v5, with marginally better CA RMSD on barnase-barstar (<a href="https://github.com/canele-ai/boltz/issues/34">#34</a>). The useful signal is carried almost entirely by the pairwise track (triangle attention + multiplication). No speed gain because triangle ops, not attention, dominate compute.</p>
+
+  <h3>MSA module can be cached across recycling (unverified)</h3>
+  <p>Preliminary results suggest that caching the MSA module output from the first trunk pass and reusing it on recycling passes 2+ could reduce predict-only time by ~35%, since MSA inputs don't change across recycling iterations (<a href="https://github.com/canele-ai/boltz/issues/32">#32</a>). This signal was unexpectedly large and needs independent verification before adoption.</p>
 </section>
 
 <!-- Method -->
