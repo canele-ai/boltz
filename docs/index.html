@@ -216,6 +216,131 @@
   </div>
 </section>
 
+<!-- Research Lineage -->
+<section>
+  <h2>Research Lineage</h2>
+  <p>50 orbits explored across five directions. Two tracks converged to the winning stack — each node links to its GitHub issue.</p>
+
+  <svg viewBox="0 0 800 530" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;margin:24px 0">
+    <style>
+      .node { cursor: pointer; }
+      .node rect { transition: opacity 0.15s; }
+      .node:hover rect { opacity: 0.82; }
+      .edge { fill: none; stroke: #cbd5e1; stroke-width: 1.5; }
+      .edge-dash { fill: none; stroke: #cbd5e1; stroke-width: 1.5; stroke-dasharray: 5,4; }
+      .lbl { font-family: Inter, -apple-system, sans-serif; }
+      .mono { font-family: 'JetBrains Mono', Menlo, monospace; }
+    </style>
+    <defs>
+      <marker id="arr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+        <polygon points="0 0, 7 2.5, 0 5" fill="#cbd5e1"/>
+      </marker>
+    </defs>
+
+    <!-- Edges (behind nodes) -->
+    <line x1="400" y1="49" x2="163" y2="97" class="edge" marker-end="url(#arr)"/>
+    <line x1="400" y1="49" x2="397" y2="97" class="edge" marker-end="url(#arr)"/>
+    <line x1="400" y1="49" x2="635" y2="100" class="edge-dash" marker-end="url(#arr)"/>
+    <line x1="163" y1="132" x2="163" y2="182" class="edge" marker-end="url(#arr)"/>
+    <line x1="163" y1="217" x2="163" y2="267" class="edge" marker-end="url(#arr)"/>
+    <line x1="397" y1="132" x2="397" y2="182" class="edge" marker-end="url(#arr)"/>
+    <line x1="397" y1="217" x2="397" y2="267" class="edge" marker-end="url(#arr)"/>
+    <line x1="397" y1="302" x2="397" y2="352" class="edge" marker-end="url(#arr)"/>
+    <path d="M163,302 C163,375 260,410 285,435" class="edge" marker-end="url(#arr)"/>
+    <path d="M397,387 C397,415 340,420 315,435" class="edge" marker-end="url(#arr)"/>
+
+    <!-- Track labels -->
+    <text x="163" y="82" text-anchor="middle" class="lbl" fill="#2563eb" font-size="12" font-weight="600" letter-spacing="0.5">SAMPLING</text>
+    <text x="397" y="82" text-anchor="middle" class="lbl" fill="#2563eb" font-size="12" font-weight="600" letter-spacing="0.5">FRAMEWORK</text>
+    <text x="640" y="82" text-anchor="middle" class="lbl" fill="#94a3b8" font-size="12" font-weight="600" letter-spacing="0.5">DEAD ENDS</text>
+
+    <!-- Campaign -->
+    <a href="https://github.com/canele-ai/boltz/issues/2" target="_blank" class="node">
+      <rect x="315" y="15" width="170" height="34" rx="6" fill="#374151"/>
+      <text x="400" y="37" text-anchor="middle" class="lbl" fill="white" font-size="13" font-weight="600">Campaign #2</text>
+    </a>
+
+    <!-- Sampling track -->
+    <a href="https://github.com/canele-ai/boltz/issues/3" target="_blank" class="node">
+      <rect x="83" y="100" width="160" height="32" rx="6" fill="#3b82f6"/>
+      <text x="163" y="121" text-anchor="middle" class="lbl" fill="white" font-size="12" font-weight="500">step-reduction #3</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/6" target="_blank" class="node">
+      <rect x="88" y="185" width="150" height="32" rx="6" fill="#059669"/>
+      <text x="163" y="206" text-anchor="middle" class="lbl" fill="white" font-size="12" font-weight="600">ode-sampler #6</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/49" target="_blank" class="node">
+      <rect x="83" y="270" width="160" height="32" rx="6" fill="#3b82f6"/>
+      <text x="163" y="291" text-anchor="middle" class="lbl" fill="white" font-size="12" font-weight="500">ode-steps-v5 #49</text>
+    </a>
+
+    <!-- Framework track -->
+    <a href="https://github.com/canele-ai/boltz/issues/42" target="_blank" class="node">
+      <rect x="317" y="100" width="160" height="32" rx="6" fill="#3b82f6"/>
+      <text x="397" y="121" text-anchor="middle" class="lbl" fill="white" font-size="12" font-weight="500">cpu-gap-profile #42</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/28" target="_blank" class="node">
+      <rect x="312" y="185" width="170" height="32" rx="6" fill="#3b82f6"/>
+      <text x="397" y="206" text-anchor="middle" class="lbl" fill="white" font-size="12" font-weight="500">minimal-inference #28</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/17" target="_blank" class="node">
+      <rect x="322" y="270" width="150" height="32" rx="6" fill="#059669"/>
+      <text x="397" y="291" text-anchor="middle" class="lbl" fill="white" font-size="12" font-weight="600">lightning-strip #17</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/44" target="_blank" class="node">
+      <rect x="307" y="355" width="180" height="32" rx="6" fill="#059669"/>
+      <text x="397" y="376" text-anchor="middle" class="lbl" fill="white" font-size="12" font-weight="600">bypass-lightning #44</text>
+    </a>
+
+    <!-- Dead ends -->
+    <a href="https://github.com/canele-ai/boltz/issues/4" target="_blank" class="node">
+      <rect x="565" y="108" width="105" height="26" rx="4" fill="#e2e8f0"/>
+      <text x="617" y="126" text-anchor="middle" class="lbl" fill="#64748b" font-size="10.5" font-weight="500">compile #4</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/5" target="_blank" class="node">
+      <rect x="680" y="108" width="88" height="26" rx="4" fill="#e2e8f0"/>
+      <text x="724" y="126" text-anchor="middle" class="lbl" fill="#64748b" font-size="10.5" font-weight="500">sdpa #5</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/33" target="_blank" class="node">
+      <rect x="565" y="146" width="105" height="26" rx="4" fill="#e2e8f0"/>
+      <text x="617" y="164" text-anchor="middle" class="lbl" fill="#64748b" font-size="10.5" font-weight="500">int8 #33</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/22" target="_blank" class="node">
+      <rect x="680" y="146" width="88" height="26" rx="4" fill="#e2e8f0"/>
+      <text x="724" y="164" text-anchor="middle" class="lbl" fill="#64748b" font-size="10.5" font-weight="500">triton #22</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/24" target="_blank" class="node">
+      <rect x="558" y="184" width="120" height="26" rx="4" fill="#e2e8f0"/>
+      <text x="618" y="202" text-anchor="middle" class="lbl" fill="#64748b" font-size="10.5" font-weight="500">cuda-graphs #24</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/27" target="_blank" class="node">
+      <rect x="688" y="184" width="80" height="26" rx="4" fill="#e2e8f0"/>
+      <text x="728" y="202" text-anchor="middle" class="lbl" fill="#64748b" font-size="10.5" font-weight="500">tok-mrg #27</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/37" target="_blank" class="node">
+      <rect x="558" y="222" width="120" height="26" rx="4" fill="#e2e8f0"/>
+      <text x="618" y="240" text-anchor="middle" class="lbl" fill="#64748b" font-size="10.5" font-weight="500">sparse-tri #37</text>
+    </a>
+    <a href="https://github.com/canele-ai/boltz/issues/25" target="_blank" class="node">
+      <rect x="688" y="222" width="80" height="26" rx="4" fill="#e2e8f0"/>
+      <text x="728" y="240" text-anchor="middle" class="lbl" fill="#64748b" font-size="10.5" font-weight="500">prune #25</text>
+    </a>
+
+    <!-- Final stack -->
+    <rect x="185" y="438" width="230" height="42" rx="8" fill="#1d4ed8"/>
+    <text x="300" y="462" text-anchor="middle" class="mono" fill="white" font-size="16" font-weight="700">Final Stack: 1.69×</text>
+    <text x="300" y="476" text-anchor="middle" class="lbl" fill="#93c5fd" font-size="10">ODE-12 + bypass Lightning</text>
+
+    <!-- Legend -->
+    <rect x="235" y="500" width="12" height="12" rx="3" fill="#059669"/>
+    <text x="253" y="511" class="lbl" fill="#6b7280" font-size="11">Winner</text>
+    <rect x="310" y="500" width="12" height="12" rx="3" fill="#3b82f6"/>
+    <text x="328" y="511" class="lbl" fill="#6b7280" font-size="11">Insight</text>
+    <rect x="385" y="500" width="12" height="12" rx="3" fill="#e2e8f0"/>
+    <text x="403" y="511" class="lbl" fill="#6b7280" font-size="11">Dead end</text>
+  </svg>
+</section>
+
 <!-- Where Time Goes -->
 <section>
   <h2>Where Time Goes</h2>
