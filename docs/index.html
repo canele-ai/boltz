@@ -346,8 +346,8 @@
     </div>
     <div class="dead-end-card">
       <div class="name"><a href="https://github.com/canele-ai/boltz/issues/34">Head Pruning (75%)</a></div>
-      <div class="result">1.00× — +2.2pp pLDDT (quality improves!)</div>
-      <div class="reason">75% of sequence attention heads are redundant — zeroing them slightly improves quality. But no speed gain because triangle operations, not attention, dominate Pairformer compute. (<a href="https://github.com/canele-ai/boltz/issues/34">#34</a>)</div>
+      <div class="result">1.00× — no speed gain, CA RMSD unchanged</div>
+      <div class="reason">Zeroing 75% of sequence attention heads has no effect on speed (triangle ops dominate) and no meaningful effect on structural accuracy (CA RMSD 16.4Å vs 16.5Å control, within noise). pLDDT shifts +2.2pp but this is not corroborated by RMSD. (<a href="https://github.com/canele-ai/boltz/issues/34">#34</a>)</div>
     </div>
   </div>
 
@@ -373,7 +373,7 @@
   <p>Cutting from 24 to 8 DiffusionTransformer layers has zero quality or timing impact at 12 ODE steps — confirmed on eval-v5 with CA RMSD identical to 4 decimal places (<a href="https://github.com/canele-ai/boltz/issues/25">#25</a>). The score model is massively over-parameterized for inference at reduced step counts.</p>
 
   <h3>75% of sequence attention heads are redundant</h3>
-  <p>Zeroing 75% of Pairformer sequence attention heads actually <em>improves</em> pLDDT by +2.2pp on eval-v5, with marginally better CA RMSD on barnase-barstar (<a href="https://github.com/canele-ai/boltz/issues/34">#34</a>). The useful signal is carried almost entirely by the pairwise track (triangle attention + multiplication). No speed gain because triangle ops, not attention, dominate compute.</p>
+  <p>Zeroing 75% of Pairformer sequence attention heads has no meaningful effect on structural accuracy (CA RMSD within noise) and no speed benefit (<a href="https://github.com/canele-ai/boltz/issues/34">#34</a>). pLDDT shifts +2.2pp but this is not corroborated by CA RMSD improvement — consistent with our finding that pLDDT is an unreliable proxy for structural quality. The useful signal is carried by the pairwise track (triangle attention + multiplication), not sequence attention.</p>
 
   <h3>MSA module can be cached across recycling (unverified)</h3>
   <p>Preliminary results suggest that caching the MSA module output from the first trunk pass and reusing it on recycling passes 2+ could reduce predict-only time by ~35%, since MSA inputs don't change across recycling iterations (<a href="https://github.com/canele-ai/boltz/issues/32">#32</a>). This signal was unexpectedly large and needs independent verification before adoption.</p>
