@@ -43,17 +43,18 @@ The CA RMSD quality gate threshold is: regression from baseline must be <= 1.0A 
 | Recycling | Mean pLDDT | pLDDT delta | Speedup | pLDDT gate |
 |-----------|-----------|-------------|---------|------------|
 | baseline | 0.9650 | -- | 1.00x | -- |
-| 0 (ODE-12) | ~0.957* | ~-0.8pp* | ~1.8x* | PASS* |
+| 0 (ODE-12) | 0.9583 | -0.67pp | 1.93x | PASS |
 | 1 (ODE-12) | 0.9633 | -0.17pp | 1.66x | PASS |
 | 2 (ODE-12) | 0.9655 | +0.05pp | 1.49x | PASS |
 | 3 (ODE-12) | 0.9659 | +0.09pp | 1.31x | PASS |
 
-(*) recycle=0 estimates from partial run (small_complex failed on first attempt due to network error; retry provided small_complex data, medium/large from first run).
+Note: recycle=0 pLDDT PASSES the quality gate but FAILS the structural gate (CA RMSD regression 1.87A on 2DN2).
 
 ### Timing breakdown (median wall time per complex, seconds)
 
 | Recycling | 1BRS | 1DQJ | 2DN2 | Total |
 |-----------|------|------|------|-------|
+| 0 | 10.7 | 16.5 | 19.0 | 46.2 |
 | 1 | 11.5 | 19.6 | 22.7 | 53.8 |
 | 2 | 10.0 | 22.2 | 27.6 | 59.8 |
 | 3 | 10.1 | 25.9 | 32.0 | 68.0 |
