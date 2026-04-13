@@ -1,0 +1,11 @@
+version: 1
+# Barnase-Barstar complex (PDB: 1BRS, 2.0 Å)
+# 199 residues: Barnase (chain A, 110 res) + Barstar (chain D→B, 89 res)
+# Ground truth: research/eval/ground_truth/1BRS.cif
+sequences:
+  - protein:
+      id: A
+      sequence: AQVINTFDGVADYLQTYHKLPDNYITKSEAQALGWVASKGNLADVAPGKSIGGDIFSNREGKLPGKSGRTWREADINYTSGFRNSDRILYSSDWLIYKTTDHYQTFTKIR
+  - protein:
+      id: B
+      sequence: KKAVINGEQIRSISDLHQTLKKELALPEYYGENLDALWDALTGWVEYPLVLEWRQFEQSKQLTENGAESVLQVFREAKAEGADITIILS

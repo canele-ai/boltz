@@ -1,0 +1,82 @@
+metric:
+  name: speedup_at_iso_quality
+  direction: maximize
+  quality_gate:
+    plddt:
+      max_regression_pp: 2.0
+      per_complex_max_regression_pp: 5.0
+    structural:
+      max_ca_rmsd_regression_A: 1.0
+      note: Optimized predictions must not deviate from ground truth more than the
+        baseline does. CA RMSD after optimal superposition, computed with BioPython
+        against PDB reference structures.
+baseline:
+  config:
+    sampling_steps: 200
+    recycling_steps: 3
+    matmul_precision: highest
+    compile_pairformer: false
+    compile_structure: false
+    compile_confidence: false
+    compile_msa: false
+    diffusion_samples: 1
+    seed: 42
+  mean_wall_time_s: 29.780199037
+  total_wall_time_s: 89.340597111
+  mean_plddt: 0.9649844169616699
+  mean_iptm: 0.948275069395701
+  per_complex:
+  - name: small_complex
+    wall_time_s: 13.981386323999999
+    complex_plddt: 0.9671022891998291
+    iptm: 0.9567950963973999
+    ca_rmsd_vs_gt: 0.325
+  - name: medium_complex
+    wall_time_s: 33.497028753999984
+    complex_plddt: 0.9623260498046875
+    iptm: 0.940136730670929
+    ca_rmsd_vs_gt: 5.243
+  - name: large_complex
+    wall_time_s: 41.86218203300001
+    complex_plddt: 0.9655249118804932
+    iptm: 0.9478933811187744
+    ca_rmsd_vs_gt: 0.474
+significance:
+  num_seeds: 3
+test_cases:
+- name: small_complex
+  description: "Barnase-Barstar (PDB 1BRS, 2.0 \xC5, 199 residues)"
+  yaml: test_cases/small_complex.yaml
+  pdb_id: 1BRS
+  ground_truth: ground_truth/1BRS.cif
+  chain_mapping:
+    A: A
+    B: D
+- name: medium_complex
+  description: "Anti-lysozyme Fab HyHEL-63 + HEWL (PDB 1DQJ, 1.80 \xC5, 563 residues)"
+  yaml: test_cases/medium_complex.yaml
+  pdb_id: 1DQJ
+  ground_truth: ground_truth/1DQJ.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+- name: large_complex
+  description: "Human hemoglobin tetramer (PDB 2DN2, 1.25 \xC5, 574 residues)"
+  yaml: test_cases/large_complex.yaml
+  pdb_id: 2DN2
+  ground_truth: ground_truth/2DN2.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+sanity_checks:
+- name: evaluator_runs
+  description: Evaluator completes without error on smallest test case
+- name: timing_positive
+  description: All timing measurements are positive
+- name: quality_in_range
+  description: pLDDT values between 0 and 1
+- name: structural_comparison
+  description: Ground truth structures accessible and RMSD computable
