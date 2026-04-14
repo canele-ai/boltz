@@ -1,0 +1,226 @@
+{
+  "T1123": {
+    "baseline": [
+      {
+        "seed": 42,
+        "plddt": 0.8485512137413025,
+        "ca_rmsd": null,
+        "predict_only_s": 32.476825961,
+        "wall_time_s": 117.528193561
+      },
+      {
+        "seed": 43,
+        "plddt": 0.7558175325393677,
+        "ca_rmsd": null,
+        "predict_only_s": 27.106620932,
+        "wall_time_s": 54.79934476
+      },
+      {
+        "seed": 44,
+        "plddt": 0.8416299223899841,
+        "ca_rmsd": null,
+        "predict_only_s": 27.177129963,
+        "wall_time_s": 54.651647535999984
+      }
+    ],
+    "optimized": [
+      {
+        "seed": 42,
+        "plddt": 0.7257687449455261,
+        "ca_rmsd": null,
+        "predict_only_s": 15.294639837000034,
+        "wall_time_s": 62.719078016
+      },
+      {
+        "seed": 43,
+        "plddt": 0.7480674386024475,
+        "ca_rmsd": null,
+        "predict_only_s": 15.248407458999964,
+        "wall_time_s": 62.068025965000004
+      },
+      {
+        "seed": 44,
+        "plddt": 0.7501551508903503,
+        "ca_rmsd": null,
+        "predict_only_s": 15.270713131000036,
+        "wall_time_s": 61.11169786300002
+      }
+    ],
+    "baseline_mean_plddt": 0.8153328895568848,
+    "baseline_mean_rmsd": null,
+    "baseline_std_plddt": 0.05165785863916882,
+    "baseline_std_rmsd": 0,
+    "optimized_mean_plddt": 0.7413304448127747,
+    "optimized_mean_rmsd": null,
+    "optimized_std_plddt": 0.013517193226332434,
+    "optimized_std_rmsd": 0
+  },
+  "T1147": {
+    "baseline": [
+      {
+        "seed": 42,
+        "plddt": 0.75510573387146,
+        "ca_rmsd": 27.233,
+        "predict_only_s": 28.92329867000001,
+        "wall_time_s": 54.76221999400002
+      },
+      {
+        "seed": 43,
+        "plddt": 0.7517960071563721,
+        "ca_rmsd": 27.646,
+        "predict_only_s": 26.565764126999966,
+        "wall_time_s": 55.98778921100006
+      },
+      {
+        "seed": 44,
+        "plddt": 0.7440798282623291,
+        "ca_rmsd": 23.42,
+        "predict_only_s": 26.94912229399995,
+        "wall_time_s": 54.80015797300007
+      }
+    ],
+    "optimized": [
+      {
+        "seed": 42,
+        "plddt": 0.720139741897583,
+        "ca_rmsd": 22.046,
+        "predict_only_s": 15.293760745999975,
+        "wall_time_s": 62.26322694699991
+      },
+      {
+        "seed": 43,
+        "plddt": 0.7386112213134766,
+        "ca_rmsd": 22.931,
+        "predict_only_s": 15.450567686,
+        "wall_time_s": 61.519847013
+      },
+      {
+        "seed": 44,
+        "plddt": 0.72678542137146,
+        "ca_rmsd": 26.79,
+        "predict_only_s": 15.353421082000068,
+        "wall_time_s": 61.13449355099999
+      }
+    ],
+    "baseline_mean_plddt": 0.7503271897633871,
+    "baseline_mean_rmsd": 26.099666666666668,
+    "baseline_std_plddt": 0.005657801430398325,
+    "baseline_std_rmsd": 2.3298288206074993,
+    "optimized_mean_plddt": 0.7285121281941732,
+    "optimized_mean_rmsd": 23.92233333333333,
+    "optimized_std_plddt": 0.00935601546020784,
+    "optimized_std_rmsd": 2.5225860408186933
+  },
+  "T1176": {
+    "baseline": [
+      {
+        "seed": 42,
+        "plddt": 0.7962664365768433,
+        "ca_rmsd": 25.536,
+        "predict_only_s": 29.13886365799999,
+        "wall_time_s": 55.91287557700002
+      },
+      {
+        "seed": 43,
+        "plddt": 0.8325617909431458,
+        "ca_rmsd": 28.648,
+        "predict_only_s": 29.146161570999993,
+        "wall_time_s": 56.10105227899999
+      },
+      {
+        "seed": 44,
+        "plddt": 0.7995377779006958,
+        "ca_rmsd": 32.79,
+        "predict_only_s": 29.41090904400005,
+        "wall_time_s": 57.049711496999976
+      }
+    ],
+    "optimized": [
+      {
+        "seed": 42,
+        "plddt": 0.7984785437583923,
+        "ca_rmsd": 33.667,
+        "predict_only_s": 16.77474985799995,
+        "wall_time_s": 64.14931562200002
+      },
+      {
+        "seed": 43,
+        "plddt": 0.7954804301261902,
+        "ca_rmsd": 25.74,
+        "predict_only_s": 16.906266777999917,
+        "wall_time_s": 64.40386143
+      },
+      {
+        "seed": 44,
+        "plddt": 0.8054175972938538,
+        "ca_rmsd": 24.601,
+        "predict_only_s": 16.817361812999934,
+        "wall_time_s": 64.06865135199996
+      }
+    ],
+    "baseline_mean_plddt": 0.8094553351402283,
+    "baseline_mean_rmsd": 28.991333333333333,
+    "baseline_std_plddt": 0.020077515865849053,
+    "baseline_std_rmsd": 3.6391671208304417,
+    "optimized_mean_plddt": 0.7997921903928121,
+    "optimized_mean_rmsd": 28.002666666666666,
+    "optimized_std_plddt": 0.005097163273784203,
+    "optimized_std_rmsd": 4.938404026943659
+  },
+  "T1185": {
+    "baseline": [
+      {
+        "seed": 42,
+        "plddt": 0.8931381702423096,
+        "ca_rmsd": 17.494,
+        "predict_only_s": 80.54175930199995,
+        "wall_time_s": 114.60904059800009
+      },
+      {
+        "seed": 43,
+        "plddt": 0.9045150876045227,
+        "ca_rmsd": 19.4,
+        "predict_only_s": 80.14540643100008,
+        "wall_time_s": 111.5909176839998
+      },
+      {
+        "seed": 44,
+        "plddt": 0.8926483392715454,
+        "ca_rmsd": 17.549,
+        "predict_only_s": 80.75792118200002,
+        "wall_time_s": 112.41259340800002
+      }
+    ],
+    "optimized": [
+      {
+        "seed": 42,
+        "plddt": 0.9082691073417664,
+        "ca_rmsd": 19.168,
+        "predict_only_s": 58.15849859500008,
+        "wall_time_s": 152.12556264600016
+      },
+      {
+        "seed": 43,
+        "plddt": 0.9089347720146179,
+        "ca_rmsd": 19.175,
+        "predict_only_s": 58.03911846899996,
+        "wall_time_s": 152.60141935899992
+      },
+      {
+        "seed": 44,
+        "plddt": 0.9091330766677856,
+        "ca_rmsd": 19.185,
+        "predict_only_s": 58.05846508100012,
+        "wall_time_s": 152.97168748400009
+      }
+    ],
+    "baseline_mean_plddt": 0.8967671990394592,
+    "baseline_mean_rmsd": 18.147666666666666,
+    "baseline_std_plddt": 0.006714336639420232,
+    "baseline_std_rmsd": 1.0849010707586808,
+    "optimized_mean_plddt": 0.90877898534139,
+    "optimized_mean_rmsd": 19.176,
+    "optimized_std_plddt": 0.00045256255340243124,
+    "optimized_std_rmsd": 0.008544003745317162
+  }
+}
