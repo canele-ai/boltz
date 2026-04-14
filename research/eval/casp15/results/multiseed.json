@@ -4,56 +4,56 @@
       {
         "seed": 42,
         "plddt": 0.8485512137413025,
-        "ca_rmsd": null,
-        "predict_only_s": 32.476825961,
-        "wall_time_s": 117.528193561
+        "ca_rmsd": 22.352,
+        "predict_only_s": 32.705451209,
+        "wall_time_s": 119.73849821799999
       },
       {
         "seed": 43,
         "plddt": 0.7558175325393677,
-        "ca_rmsd": null,
-        "predict_only_s": 27.106620932,
-        "wall_time_s": 54.79934476
+        "ca_rmsd": 22.851,
+        "predict_only_s": 26.553020556999996,
+        "wall_time_s": 52.614956323
       },
       {
         "seed": 44,
         "plddt": 0.8416299223899841,
-        "ca_rmsd": null,
-        "predict_only_s": 27.177129963,
-        "wall_time_s": 54.651647535999984
+        "ca_rmsd": 22.475,
+        "predict_only_s": 26.554379179999984,
+        "wall_time_s": 52.513419664
       }
     ],
     "optimized": [
       {
         "seed": 42,
         "plddt": 0.7257687449455261,
-        "ca_rmsd": null,
-        "predict_only_s": 15.294639837000034,
-        "wall_time_s": 62.719078016
+        "ca_rmsd": 21.582,
+        "predict_only_s": 15.647831505,
+        "wall_time_s": 60.28997474399998
       },
       {
         "seed": 43,
         "plddt": 0.7480674386024475,
-        "ca_rmsd": null,
-        "predict_only_s": 15.248407458999964,
-        "wall_time_s": 62.068025965000004
+        "ca_rmsd": 22.816,
+        "predict_only_s": 15.051474241999983,
+        "wall_time_s": 59.30520278
       },
       {
         "seed": 44,
         "plddt": 0.7501551508903503,
-        "ca_rmsd": null,
-        "predict_only_s": 15.270713131000036,
-        "wall_time_s": 61.11169786300002
+        "ca_rmsd": 22.987,
+        "predict_only_s": 15.229783254999973,
+        "wall_time_s": 59.74213779799999
       }
     ],
     "baseline_mean_plddt": 0.8153328895568848,
-    "baseline_mean_rmsd": null,
+    "baseline_mean_rmsd": 22.55933333333333,
     "baseline_std_plddt": 0.05165785863916882,
-    "baseline_std_rmsd": 0,
+    "baseline_std_rmsd": 0.2599698700490749,
     "optimized_mean_plddt": 0.7413304448127747,
-    "optimized_mean_rmsd": null,
+    "optimized_mean_rmsd": 22.461666666666662,
     "optimized_std_plddt": 0.013517193226332434,
-    "optimized_std_rmsd": 0
+    "optimized_std_rmsd": 0.7665965910003327
   },
   "T1147": {
     "baseline": [

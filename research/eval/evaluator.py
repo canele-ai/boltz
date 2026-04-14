@@ -479,32 +479,39 @@ def _compare_structures(
         gt_structure = parser.get_structure("gt", str(gt_path))
         pred_structure = parser.get_structure("pred", str(pred_cif))
 
-        # Extract CA atoms from ground truth (first model)
-        gt_ca = {}
-        for chain in gt_structure[0]:
-            for residue in chain:
-                if residue.id[0] != " ":
-                    continue  # skip hetero
-                if "CA" in residue:
-                    gt_ca[(chain.id, residue.id[1])] = residue["CA"].get_vector().get_array()
+        # Extract CA atoms per chain, ordered by residue number.
+        # We match by sequential position rather than residue number because
+        # Boltz outputs 1-based indices while PDB ground truth structures
+        # (especially cryo-EM) use deposited numbering (e.g. starting at 420).
+        from collections import defaultdict
 
-        # Extract CA atoms from prediction (first model), applying chain mapping
-        pred_ca = {}
-        for chain in pred_structure[0]:
-            gt_chain_id = chain_mapping.get(chain.id, chain.id)
-            for residue in chain:
+        gt_ca_by_chain = defaultdict(list)
+        for chain in gt_structure[0]:
+            for residue in sorted(chain.get_residues(), key=lambda r: r.id[1]):
                 if residue.id[0] != " ":
                     continue
                 if "CA" in residue:
-                    pred_ca[(gt_chain_id, residue.id[1])] = residue["CA"].get_vector().get_array()
+                    gt_ca_by_chain[chain.id].append(residue["CA"].get_vector().get_array())
 
-        # Find matched CA pairs
+        pred_ca_by_chain = defaultdict(list)
+        for chain in pred_structure[0]:
+            gt_chain_id = chain_mapping.get(chain.id, chain.id)
+            for residue in sorted(chain.get_residues(), key=lambda r: r.id[1]):
+                if residue.id[0] != " ":
+                    continue
+                if "CA" in residue:
+                    pred_ca_by_chain[gt_chain_id].append(residue["CA"].get_vector().get_array())
+
+        # Match by sequential position within each chain
         matched_gt = []
         matched_pred = []
-        for key in sorted(gt_ca.keys()):
-            if key in pred_ca:
-                matched_gt.append(gt_ca[key])
-                matched_pred.append(pred_ca[key])
+        for chain_id in sorted(gt_ca_by_chain.keys()):
+            if chain_id in pred_ca_by_chain:
+                gt_atoms = gt_ca_by_chain[chain_id]
+                pred_atoms = pred_ca_by_chain[chain_id]
+                n = min(len(gt_atoms), len(pred_atoms))
+                matched_gt.extend(gt_atoms[:n])
+                matched_pred.extend(pred_atoms[:n])
 
         if len(matched_gt) < 10:
             return {"error": f"Too few matched CA atoms: {len(matched_gt)}",

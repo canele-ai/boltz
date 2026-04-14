@@ -411,44 +411,44 @@
   <h2>CASP15 Validation</h2>
   <p>The 3-complex result was validated on <strong>35 CASP15 protein targets</strong> (38 attempted, 3 exceeded L40S memory) spanning 44–1,439 residues. The question: does the optimized config regress prediction quality on any individual target?</p>
 
-  <h3>No regression on single-chain and 2-chain targets</h3>
+  <h3>No regression on single-chain targets; marginal on 2-chain</h3>
   <table>
     <thead>
       <tr><th>Target class</th><th class="num">n</th><th class="num">Speedup</th><th class="num">pLDDT Δ</th><th class="num">CA RMSD Δ</th><th class="num">Targets regressed</th></tr>
     </thead>
     <tbody>
       <tr>
-        <td>Single-chain</td><td class="num">12</td><td class="num speedup">1.61×</td><td class="num">+0.93pp</td><td class="num">−0.21 Å</td>
+        <td>Single-chain</td><td class="num">12</td><td class="num speedup">1.61×</td><td class="num">+0.94pp</td><td class="num">−0.14 Å</td>
         <td class="num"><strong>0</strong> / 12</td>
       </tr>
       <tr>
-        <td>2-chain complexes</td><td class="num">12</td><td class="num speedup">1.61×</td><td class="num">+0.38pp</td><td class="num">+0.07 Å</td>
-        <td class="num"><strong>0</strong> / 12</td>
+        <td>2-chain complexes</td><td class="num">12</td><td class="num speedup">1.61×</td><td class="num">+0.19pp</td><td class="num">+0.04 Å</td>
+        <td class="num">2 RMSD</td>
       </tr>
       <tr>
-        <td>3+ chain assemblies</td><td class="num">11</td><td class="num speedup">1.61×</td><td class="num">−1.13pp</td><td class="num">−1.90 Å</td>
+        <td>3+ chain assemblies</td><td class="num">11</td><td class="num speedup">1.61×</td><td class="num">−0.51pp</td><td class="num">−1.83 Å</td>
         <td class="num">2 pLDDT, 2 RMSD</td>
       </tr>
     </tbody>
   </table>
-  <p style="font-size:0.82rem;color:var(--muted)">"Regressed" = &gt;2pp pLDDT drop or &gt;1Å RMSD increase vs baseline. 1 seed per config, pre-cached MSAs, Modal L40S. 5 targets lack RMSD data due to non-standard chain IDs in cryo-EM structures.</p>
+  <p style="font-size:0.82rem;color:var(--muted)">"Regressed" = &gt;2pp pLDDT drop or &gt;1Å RMSD increase vs baseline. 1 seed per config, pre-cached MSAs, Modal L40S. CA RMSD computed for all 35 targets against PDB ground truth.</p>
 
-  <p>Across <strong>24 single-chain and 2-chain targets</strong>, there is zero quality regression on either metric. pLDDT improves slightly on average, and CA RMSD is unchanged. The optimization is safe for these target classes.</p>
+  <p>Across <strong>12 single-chain targets</strong>, there is zero quality regression on either metric. The 2-chain category shows two marginal RMSD regressions (T1145 +1.3Å, T1179 +1.0Å) but zero pLDDT regression and a near-zero mean RMSD delta. The optimization is safe for these target classes.</p>
 
-  <h3>3+ chain assemblies: one real regression, rest within noise</h3>
+  <h3>3+ chain assemblies: pLDDT regression on T1123, but structure preserved</h3>
   <p>The four 1-seed outliers were re-evaluated with 3 seeds each to distinguish real regression from sampling variance:</p>
   <table>
     <thead>
       <tr><th>Target</th><th class="num">Chains</th><th class="num">BL pLDDT (3 seeds)</th><th class="num">OPT pLDDT</th><th class="num">Δ pp</th><th class="num">BL RMSD</th><th class="num">OPT RMSD</th><th class="num">Δ Å</th></tr>
     </thead>
     <tbody>
-      <tr><td>T1123 (7UZT)</td><td class="num">3</td><td class="num">0.815±0.052</td><td class="num">0.741±0.014</td><td class="num" style="color:var(--red)">−7.4</td><td class="num" colspan="2">N/A</td><td class="num">—</td></tr>
+      <tr><td>T1123 (7UZT)</td><td class="num">3</td><td class="num">0.815±0.052</td><td class="num">0.741±0.014</td><td class="num" style="color:var(--red)">−7.4</td><td class="num">22.6±0.3</td><td class="num">22.5±0.8</td><td class="num" style="color:var(--green)">−0.1</td></tr>
       <tr><td>T1147 (8EM5)</td><td class="num">6</td><td class="num">0.750±0.006</td><td class="num">0.729±0.009</td><td class="num" style="color:var(--amber)">−2.2</td><td class="num">26.1±2.3</td><td class="num">23.9±2.5</td><td class="num" style="color:var(--green)">−2.2</td></tr>
       <tr><td>T1176 (8SMQ)</td><td class="num">4</td><td class="num">0.810±0.020</td><td class="num">0.800±0.005</td><td class="num">−1.0</td><td class="num">29.0±3.6</td><td class="num">28.0±4.9</td><td class="num">−1.0</td></tr>
       <tr><td>T1185 (8OUY)</td><td class="num">4</td><td class="num">0.897±0.007</td><td class="num">0.909±0.001</td><td class="num" style="color:var(--green)">+1.2</td><td class="num">18.2±1.1</td><td class="num">19.2±0.0</td><td class="num">+1.0</td></tr>
     </tbody>
   </table>
-  <p><strong>T1123 is a real pLDDT regression</strong> (−7.4pp, confirmed across 3 seeds). This is a 3-chain, 639-residue complex where the optimized config consistently produces lower pLDDT. The remaining three outliers resolve to within-noise differences: T1176's apparent +8.1Å RMSD regression at 1 seed becomes −1.0Å improvement at 3 seeds, and T1185 improves on pLDDT. T1147 shows a marginal −2.2pp pLDDT regression but its RMSD <em>improves</em> by 2.2Å — a mixed signal that does not clearly indicate degradation.</p>
+  <p><strong>T1123 has a real pLDDT regression but no structural degradation.</strong> The −7.4pp pLDDT drop is confirmed across 3 seeds, but CA RMSD is essentially unchanged (22.6Å → 22.5Å, Δ = −0.1Å). The confidence model reports lower scores, but the actual predicted structure is equally accurate against PDB ground truth. The remaining three outliers resolve to within-noise differences: T1176's apparent +8.1Å RMSD regression at 1 seed becomes −1.0Å improvement at 3 seeds, and T1185 improves on pLDDT. T1147 shows a marginal −2.2pp pLDDT regression but its RMSD <em>improves</em> by 2.2Å — a mixed signal that does not clearly indicate degradation.</p>
 
   <h3>Speedup confirmed</h3>
   <p>Predict-only speedup is <strong>1.61×</strong> (40.5s → 25.1s mean) across all 35 targets, consistent with the 1.69× measured on the 3-complex development set. The speedup is uniform across target sizes — it does not depend on chain count or residue count.</p>

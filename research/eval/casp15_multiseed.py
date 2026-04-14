@@ -227,21 +227,27 @@ def _compare_structures(pred_dir, input_yaml, gt_path, chain_mapping):
             return {"error": "No predicted CIF"}
         gt_s = parser.get_structure("gt", str(gt_path))
         pred_s = parser.get_structure("pred", str(pred_cif))
-        gt_ca, pred_ca = {}, {}
+        # Match by sequential position within each chain (not residue number)
+        # because Boltz outputs 1-based indices while cryo-EM PDB structures
+        # use deposited numbering (e.g. starting at 420).
+        from collections import defaultdict
+        gt_by_chain = defaultdict(list)
         for chain in gt_s[0]:
-            for r in chain:
+            for r in sorted(chain.get_residues(), key=lambda r: r.id[1]):
                 if r.id[0] == " " and "CA" in r:
-                    gt_ca[(chain.id, r.id[1])] = r["CA"].get_vector().get_array()
+                    gt_by_chain[chain.id].append(r["CA"].get_vector().get_array())
+        pred_by_chain = defaultdict(list)
         for chain in pred_s[0]:
             mapped = chain_mapping.get(chain.id, chain.id)
-            for r in chain:
+            for r in sorted(chain.get_residues(), key=lambda r: r.id[1]):
                 if r.id[0] == " " and "CA" in r:
-                    pred_ca[(mapped, r.id[1])] = r["CA"].get_vector().get_array()
+                    pred_by_chain[mapped].append(r["CA"].get_vector().get_array())
         matched_gt, matched_pred = [], []
-        for key in sorted(gt_ca):
-            if key in pred_ca:
-                matched_gt.append(gt_ca[key])
-                matched_pred.append(pred_ca[key])
+        for cid in sorted(gt_by_chain):
+            if cid in pred_by_chain:
+                n = min(len(gt_by_chain[cid]), len(pred_by_chain[cid]))
+                matched_gt.extend(gt_by_chain[cid][:n])
+                matched_pred.extend(pred_by_chain[cid][:n])
         if len(matched_gt) < 10:
             return {"error": f"Too few CA atoms: {len(matched_gt)}", "matched": len(matched_gt)}
         sup = SVDSuperimposer()

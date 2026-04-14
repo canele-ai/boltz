@@ -174,30 +174,6 @@
       "error": null
     },
     {
-      "name": "T1173",
-      "pdb_id": "8ON4",
-      "total_residues": 204,
-      "num_chains": 1,
-      "wall_time_s": 42.58828856300005,
-      "predict_only_s": 13.714967144000013,
-      "quality": {
-        "confidence_score": 0.6310760378837585,
-        "ptm": 0.489234060049057,
-        "iptm": 0.0,
-        "ligand_iptm": 0.0,
-        "protein_iptm": 0.0,
-        "complex_plddt": 0.6665365695953369,
-        "complex_iplddt": 0.6665365695953369,
-        "complex_pde": 1.404592752456665,
-        "complex_ipde": 0.0
-      },
-      "structural": {
-        "error": "Too few matched CA atoms: 0",
-        "matched_residues": 0
-      },
-      "error": null
-    },
-    {
       "name": "T1122",
       "pdb_id": "8BBT",
       "total_residues": 230,
@@ -414,30 +390,6 @@
       "error": null
     },
     {
-      "name": "T1179",
-      "pdb_id": "8TN8",
-      "total_residues": 505,
-      "num_chains": 2,
-      "wall_time_s": 47.89871827000002,
-      "predict_only_s": 20.353684080999983,
-      "quality": {
-        "confidence_score": 0.31125113368034363,
-        "ptm": 0.4145122468471527,
-        "iptm": 0.23546202480793,
-        "ligand_iptm": 0.0,
-        "protein_iptm": 0.23546202480793,
-        "complex_plddt": 0.33019837737083435,
-        "complex_iplddt": 0.32602521777153015,
-        "complex_pde": 4.000698566436768,
-        "complex_ipde": 10.892486572265625
-      },
-      "structural": {
-        "error": "Too few matched CA atoms: 0",
-        "matched_residues": 0
-      },
-      "error": null
-    },
-    {
       "name": "T1183",
       "pdb_id": "8IFX",
       "total_residues": 522,
@@ -461,30 +413,6 @@
         "mean_per_residue_dev": 4.701,
         "max_per_residue_dev": 24.868,
         "pct_within_2A": 38.7
-      },
-      "error": null
-    },
-    {
-      "name": "T1178",
-      "pdb_id": "8UFN",
-      "total_residues": 536,
-      "num_chains": 2,
-      "wall_time_s": 48.08612881600004,
-      "predict_only_s": 21.031055659000003,
-      "quality": {
-        "confidence_score": 0.7417811751365662,
-        "ptm": 0.8878790736198425,
-        "iptm": 0.8733378648757935,
-        "ligand_iptm": 0.0,
-        "protein_iptm": 0.8733378648757935,
-        "complex_plddt": 0.7088919281959534,
-        "complex_iplddt": 0.6759987473487854,
-        "complex_pde": 1.0658584833145142,
-        "complex_ipde": 2.8313562870025635
-      },
-      "structural": {
-        "error": "Too few matched CA atoms: 0",
-        "matched_residues": 0
       },
       "error": null
     },
@@ -570,30 +498,6 @@
       "error": null
     },
     {
-      "name": "T1123",
-      "pdb_id": "7UZT",
-      "total_residues": 639,
-      "num_chains": 3,
-      "wall_time_s": 54.63746676599999,
-      "predict_only_s": 26.850722799000096,
-      "quality": {
-        "confidence_score": 0.8535823225975037,
-        "ptm": 0.9013954401016235,
-        "iptm": 0.8737064599990845,
-        "ligand_iptm": 0.0,
-        "protein_iptm": 0.8737064599990845,
-        "complex_plddt": 0.8485512137413025,
-        "complex_iplddt": 0.8061320781707764,
-        "complex_pde": 0.5210115909576416,
-        "complex_ipde": 1.630295753479004
-      },
-      "structural": {
-        "error": "Too few matched CA atoms: 0",
-        "matched_residues": 0
-      },
-      "error": null
-    },
-    {
       "name": "T1113",
       "pdb_id": "7UYX",
       "total_residues": 666,
@@ -644,30 +548,6 @@
         "mean_per_residue_dev": 23.635,
         "max_per_residue_dev": 52.89,
         "pct_within_2A": 0.0
-      },
-      "error": null
-    },
-    {
-      "name": "T1174",
-      "pdb_id": "8OND",
-      "total_residues": 695,
-      "num_chains": 2,
-      "wall_time_s": 90.53585772800011,
-      "predict_only_s": 42.34528787399995,
-      "quality": {
-        "confidence_score": 0.7738307118415833,
-        "ptm": 0.6745361089706421,
-        "iptm": 0.6588126420974731,
-        "ligand_iptm": 0.0,
-        "protein_iptm": 0.6588126420974731,
-        "complex_plddt": 0.8025851845741272,
-        "complex_iplddt": 0.8127514123916626,
-        "complex_pde": 0.9772994518280029,
-        "complex_ipde": 2.7181198596954346
-      },
-      "structural": {
-        "error": "Too few matched CA atoms: 0",
-        "matched_residues": 0
       },
       "error": null
     },
@@ -985,24 +865,159 @@
         "error": "No predicted mmCIF found in /tmp/casp15_eval/T1114_b3487269/boltz_results_T1114/predictions"
       },
       "error": null
+    },
+    {
+      "name": "T1173",
+      "pdb_id": "8ON4",
+      "total_residues": 204,
+      "num_chains": 1,
+      "wall_time_s": 111.154205037,
+      "predict_only_s": 24.21011822,
+      "quality": {
+        "confidence_score": 0.6300081610679626,
+        "ptm": 0.48676633834838867,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.6658186316490173,
+        "complex_iplddt": 0.6658186316490173,
+        "complex_pde": 1.4092319011688232,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 13.325,
+        "matched_residues": 204,
+        "mean_per_residue_dev": 11.124,
+        "max_per_residue_dev": 40.221,
+        "pct_within_2A": 4.9
+      },
+      "error": null
+    },
+    {
+      "name": "T1179",
+      "pdb_id": "8TN8",
+      "total_residues": 505,
+      "num_chains": 2,
+      "wall_time_s": 59.197409244,
+      "predict_only_s": 26.725996912,
+      "quality": {
+        "confidence_score": 0.4696177542209625,
+        "ptm": 0.9677222371101379,
+        "iptm": 0.9563965201377869,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.9563965201377869,
+        "complex_plddt": 0.34792304039001465,
+        "complex_iplddt": 0.3289417028427124,
+        "complex_pde": 0.33361929655075073,
+        "complex_ipde": 0.6073545217514038
+      },
+      "structural": {
+        "ca_rmsd": 23.187,
+        "matched_residues": 505,
+        "mean_per_residue_dev": 21.599,
+        "max_per_residue_dev": 41.567,
+        "pct_within_2A": 0.4
+      },
+      "error": null
+    },
+    {
+      "name": "T1178",
+      "pdb_id": "8UFN",
+      "total_residues": 536,
+      "num_chains": 2,
+      "wall_time_s": 58.35071661700002,
+      "predict_only_s": 25.967239143,
+      "quality": {
+        "confidence_score": 0.7366911768913269,
+        "ptm": 0.8627976179122925,
+        "iptm": 0.845022976398468,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.845022976398468,
+        "complex_plddt": 0.709608256816864,
+        "complex_iplddt": 0.6724221110343933,
+        "complex_pde": 1.2872836589813232,
+        "complex_ipde": 3.431495189666748
+      },
+      "structural": {
+        "ca_rmsd": 4.541,
+        "matched_residues": 536,
+        "mean_per_residue_dev": 3.257,
+        "max_per_residue_dev": 18.514,
+        "pct_within_2A": 48.3
+      },
+      "error": null
+    },
+    {
+      "name": "T1123",
+      "pdb_id": "7UZT",
+      "total_residues": 639,
+      "num_chains": 3,
+      "wall_time_s": 61.76322441700003,
+      "predict_only_s": 29.355414281000037,
+      "quality": {
+        "confidence_score": 0.7869434356689453,
+        "ptm": 0.8550205826759338,
+        "iptm": 0.8012053370475769,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.8012053370475769,
+        "complex_plddt": 0.7833779454231262,
+        "complex_iplddt": 0.6843193769454956,
+        "complex_pde": 0.6139304637908936,
+        "complex_ipde": 2.354419231414795
+      },
+      "structural": {
+        "ca_rmsd": 22.66,
+        "matched_residues": 639,
+        "mean_per_residue_dev": 20.908,
+        "max_per_residue_dev": 50.613,
+        "pct_within_2A": 0.3
+      },
+      "error": null
+    },
+    {
+      "name": "T1174",
+      "pdb_id": "8OND",
+      "total_residues": 695,
+      "num_chains": 2,
+      "wall_time_s": 81.02387136300001,
+      "predict_only_s": 43.496296046,
+      "quality": {
+        "confidence_score": 0.772613525390625,
+        "ptm": 0.674702525138855,
+        "iptm": 0.659246563911438,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.659246563911438,
+        "complex_plddt": 0.8009552359580994,
+        "complex_iplddt": 0.8119356632232666,
+        "complex_pde": 0.9943274855613708,
+        "complex_ipde": 2.7216081619262695
+      },
+      "structural": {
+        "ca_rmsd": 62.97,
+        "matched_residues": 695,
+        "mean_per_residue_dev": 57.412,
+        "max_per_residue_dev": 152.955,
+        "pct_within_2A": 0.0
+      },
+      "error": null
     }
   ],
   "aggregate": {
     "num_successful": 38,
     "num_with_plddt": 35,
-    "num_with_rmsd": 30,
-    "mean_wall_time_s": 80.84,
-    "median_wall_time_s": 55.57,
-    "total_wall_time_s": 3071.8,
-    "mean_predict_only_s": 46.6,
-    "median_predict_only_s": 27.58,
-    "mean_plddt": 0.8133,
+    "num_with_rmsd": 35,
+    "mean_wall_time_s": 83.15,
+    "median_wall_time_s": 60.48,
+    "total_wall_time_s": 3159.54,
+    "mean_predict_only_s": 47.27,
+    "median_predict_only_s": 28.47,
+    "mean_plddt": 0.8119,
     "median_plddt": 0.8518,
-    "min_plddt": 0.3302,
+    "min_plddt": 0.3479,
     "max_plddt": 0.963,
-    "mean_ca_rmsd": 20.917,
-    "median_ca_rmsd": 17.749,
+    "mean_ca_rmsd": 21.548,
+    "median_ca_rmsd": 18.005,
     "min_ca_rmsd": 2.985,
-    "max_ca_rmsd": 47.454
+    "max_ca_rmsd": 62.97
   }
 }

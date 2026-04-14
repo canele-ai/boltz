@@ -236,7 +236,7 @@ def _run_subprocess(cmd: list[str]) -> dict[str, Any]:
         if proc.returncode != 0:
             result["error"] = (
                 f"Exit code {proc.returncode}.\n"
-                f"STDERR: {proc.stderr[-2000:] if proc.stderr else '(empty)'}"
+                f"STDERR: {proc.stderr[-8000:] if proc.stderr else '(empty)'}"
             )
             return result
 
@@ -323,32 +323,39 @@ def _compare_structures(
         gt_structure = parser.get_structure("gt", str(gt_path))
         pred_structure = parser.get_structure("pred", str(pred_cif))
 
-        # Extract CA atoms from ground truth
-        gt_ca = {}
+        # Extract CA atoms per chain, ordered by residue number.
+        # We match by sequential position rather than residue number because
+        # Boltz outputs 1-based indices while PDB ground truth structures
+        # (especially cryo-EM) use deposited numbering (e.g. starting at 420).
+        from collections import defaultdict
+
+        gt_ca_by_chain = defaultdict(list)
         for chain in gt_structure[0]:
-            for residue in chain:
+            for residue in sorted(chain.get_residues(), key=lambda r: r.id[1]):
                 if residue.id[0] != " ":
                     continue
                 if "CA" in residue:
-                    gt_ca[(chain.id, residue.id[1])] = residue["CA"].get_vector().get_array()
+                    gt_ca_by_chain[chain.id].append(residue["CA"].get_vector().get_array())
 
-        # Extract CA atoms from prediction with chain mapping
-        pred_ca = {}
+        pred_ca_by_chain = defaultdict(list)
         for chain in pred_structure[0]:
             gt_chain_id = chain_mapping.get(chain.id, chain.id)
-            for residue in chain:
+            for residue in sorted(chain.get_residues(), key=lambda r: r.id[1]):
                 if residue.id[0] != " ":
                     continue
                 if "CA" in residue:
-                    pred_ca[(gt_chain_id, residue.id[1])] = residue["CA"].get_vector().get_array()
+                    pred_ca_by_chain[gt_chain_id].append(residue["CA"].get_vector().get_array())
 
-        # Match CA pairs
+        # Match by sequential position within each chain
         matched_gt = []
         matched_pred = []
-        for key in sorted(gt_ca.keys()):
-            if key in pred_ca:
-                matched_gt.append(gt_ca[key])
-                matched_pred.append(pred_ca[key])
+        for chain_id in sorted(gt_ca_by_chain.keys()):
+            if chain_id in pred_ca_by_chain:
+                gt_atoms = gt_ca_by_chain[chain_id]
+                pred_atoms = pred_ca_by_chain[chain_id]
+                n = min(len(gt_atoms), len(pred_atoms))
+                matched_gt.extend(gt_atoms[:n])
+                matched_pred.extend(pred_atoms[:n])
 
         if len(matched_gt) < 10:
             return {"error": f"Too few matched CA atoms: {len(matched_gt)}",
@@ -395,6 +402,7 @@ def run_evaluation(
     use_bypass: bool = False,
     max_targets: int = 0,
     sanity: bool = False,
+    target_filter: str = "",
 ) -> str:
     """Run a single config on all CASP15 targets.
 
@@ -405,6 +413,9 @@ def run_evaluation(
     config = json.loads(config_json)
     targets = _load_casp15_targets()
 
+    if target_filter:
+        filter_set = {t.strip() for t in target_filter.split(",")}
+        targets = [t for t in targets if t["name"] in filter_set]
     if max_targets > 0:
         targets = targets[:max_targets]
     if sanity:
@@ -578,6 +589,7 @@ def _compute_aggregates(successful: list[dict]) -> dict[str, Any]:
 def main(
     mode: str = "both",
     max_targets: int = 0,
+    targets: str = "",
 ):
     """CASP15 validation evaluation.
 
@@ -591,10 +603,36 @@ def main(
         modal run research/eval/casp15_eval.py --mode sanity
         modal run research/eval/casp15_eval.py --mode both
         modal run research/eval/casp15_eval.py --mode both --max-targets 10
+        modal run research/eval/casp15_eval.py --mode both --targets T1123,T1173
     """
     sanity = mode == "sanity"
     results_dir = EVAL_DIR / "casp15" / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
+
+    def _save_results(new_results: dict, config_name: str):
+        """Save results, merging with existing file when --targets is used."""
+        out_path = results_dir / f"{config_name}.json"
+        if targets and out_path.exists():
+            with out_path.open() as f:
+                existing = json.load(f)
+            # Replace matching targets, keep the rest
+            new_names = {r["name"] for r in new_results["per_target"]}
+            merged = [r for r in existing["per_target"] if r["name"] not in new_names]
+            merged.extend(new_results["per_target"])
+            existing["per_target"] = merged
+            existing["num_targets"] = len(merged)
+            existing["aggregate"] = _compute_aggregates(
+                [r for r in merged if r.get("error") is None]
+            )
+            with out_path.open("w") as f:
+                json.dump(existing, f, indent=2)
+            print(f"\n[casp15] Merged {len(new_names)} targets into {out_path}")
+            return existing
+        else:
+            with out_path.open("w") as f:
+                json.dump(new_results, f, indent=2)
+            print(f"\n[casp15] Results saved to {out_path}")
+            return new_results
 
     if mode in ("baseline", "both", "sanity"):
         print(f"[casp15] Running BASELINE (SDE-200, recycle=3, fp32)...")
@@ -604,13 +642,9 @@ def main(
             use_bypass=False,
             max_targets=max_targets,
             sanity=sanity,
+            target_filter=targets,
         )
-        baseline = json.loads(baseline_json)
-
-        out_path = results_dir / "baseline.json"
-        with out_path.open("w") as f:
-            json.dump(baseline, f, indent=2)
-        print(f"\n[casp15] Baseline results saved to {out_path}")
+        baseline = _save_results(json.loads(baseline_json), "baseline")
         _print_summary("Baseline", baseline)
 
     if mode in ("optimized", "both", "sanity"):
@@ -621,13 +655,9 @@ def main(
             use_bypass=True,
             max_targets=max_targets,
             sanity=sanity,
+            target_filter=targets,
         )
-        optimized = json.loads(optimized_json)
-
-        out_path = results_dir / "optimized.json"
-        with out_path.open("w") as f:
-            json.dump(optimized, f, indent=2)
-        print(f"\n[casp15] Optimized results saved to {out_path}")
+        optimized = _save_results(json.loads(optimized_json), "optimized")
         _print_summary("Optimized", optimized)
 
     if mode in ("both", "sanity"):
