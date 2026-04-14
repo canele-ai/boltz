@@ -1,0 +1,11 @@
+sequences:
+- protein:
+    id: A
+    sequence: MYTVKPGDTMWKIAVKYQIGISEIIAANPQIKNPNLIYPGQKINIP
+- protein:
+    id: B
+    sequence: MYTVKPGDTMWKIAVKYQIGISEIIAANPQIKNPNLIYPGQKINIP
+- protein:
+    id: C
+    sequence: MYTVKPGDTMWKIAVKYQIGISEIIAANPQIKNPNLIYPGQKINIPN
+version: 1

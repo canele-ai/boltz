@@ -1,0 +1,1008 @@
+{
+  "config_name": "baseline",
+  "config": {
+    "sampling_steps": 200,
+    "recycling_steps": 3,
+    "matmul_precision": "highest",
+    "diffusion_samples": 1,
+    "seed": 42
+  },
+  "use_bypass": false,
+  "msa_cached": true,
+  "num_targets": 38,
+  "per_target": [
+    {
+      "name": "T1160",
+      "pdb_id": "8JVN",
+      "total_residues": 44,
+      "num_chains": 1,
+      "wall_time_s": 97.333468899,
+      "predict_only_s": 12.192644033999997,
+      "quality": {
+        "confidence_score": 0.912857174873352,
+        "ptm": 0.7536381483078003,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.95266193151474,
+        "complex_iplddt": 0.95266193151474,
+        "complex_pde": 0.32713162899017334,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 8.712,
+        "matched_residues": 40,
+        "mean_per_residue_dev": 8.078,
+        "max_per_residue_dev": 13.937,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1119",
+      "pdb_id": "7SQ4",
+      "total_residues": 48,
+      "num_chains": 1,
+      "wall_time_s": 40.651057125999984,
+      "predict_only_s": 10.566199174000005,
+      "quality": {
+        "confidence_score": 0.8792201280593872,
+        "ptm": 0.6097933053970337,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.9465768337249756,
+        "complex_iplddt": 0.9465768337249756,
+        "complex_pde": 0.3567638397216797,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 3.656,
+        "matched_residues": 45,
+        "mean_per_residue_dev": 3.453,
+        "max_per_residue_dev": 6.638,
+        "pct_within_2A": 6.7
+      },
+      "error": null
+    },
+    {
+      "name": "T1161",
+      "pdb_id": "8JVP",
+      "total_residues": 48,
+      "num_chains": 1,
+      "wall_time_s": 39.061901616,
+      "predict_only_s": 10.017180079000013,
+      "quality": {
+        "confidence_score": 0.8406959772109985,
+        "ptm": 0.7332583665847778,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.8675553202629089,
+        "complex_iplddt": 0.8675553202629089,
+        "complex_pde": 0.4451717436313629,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 9.156,
+        "matched_residues": 48,
+        "mean_per_residue_dev": 8.133,
+        "max_per_residue_dev": 18.015,
+        "pct_within_2A": 2.1
+      },
+      "error": null
+    },
+    {
+      "name": "T1155",
+      "pdb_id": "8PBV",
+      "total_residues": 116,
+      "num_chains": 1,
+      "wall_time_s": 43.143620003000024,
+      "predict_only_s": 14.579986630999997,
+      "quality": {
+        "confidence_score": 0.7606872916221619,
+        "ptm": 0.7788423895835876,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.7561484575271606,
+        "complex_iplddt": 0.7561484575271606,
+        "complex_pde": 0.962721049785614,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 6.924,
+        "matched_residues": 116,
+        "mean_per_residue_dev": 4.777,
+        "max_per_residue_dev": 29.121,
+        "pct_within_2A": 19.8
+      },
+      "error": null
+    },
+    {
+      "name": "T1104",
+      "pdb_id": "7ROA",
+      "total_residues": 117,
+      "num_chains": 1,
+      "wall_time_s": 42.73454268400002,
+      "predict_only_s": 13.799438561000017,
+      "quality": {
+        "confidence_score": 0.8824252486228943,
+        "ptm": 0.8682008981704712,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.8859812617301941,
+        "complex_iplddt": 0.8859812617301941,
+        "complex_pde": 0.5578345060348511,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 6.294,
+        "matched_residues": 52,
+        "mean_per_residue_dev": 5.611,
+        "max_per_residue_dev": 16.368,
+        "pct_within_2A": 3.8
+      },
+      "error": null
+    },
+    {
+      "name": "T1152",
+      "pdb_id": "7R1L",
+      "total_residues": 139,
+      "num_chains": 3,
+      "wall_time_s": 50.56752805299999,
+      "predict_only_s": 14.284661749999998,
+      "quality": {
+        "confidence_score": 0.7407743334770203,
+        "ptm": 0.5945665836334229,
+        "iptm": 0.41087478399276733,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.41087478399276733,
+        "complex_plddt": 0.8232491612434387,
+        "complex_iplddt": 0.7395044565200806,
+        "complex_pde": 0.8622883558273315,
+        "complex_ipde": 5.969388008117676
+      },
+      "structural": {
+        "ca_rmsd": 14.797,
+        "matched_residues": 139,
+        "mean_per_residue_dev": 14.179,
+        "max_per_residue_dev": 24.762,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1173",
+      "pdb_id": "8ON4",
+      "total_residues": 204,
+      "num_chains": 1,
+      "wall_time_s": 42.58828856300005,
+      "predict_only_s": 13.714967144000013,
+      "quality": {
+        "confidence_score": 0.6310760378837585,
+        "ptm": 0.489234060049057,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.6665365695953369,
+        "complex_iplddt": 0.6665365695953369,
+        "complex_pde": 1.404592752456665,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "error": "Too few matched CA atoms: 0",
+        "matched_residues": 0
+      },
+      "error": null
+    },
+    {
+      "name": "T1122",
+      "pdb_id": "8BBT",
+      "total_residues": 230,
+      "num_chains": 1,
+      "wall_time_s": 39.322982147000005,
+      "predict_only_s": 11.213380752000035,
+      "quality": {
+        "confidence_score": 0.3630533516407013,
+        "ptm": 0.30143383145332336,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.3784582316875458,
+        "complex_iplddt": 0.3784582316875458,
+        "complex_pde": 3.0490922927856445,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 18.005,
+        "matched_residues": 223,
+        "mean_per_residue_dev": 16.409,
+        "max_per_residue_dev": 45.13,
+        "pct_within_2A": 0.4
+      },
+      "error": null
+    },
+    {
+      "name": "T1159",
+      "pdb_id": "7PZT",
+      "total_residues": 320,
+      "num_chains": 2,
+      "wall_time_s": 40.227849714,
+      "predict_only_s": 12.743662885999981,
+      "quality": {
+        "confidence_score": 0.7865862250328064,
+        "ptm": 0.606942355632782,
+        "iptm": 0.24135558307170868,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.24135558307170868,
+        "complex_plddt": 0.9228938221931458,
+        "complex_iplddt": 0.8514507412910461,
+        "complex_pde": 0.715405285358429,
+        "complex_ipde": 9.820784568786621
+      },
+      "structural": {
+        "ca_rmsd": 19.744,
+        "matched_residues": 320,
+        "mean_per_residue_dev": 18.438,
+        "max_per_residue_dev": 32.767,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1194",
+      "pdb_id": "8OKH",
+      "total_residues": 331,
+      "num_chains": 2,
+      "wall_time_s": 45.495839449000016,
+      "predict_only_s": 14.137308930000017,
+      "quality": {
+        "confidence_score": 0.8949633836746216,
+        "ptm": 0.8919750452041626,
+        "iptm": 0.8400256037712097,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.8400256037712097,
+        "complex_plddt": 0.9086978435516357,
+        "complex_iplddt": 0.8877192139625549,
+        "complex_pde": 0.45262861251831055,
+        "complex_ipde": 2.367886543273926
+      },
+      "structural": {
+        "ca_rmsd": 16.922,
+        "matched_residues": 287,
+        "mean_per_residue_dev": 15.512,
+        "max_per_residue_dev": 36.734,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1106",
+      "pdb_id": "7QIH",
+      "total_residues": 357,
+      "num_chains": 4,
+      "wall_time_s": 51.33704876600001,
+      "predict_only_s": 19.775120923999907,
+      "quality": {
+        "confidence_score": 0.8729829788208008,
+        "ptm": 0.8561660647392273,
+        "iptm": 0.8027573227882385,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.8027573227882385,
+        "complex_plddt": 0.8905393481254578,
+        "complex_iplddt": 0.8682482242584229,
+        "complex_pde": 0.8725078105926514,
+        "complex_ipde": 5.117785930633545
+      },
+      "structural": {
+        "ca_rmsd": 14.531,
+        "matched_residues": 257,
+        "mean_per_residue_dev": 13.194,
+        "max_per_residue_dev": 30.282,
+        "pct_within_2A": 1.9
+      },
+      "error": null
+    },
+    {
+      "name": "T1151",
+      "pdb_id": "8D5V",
+      "total_residues": 357,
+      "num_chains": 4,
+      "wall_time_s": 51.71802552099996,
+      "predict_only_s": 18.662762094999948,
+      "quality": {
+        "confidence_score": 0.7701625823974609,
+        "ptm": 0.6197670102119446,
+        "iptm": 0.581381618976593,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.581381618976593,
+        "complex_plddt": 0.8173578381538391,
+        "complex_iplddt": 0.7512176036834717,
+        "complex_pde": 1.39177405834198,
+        "complex_ipde": 9.919116020202637
+      },
+      "structural": {
+        "ca_rmsd": 17.234,
+        "matched_residues": 151,
+        "mean_per_residue_dev": 16.651,
+        "max_per_residue_dev": 27.846,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1133",
+      "pdb_id": "8DYS",
+      "total_residues": 409,
+      "num_chains": 1,
+      "wall_time_s": 44.60857290299998,
+      "predict_only_s": 17.617475661999947,
+      "quality": {
+        "confidence_score": 0.9419699907302856,
+        "ptm": 0.9407790303230286,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.942267656326294,
+        "complex_iplddt": 0.942267656326294,
+        "complex_pde": 0.35442060232162476,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 15.749,
+        "matched_residues": 391,
+        "mean_per_residue_dev": 14.152,
+        "max_per_residue_dev": 40.958,
+        "pct_within_2A": 0.5
+      },
+      "error": null
+    },
+    {
+      "name": "T1120",
+      "pdb_id": "7QVB",
+      "total_residues": 442,
+      "num_chains": 2,
+      "wall_time_s": 44.48544485600007,
+      "predict_only_s": 16.926006207,
+      "quality": {
+        "confidence_score": 0.9272002577781677,
+        "ptm": 0.9180907011032104,
+        "iptm": 0.9212574362754822,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.9212574362754822,
+        "complex_plddt": 0.9286859631538391,
+        "complex_iplddt": 0.9444683194160461,
+        "complex_pde": 0.3407858908176422,
+        "complex_ipde": 0.6621258854866028
+      },
+      "structural": {
+        "ca_rmsd": 14.367,
+        "matched_residues": 425,
+        "mean_per_residue_dev": 12.997,
+        "max_per_residue_dev": 29.213,
+        "pct_within_2A": 0.2
+      },
+      "error": null
+    },
+    {
+      "name": "T1112",
+      "pdb_id": "8ORK",
+      "total_residues": 460,
+      "num_chains": 1,
+      "wall_time_s": 47.865496914999994,
+      "predict_only_s": 20.41665681699999,
+      "quality": {
+        "confidence_score": 0.9411609768867493,
+        "ptm": 0.929591715335846,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.9440532922744751,
+        "complex_iplddt": 0.9440532922744751,
+        "complex_pde": 0.36642971634864807,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 2.985,
+        "matched_residues": 448,
+        "mean_per_residue_dev": 2.406,
+        "max_per_residue_dev": 12.124,
+        "pct_within_2A": 50.2
+      },
+      "error": null
+    },
+    {
+      "name": "T1179",
+      "pdb_id": "8TN8",
+      "total_residues": 505,
+      "num_chains": 2,
+      "wall_time_s": 47.89871827000002,
+      "predict_only_s": 20.353684080999983,
+      "quality": {
+        "confidence_score": 0.31125113368034363,
+        "ptm": 0.4145122468471527,
+        "iptm": 0.23546202480793,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.23546202480793,
+        "complex_plddt": 0.33019837737083435,
+        "complex_iplddt": 0.32602521777153015,
+        "complex_pde": 4.000698566436768,
+        "complex_ipde": 10.892486572265625
+      },
+      "structural": {
+        "error": "Too few matched CA atoms: 0",
+        "matched_residues": 0
+      },
+      "error": null
+    },
+    {
+      "name": "T1183",
+      "pdb_id": "8IFX",
+      "total_residues": 522,
+      "num_chains": 2,
+      "wall_time_s": 69.61092721,
+      "predict_only_s": 34.357781897999985,
+      "quality": {
+        "confidence_score": 0.913141667842865,
+        "ptm": 0.939012885093689,
+        "iptm": 0.9582861661911011,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.9582861661911011,
+        "complex_plddt": 0.9018555283546448,
+        "complex_iplddt": 0.9144467115402222,
+        "complex_pde": 0.4222416579723358,
+        "complex_ipde": 0.7797708511352539
+      },
+      "structural": {
+        "ca_rmsd": 6.871,
+        "matched_residues": 514,
+        "mean_per_residue_dev": 4.701,
+        "max_per_residue_dev": 24.868,
+        "pct_within_2A": 38.7
+      },
+      "error": null
+    },
+    {
+      "name": "T1178",
+      "pdb_id": "8UFN",
+      "total_residues": 536,
+      "num_chains": 2,
+      "wall_time_s": 48.08612881600004,
+      "predict_only_s": 21.031055659000003,
+      "quality": {
+        "confidence_score": 0.7417811751365662,
+        "ptm": 0.8878790736198425,
+        "iptm": 0.8733378648757935,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.8733378648757935,
+        "complex_plddt": 0.7088919281959534,
+        "complex_iplddt": 0.6759987473487854,
+        "complex_pde": 1.0658584833145142,
+        "complex_ipde": 2.8313562870025635
+      },
+      "structural": {
+        "error": "Too few matched CA atoms: 0",
+        "matched_residues": 0
+      },
+      "error": null
+    },
+    {
+      "name": "T1147",
+      "pdb_id": "8EM5",
+      "total_residues": 552,
+      "num_chains": 6,
+      "wall_time_s": 52.855049893,
+      "predict_only_s": 26.245308852999983,
+      "quality": {
+        "confidence_score": 0.6491814255714417,
+        "ptm": 0.3526016175746918,
+        "iptm": 0.22548411786556244,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.22548411786556244,
+        "complex_plddt": 0.75510573387146,
+        "complex_iplddt": 0.6776371002197266,
+        "complex_pde": 1.5420359373092651,
+        "complex_ipde": 11.532451629638672
+      },
+      "structural": {
+        "ca_rmsd": 27.233,
+        "matched_residues": 446,
+        "mean_per_residue_dev": 25.31,
+        "max_per_residue_dev": 52.857,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1188",
+      "pdb_id": "8C6Z",
+      "total_residues": 573,
+      "num_chains": 1,
+      "wall_time_s": 61.936500067,
+      "predict_only_s": 31.662428435000038,
+      "quality": {
+        "confidence_score": 0.9620217680931091,
+        "ptm": 0.9582063555717468,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.9629756212234497,
+        "complex_iplddt": 0.9629756212234497,
+        "complex_pde": 0.32175445556640625,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 25.275,
+        "matched_residues": 549,
+        "mean_per_residue_dev": 23.241,
+        "max_per_residue_dev": 59.82,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1132",
+      "pdb_id": "8ECX",
+      "total_residues": 591,
+      "num_chains": 6,
+      "wall_time_s": 111.24465027699989,
+      "predict_only_s": 40.68492346300013,
+      "quality": {
+        "confidence_score": 0.7473610043525696,
+        "ptm": 0.42611587047576904,
+        "iptm": 0.3152993321418762,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.3152993321418762,
+        "complex_plddt": 0.8553764224052429,
+        "complex_iplddt": 0.8048564195632935,
+        "complex_pde": 1.8019886016845703,
+        "complex_ipde": 12.166354179382324
+      },
+      "structural": {
+        "ca_rmsd": 30.014,
+        "matched_residues": 581,
+        "mean_per_residue_dev": 28.456,
+        "max_per_residue_dev": 63.376,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1123",
+      "pdb_id": "7UZT",
+      "total_residues": 639,
+      "num_chains": 3,
+      "wall_time_s": 54.63746676599999,
+      "predict_only_s": 26.850722799000096,
+      "quality": {
+        "confidence_score": 0.8535823225975037,
+        "ptm": 0.9013954401016235,
+        "iptm": 0.8737064599990845,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.8737064599990845,
+        "complex_plddt": 0.8485512137413025,
+        "complex_iplddt": 0.8061320781707764,
+        "complex_pde": 0.5210115909576416,
+        "complex_ipde": 1.630295753479004
+      },
+      "structural": {
+        "error": "Too few matched CA atoms: 0",
+        "matched_residues": 0
+      },
+      "error": null
+    },
+    {
+      "name": "T1113",
+      "pdb_id": "7UYX",
+      "total_residues": 666,
+      "num_chains": 4,
+      "wall_time_s": 56.03345511600014,
+      "predict_only_s": 28.31258944000001,
+      "quality": {
+        "confidence_score": 0.33675214648246765,
+        "ptm": 0.1976669430732727,
+        "iptm": 0.12242747843265533,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.12242747843265533,
+        "complex_plddt": 0.39033329486846924,
+        "complex_iplddt": 0.36568892002105713,
+        "complex_pde": 4.72382926940918,
+        "complex_ipde": 15.068787574768066
+      },
+      "structural": {
+        "ca_rmsd": 32.447,
+        "matched_residues": 566,
+        "mean_per_residue_dev": 29.851,
+        "max_per_residue_dev": 68.444,
+        "pct_within_2A": 0.2
+      },
+      "error": null
+    },
+    {
+      "name": "T1176",
+      "pdb_id": "8SMQ",
+      "total_residues": 676,
+      "num_chains": 4,
+      "wall_time_s": 57.44082583299996,
+      "predict_only_s": 28.97187313900008,
+      "quality": {
+        "confidence_score": 0.676400363445282,
+        "ptm": 0.3863871693611145,
+        "iptm": 0.1969362050294876,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.1969362050294876,
+        "complex_plddt": 0.7962664365768433,
+        "complex_iplddt": 0.7009918093681335,
+        "complex_pde": 1.433532953262329,
+        "complex_ipde": 13.337345123291016
+      },
+      "structural": {
+        "ca_rmsd": 25.536,
+        "matched_residues": 537,
+        "mean_per_residue_dev": 23.635,
+        "max_per_residue_dev": 52.89,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1174",
+      "pdb_id": "8OND",
+      "total_residues": 695,
+      "num_chains": 2,
+      "wall_time_s": 90.53585772800011,
+      "predict_only_s": 42.34528787399995,
+      "quality": {
+        "confidence_score": 0.7738307118415833,
+        "ptm": 0.6745361089706421,
+        "iptm": 0.6588126420974731,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.6588126420974731,
+        "complex_plddt": 0.8025851845741272,
+        "complex_iplddt": 0.8127514123916626,
+        "complex_pde": 0.9772994518280029,
+        "complex_ipde": 2.7181198596954346
+      },
+      "structural": {
+        "error": "Too few matched CA atoms: 0",
+        "matched_residues": 0
+      },
+      "error": null
+    },
+    {
+      "name": "T1121",
+      "pdb_id": "7TIL",
+      "total_residues": 739,
+      "num_chains": 2,
+      "wall_time_s": 79.53922096400015,
+      "predict_only_s": 45.73363047199996,
+      "quality": {
+        "confidence_score": 0.7856910824775696,
+        "ptm": 0.5544906854629517,
+        "iptm": 0.5422229170799255,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.5422229170799255,
+        "complex_plddt": 0.8465580940246582,
+        "complex_iplddt": 0.820966362953186,
+        "complex_pde": 1.1215263605117798,
+        "complex_ipde": 5.4944844245910645
+      },
+      "structural": {
+        "ca_rmsd": 23.718,
+        "matched_residues": 716,
+        "mean_per_residue_dev": 20.422,
+        "max_per_residue_dev": 70.359,
+        "pct_within_2A": 0.6
+      },
+      "error": null
+    },
+    {
+      "name": "T1124",
+      "pdb_id": "7UX8",
+      "total_residues": 741,
+      "num_chains": 2,
+      "wall_time_s": 91.52228591200014,
+      "predict_only_s": 55.486262313,
+      "quality": {
+        "confidence_score": 0.8965809941291809,
+        "ptm": 0.8356016874313354,
+        "iptm": 0.7966146469116211,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.7966146469116211,
+        "complex_plddt": 0.9215725660324097,
+        "complex_iplddt": 0.9291874766349792,
+        "complex_pde": 0.8956011533737183,
+        "complex_ipde": 4.522287368774414
+      },
+      "structural": {
+        "ca_rmsd": 11.562,
+        "matched_residues": 731,
+        "mean_per_residue_dev": 10.791,
+        "max_per_residue_dev": 37.133,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1134",
+      "pdb_id": "7UBZ",
+      "total_residues": 853,
+      "num_chains": 4,
+      "wall_time_s": 83.58437191899998,
+      "predict_only_s": 51.862633089000155,
+      "quality": {
+        "confidence_score": 0.748615026473999,
+        "ptm": 0.5557135939598083,
+        "iptm": 0.4568865895271301,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.4568865895271301,
+        "complex_plddt": 0.8215471506118774,
+        "complex_iplddt": 0.7257586717605591,
+        "complex_pde": 1.6571190357208252,
+        "complex_ipde": 10.51823902130127
+      },
+      "structural": {
+        "ca_rmsd": 41.084,
+        "matched_residues": 519,
+        "mean_per_residue_dev": 38.987,
+        "max_per_residue_dev": 91.112,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1185",
+      "pdb_id": "8OUY",
+      "total_residues": 925,
+      "num_chains": 4,
+      "wall_time_s": 119.55539266899996,
+      "predict_only_s": 80.11246589999996,
+      "quality": {
+        "confidence_score": 0.8877243995666504,
+        "ptm": 0.894633948802948,
+        "iptm": 0.8660693764686584,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.8660693764686584,
+        "complex_plddt": 0.8931381702423096,
+        "complex_iplddt": 0.8864418864250183,
+        "complex_pde": 0.6214109659194946,
+        "complex_ipde": 2.3396356105804443
+      },
+      "structural": {
+        "ca_rmsd": 17.494,
+        "matched_residues": 840,
+        "mean_per_residue_dev": 14.199,
+        "max_per_residue_dev": 51.458,
+        "pct_within_2A": 1.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1154",
+      "pdb_id": "7ZCX",
+      "total_residues": 1040,
+      "num_chains": 1,
+      "wall_time_s": 96.14848952399984,
+      "predict_only_s": 69.16341479900007,
+      "quality": {
+        "confidence_score": 0.7736808657646179,
+        "ptm": 0.7582190632820129,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.7775462865829468,
+        "complex_iplddt": 0.7775462865829468,
+        "complex_pde": 1.0941003561019897,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 30.799,
+        "matched_residues": 1011,
+        "mean_per_residue_dev": 27.593,
+        "max_per_residue_dev": 74.519,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1158",
+      "pdb_id": "8SXA",
+      "total_residues": 1153,
+      "num_chains": 1,
+      "wall_time_s": 135.26939188400002,
+      "predict_only_s": 105.06728899599989,
+      "quality": {
+        "confidence_score": 0.8143420219421387,
+        "ptm": 0.6645535826683044,
+        "iptm": 0.0,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.0,
+        "complex_plddt": 0.8517891764640808,
+        "complex_iplddt": 0.8517891764640808,
+        "complex_pde": 0.8961727023124695,
+        "complex_ipde": 0.0
+      },
+      "structural": {
+        "ca_rmsd": 47.454,
+        "matched_residues": 1008,
+        "mean_per_residue_dev": 43.23,
+        "max_per_residue_dev": 118.275,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1129",
+      "pdb_id": "8A8C",
+      "total_residues": 1224,
+      "num_chains": 2,
+      "wall_time_s": 135.67283633199986,
+      "predict_only_s": 105.05143242899999,
+      "quality": {
+        "confidence_score": 0.6338274478912354,
+        "ptm": 0.6394985914230347,
+        "iptm": 0.23738868534564972,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.23738868534564972,
+        "complex_plddt": 0.7329371571540833,
+        "complex_iplddt": 0.6722306609153748,
+        "complex_pde": 1.9789199829101562,
+        "complex_ipde": 15.326126098632812
+      },
+      "structural": {
+        "ca_rmsd": 33.334,
+        "matched_residues": 1093,
+        "mean_per_residue_dev": 30.727,
+        "max_per_residue_dev": 66.418,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1145",
+      "pdb_id": "7UWW",
+      "total_residues": 1259,
+      "num_chains": 2,
+      "wall_time_s": 137.8294541250002,
+      "predict_only_s": 105.98536979500022,
+      "quality": {
+        "confidence_score": 0.8085923194885254,
+        "ptm": 0.6477761268615723,
+        "iptm": 0.40034565329551697,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.40034565329551697,
+        "complex_plddt": 0.9106540083885193,
+        "complex_iplddt": 0.8453071117401123,
+        "complex_pde": 0.5293706059455872,
+        "complex_ipde": 10.07123851776123
+      },
+      "structural": {
+        "ca_rmsd": 36.432,
+        "matched_residues": 1188,
+        "mean_per_residue_dev": 33.987,
+        "max_per_residue_dev": 69.295,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1187",
+      "pdb_id": "8AD2",
+      "total_residues": 1319,
+      "num_chains": 8,
+      "wall_time_s": 145.94869498399976,
+      "predict_only_s": 115.4992709359999,
+      "quality": {
+        "confidence_score": 0.7070481181144714,
+        "ptm": 0.28167808055877686,
+        "iptm": 0.181081160902977,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.181081160902977,
+        "complex_plddt": 0.8385398387908936,
+        "complex_iplddt": 0.7454087138175964,
+        "complex_pde": 1.9566545486450195,
+        "complex_ipde": 18.09886360168457
+      },
+      "structural": {
+        "ca_rmsd": 41.443,
+        "matched_residues": 1318,
+        "mean_per_residue_dev": 37.852,
+        "max_per_residue_dev": 92.004,
+        "pct_within_2A": 0.0
+      },
+      "error": null
+    },
+    {
+      "name": "T1157",
+      "pdb_id": "8PKO",
+      "total_residues": 1439,
+      "num_chains": 2,
+      "wall_time_s": 196.3946350250003,
+      "predict_only_s": 162.2139689999999,
+      "quality": {
+        "confidence_score": 0.8878735899925232,
+        "ptm": 0.8795177340507507,
+        "iptm": 0.8846747279167175,
+        "ligand_iptm": 0.0,
+        "protein_iptm": 0.8846747279167175,
+        "complex_plddt": 0.8886732459068298,
+        "complex_iplddt": 0.8824125528335571,
+        "complex_pde": 0.5689225792884827,
+        "complex_ipde": 2.3028998374938965
+      },
+      "structural": {
+        "ca_rmsd": 27.738,
+        "matched_residues": 1311,
+        "mean_per_residue_dev": 24.792,
+        "max_per_residue_dev": 67.164,
+        "pct_within_2A": 0.1
+      },
+      "error": null
+    },
+    {
+      "name": "T1125",
+      "pdb_id": "8H2N",
+      "total_residues": 2836,
+      "num_chains": 4,
+      "wall_time_s": 55.10171166300006,
+      "predict_only_s": 28.619460154999615,
+      "quality": {
+        "error": "Prediction dir not found: /tmp/casp15_eval/T1125_fa3ddaae/boltz_results_T1125/predictions/T1125"
+      },
+      "structural": {
+        "error": "No predicted mmCIF found in /tmp/casp15_eval/T1125_fa3ddaae/boltz_results_T1125/predictions"
+      },
+      "error": null
+    },
+    {
+      "name": "T1137",
+      "pdb_id": "8FEF",
+      "total_residues": 3292,
+      "num_chains": 10,
+      "wall_time_s": 123.87999356099999,
+      "predict_only_s": 59.46242867700039,
+      "quality": {
+        "error": "Prediction dir not found: /tmp/casp15_eval/T1137_b595987c/boltz_results_T1137/predictions/T1137"
+      },
+      "structural": {
+        "error": "No predicted mmCIF found in /tmp/casp15_eval/T1137_b595987c/boltz_results_T1137/predictions"
+      },
+      "error": null
+    },
+    {
+      "name": "T1114",
+      "pdb_id": "7UTD",
+      "total_residues": 6908,
+      "num_chains": 20,
+      "wall_time_s": 299.9309209330004,
+      "predict_only_s": 265.20511430800025,
+      "quality": {
+        "error": "Prediction dir not found: /tmp/casp15_eval/T1114_b3487269/boltz_results_T1114/predictions/T1114"
+      },
+      "structural": {
+        "error": "No predicted mmCIF found in /tmp/casp15_eval/T1114_b3487269/boltz_results_T1114/predictions"
+      },
+      "error": null
+    }
+  ],
+  "aggregate": {
+    "num_successful": 38,
+    "num_with_plddt": 35,
+    "num_with_rmsd": 30,
+    "mean_wall_time_s": 80.84,
+    "median_wall_time_s": 55.57,
+    "total_wall_time_s": 3071.8,
+    "mean_predict_only_s": 46.6,
+    "median_predict_only_s": 27.58,
+    "mean_plddt": 0.8133,
+    "median_plddt": 0.8518,
+    "min_plddt": 0.3302,
+    "max_plddt": 0.963,
+    "mean_ca_rmsd": 20.917,
+    "median_ca_rmsd": 17.749,
+    "min_ca_rmsd": 2.985,
+    "max_ca_rmsd": 47.454
+  }
+}

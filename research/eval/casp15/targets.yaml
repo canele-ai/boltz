@@ -1,0 +1,749 @@
+description: CASP15 protein targets for Boltz-2 validation
+num_targets: 38
+num_skipped: 0
+targets:
+- name: T1160
+  casp_ids:
+  - T1160
+  pdb_id: 8JVN
+  yaml: test_cases/T1160.yaml
+  ground_truth: ground_truth/8JVN.cif
+  chain_mapping:
+    A: A
+  num_chains: 1
+  total_residues: 44
+  chain_details:
+  - id: A
+    residues: 44
+- name: T1119
+  casp_ids:
+  - T1119
+  pdb_id: 7SQ4
+  yaml: test_cases/T1119.yaml
+  ground_truth: ground_truth/7SQ4.cif
+  chain_mapping:
+    A: A
+  num_chains: 1
+  total_residues: 48
+  chain_details:
+  - id: A
+    residues: 48
+- name: T1161
+  casp_ids:
+  - T1161
+  pdb_id: 8JVP
+  yaml: test_cases/T1161.yaml
+  ground_truth: ground_truth/8JVP.cif
+  chain_mapping:
+    A: A
+  num_chains: 1
+  total_residues: 48
+  chain_details:
+  - id: A
+    residues: 48
+- name: T1155
+  casp_ids:
+  - T1155
+  pdb_id: 8PBV
+  yaml: test_cases/T1155.yaml
+  ground_truth: ground_truth/8PBV.cif
+  chain_mapping:
+    A: A
+  num_chains: 1
+  total_residues: 116
+  chain_details:
+  - id: A
+    residues: 116
+- name: T1104
+  casp_ids:
+  - T1104
+  pdb_id: 7ROA
+  yaml: test_cases/T1104.yaml
+  ground_truth: ground_truth/7ROA.cif
+  chain_mapping:
+    A: A
+  num_chains: 1
+  total_residues: 117
+  chain_details:
+  - id: A
+    residues: 117
+- name: T1152
+  casp_ids:
+  - T1152
+  pdb_id: 7R1L
+  yaml: test_cases/T1152.yaml
+  ground_truth: ground_truth/7R1L.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+  num_chains: 3
+  total_residues: 139
+  chain_details:
+  - id: A
+    residues: 46
+  - id: B
+    residues: 46
+  - id: C
+    residues: 47
+- name: T1173
+  casp_ids:
+  - T1173
+  pdb_id: 8ON4
+  yaml: test_cases/T1173.yaml
+  ground_truth: ground_truth/8ON4.cif
+  chain_mapping:
+    A: A
+  num_chains: 1
+  total_residues: 204
+  chain_details:
+  - id: A
+    residues: 204
+- name: T1122
+  casp_ids:
+  - T1122
+  pdb_id: 8BBT
+  yaml: test_cases/T1122.yaml
+  ground_truth: ground_truth/8BBT.cif
+  chain_mapping:
+    A: A
+  num_chains: 1
+  total_residues: 230
+  chain_details:
+  - id: A
+    residues: 230
+- name: T1159
+  casp_ids:
+  - T1159
+  pdb_id: 7PZT
+  yaml: test_cases/T1159.yaml
+  ground_truth: ground_truth/7PZT.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 320
+  chain_details:
+  - id: A
+    residues: 160
+  - id: B
+    residues: 160
+- name: T1194
+  casp_ids:
+  - T1194
+  pdb_id: 8OKH
+  yaml: test_cases/T1194.yaml
+  ground_truth: ground_truth/8OKH.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 331
+  chain_details:
+  - id: A
+    residues: 166
+  - id: B
+    residues: 165
+- name: T1106
+  casp_ids:
+  - T1106
+  - H1106
+  pdb_id: 7QIH
+  yaml: test_cases/T1106.yaml
+  ground_truth: ground_truth/7QIH.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+  num_chains: 4
+  total_residues: 357
+  chain_details:
+  - id: A
+    residues: 111
+  - id: B
+    residues: 71
+  - id: C
+    residues: 110
+  - id: D
+    residues: 65
+- name: T1151
+  casp_ids:
+  - T1151
+  - H1151
+  pdb_id: 8D5V
+  yaml: test_cases/T1151.yaml
+  ground_truth: ground_truth/8D5V.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+  num_chains: 4
+  total_residues: 357
+  chain_details:
+  - id: A
+    residues: 84
+  - id: B
+    residues: 97
+  - id: C
+    residues: 82
+  - id: D
+    residues: 94
+- name: T1133
+  casp_ids:
+  - T1133
+  pdb_id: 8DYS
+  yaml: test_cases/T1133.yaml
+  ground_truth: ground_truth/8DYS.cif
+  chain_mapping:
+    A: A
+  num_chains: 1
+  total_residues: 409
+  chain_details:
+  - id: A
+    residues: 409
+- name: T1120
+  casp_ids:
+  - T1120
+  pdb_id: 7QVB
+  yaml: test_cases/T1120.yaml
+  ground_truth: ground_truth/7QVB.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 442
+  chain_details:
+  - id: A
+    residues: 214
+  - id: B
+    residues: 228
+- name: T1112
+  casp_ids:
+  - T1112
+  pdb_id: 8ORK
+  yaml: test_cases/T1112.yaml
+  ground_truth: ground_truth/8ORK.cif
+  chain_mapping:
+    AAA: AAA
+  num_chains: 1
+  total_residues: 460
+  chain_details:
+  - id: AAA
+    residues: 460
+- name: T1179
+  casp_ids:
+  - T1179
+  pdb_id: 8TN8
+  yaml: test_cases/T1179.yaml
+  ground_truth: ground_truth/8TN8.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 505
+  chain_details:
+  - id: A
+    residues: 252
+  - id: B
+    residues: 253
+- name: T1183
+  casp_ids:
+  - T1183
+  pdb_id: 8IFX
+  yaml: test_cases/T1183.yaml
+  ground_truth: ground_truth/8IFX.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 522
+  chain_details:
+  - id: A
+    residues: 327
+  - id: B
+    residues: 195
+- name: T1178
+  casp_ids:
+  - T1178
+  pdb_id: 8UFN
+  yaml: test_cases/T1178.yaml
+  ground_truth: ground_truth/8UFN.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 536
+  chain_details:
+  - id: A
+    residues: 269
+  - id: B
+    residues: 267
+- name: T1147
+  casp_ids:
+  - T1147
+  pdb_id: 8EM5
+  yaml: test_cases/T1147.yaml
+  ground_truth: ground_truth/8EM5.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+    E: E
+    F: F
+  num_chains: 6
+  total_residues: 552
+  chain_details:
+  - id: A
+    residues: 92
+  - id: B
+    residues: 92
+  - id: C
+    residues: 92
+  - id: D
+    residues: 92
+  - id: E
+    residues: 92
+  - id: F
+    residues: 92
+- name: T1188
+  casp_ids:
+  - T1188
+  pdb_id: 8C6Z
+  yaml: test_cases/T1188.yaml
+  ground_truth: ground_truth/8C6Z.cif
+  chain_mapping:
+    A: A
+  num_chains: 1
+  total_residues: 573
+  chain_details:
+  - id: A
+    residues: 573
+- name: T1132
+  casp_ids:
+  - T1132
+  pdb_id: 8ECX
+  yaml: test_cases/T1132.yaml
+  ground_truth: ground_truth/8ECX.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+    E: E
+    F: F
+  num_chains: 6
+  total_residues: 591
+  chain_details:
+  - id: A
+    residues: 97
+  - id: B
+    residues: 98
+  - id: C
+    residues: 101
+  - id: D
+    residues: 98
+  - id: E
+    residues: 99
+  - id: F
+    residues: 98
+- name: T1123
+  casp_ids:
+  - T1123
+  pdb_id: 7UZT
+  yaml: test_cases/T1123.yaml
+  ground_truth: ground_truth/7UZT.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+  num_chains: 3
+  total_residues: 639
+  chain_details:
+  - id: A
+    residues: 211
+  - id: B
+    residues: 214
+  - id: C
+    residues: 214
+- name: T1113
+  casp_ids:
+  - T1113
+  pdb_id: 7UYX
+  yaml: test_cases/T1113.yaml
+  ground_truth: ground_truth/7UYX.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+  num_chains: 4
+  total_residues: 666
+  chain_details:
+  - id: A
+    residues: 167
+  - id: B
+    residues: 169
+  - id: C
+    residues: 164
+  - id: D
+    residues: 166
+- name: T1176
+  casp_ids:
+  - T1176
+  pdb_id: 8SMQ
+  yaml: test_cases/T1176.yaml
+  ground_truth: ground_truth/8SMQ.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+  num_chains: 4
+  total_residues: 676
+  chain_details:
+  - id: A
+    residues: 170
+  - id: B
+    residues: 169
+  - id: C
+    residues: 168
+  - id: D
+    residues: 169
+- name: T1174
+  casp_ids:
+  - T1174
+  pdb_id: 8OND
+  yaml: test_cases/T1174.yaml
+  ground_truth: ground_truth/8OND.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 695
+  chain_details:
+  - id: A
+    residues: 344
+  - id: B
+    residues: 351
+- name: T1121
+  casp_ids:
+  - T1121
+  pdb_id: 7TIL
+  yaml: test_cases/T1121.yaml
+  ground_truth: ground_truth/7TIL.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 739
+  chain_details:
+  - id: A
+    residues: 365
+  - id: B
+    residues: 374
+- name: T1124
+  casp_ids:
+  - T1124
+  pdb_id: 7UX8
+  yaml: test_cases/T1124.yaml
+  ground_truth: ground_truth/7UX8.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 741
+  chain_details:
+  - id: A
+    residues: 379
+  - id: B
+    residues: 362
+- name: T1134
+  casp_ids:
+  - T1134
+  - H1134
+  pdb_id: 7UBZ
+  yaml: test_cases/T1134.yaml
+  ground_truth: ground_truth/7UBZ.cif
+  chain_mapping:
+    A: A
+    C: C
+    B: B
+    D: D
+  num_chains: 4
+  total_residues: 853
+  chain_details:
+  - id: A
+    residues: 230
+  - id: C
+    residues: 230
+  - id: B
+    residues: 191
+  - id: D
+    residues: 202
+- name: T1185
+  casp_ids:
+  - T1185
+  - H1185
+  pdb_id: 8OUY
+  yaml: test_cases/T1185.yaml
+  ground_truth: ground_truth/8OUY.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+  num_chains: 4
+  total_residues: 925
+  chain_details:
+  - id: A
+    residues: 70
+  - id: B
+    residues: 313
+  - id: C
+    residues: 308
+  - id: D
+    residues: 234
+- name: T1154
+  casp_ids:
+  - T1154
+  pdb_id: 7ZCX
+  yaml: test_cases/T1154.yaml
+  ground_truth: ground_truth/7ZCX.cif
+  chain_mapping:
+    AAA: AAA
+  num_chains: 1
+  total_residues: 1040
+  chain_details:
+  - id: AAA
+    residues: 1040
+- name: T1158
+  casp_ids:
+  - T1158
+  pdb_id: 8SXA
+  yaml: test_cases/T1158.yaml
+  ground_truth: ground_truth/8SXA.cif
+  chain_mapping:
+    A: A
+  num_chains: 1
+  total_residues: 1153
+  chain_details:
+  - id: A
+    residues: 1153
+- name: T1129
+  casp_ids:
+  - T1129
+  pdb_id: 8A8C
+  yaml: test_cases/T1129.yaml
+  ground_truth: ground_truth/8A8C.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 1224
+  chain_details:
+  - id: A
+    residues: 695
+  - id: B
+    residues: 529
+- name: T1145
+  casp_ids:
+  - T1145
+  pdb_id: 7UWW
+  yaml: test_cases/T1145.yaml
+  ground_truth: ground_truth/7UWW.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 1259
+  chain_details:
+  - id: A
+    residues: 632
+  - id: B
+    residues: 627
+- name: T1187
+  casp_ids:
+  - T1187
+  pdb_id: 8AD2
+  yaml: test_cases/T1187.yaml
+  ground_truth: ground_truth/8AD2.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+    E: E
+    F: F
+    G: G
+    H: H
+  num_chains: 8
+  total_residues: 1319
+  chain_details:
+  - id: A
+    residues: 165
+  - id: B
+    residues: 165
+  - id: C
+    residues: 165
+  - id: D
+    residues: 165
+  - id: E
+    residues: 165
+  - id: F
+    residues: 165
+  - id: G
+    residues: 164
+  - id: H
+    residues: 165
+- name: T1157
+  casp_ids:
+  - T1157
+  - H1157
+  pdb_id: 8PKO
+  yaml: test_cases/T1157.yaml
+  ground_truth: ground_truth/8PKO.cif
+  chain_mapping:
+    A: A
+    B: B
+  num_chains: 2
+  total_residues: 1439
+  chain_details:
+  - id: A
+    residues: 972
+  - id: B
+    residues: 467
+- name: T1125
+  casp_ids:
+  - T1125
+  pdb_id: 8H2N
+  yaml: test_cases/T1125.yaml
+  ground_truth: ground_truth/8H2N.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+  num_chains: 4
+  total_residues: 2836
+  chain_details:
+  - id: A
+    residues: 709
+  - id: B
+    residues: 709
+  - id: C
+    residues: 709
+  - id: D
+    residues: 709
+- name: T1137
+  casp_ids:
+  - T1137
+  pdb_id: 8FEF
+  yaml: test_cases/T1137.yaml
+  ground_truth: ground_truth/8FEF.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+    E: E
+    F: F
+    G: G
+    H: H
+    I: I
+    J: J
+  num_chains: 10
+  total_residues: 3292
+  chain_details:
+  - id: A
+    residues: 392
+  - id: B
+    residues: 335
+  - id: C
+    residues: 310
+  - id: D
+    residues: 385
+  - id: E
+    residues: 358
+  - id: F
+    residues: 399
+  - id: G
+    residues: 299
+  - id: H
+    residues: 298
+  - id: I
+    residues: 253
+  - id: J
+    residues: 263
+- name: T1114
+  casp_ids:
+  - T1114
+  pdb_id: 7UTD
+  yaml: test_cases/T1114.yaml
+  ground_truth: ground_truth/7UTD.cif
+  chain_mapping:
+    A: A
+    B: B
+    C: C
+    D: D
+    E: E
+    F: F
+    G: G
+    H: H
+    I: I
+    J: J
+    K: K
+    L: L
+    M: M
+    N: N
+    O: O
+    P: P
+    Q: Q
+    R: R
+    S: S
+    T: T
+  num_chains: 20
+  total_residues: 6908
+  chain_details:
+  - id: A
+    residues: 512
+  - id: B
+    residues: 322
+  - id: C
+    residues: 512
+  - id: D
+    residues: 322
+  - id: E
+    residues: 512
+  - id: F
+    residues: 322
+  - id: G
+    residues: 512
+  - id: H
+    residues: 322
+  - id: I
+    residues: 512
+  - id: J
+    residues: 322
+  - id: K
+    residues: 512
+  - id: L
+    residues: 322
+  - id: M
+    residues: 512
+  - id: N
+    residues: 322
+  - id: O
+    residues: 512
+  - id: P
+    residues: 322
+  - id: Q
+    residues: 59
+  - id: R
+    residues: 59
+  - id: S
+    residues: 59
+  - id: T
+    residues: 59

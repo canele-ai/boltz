@@ -406,6 +406,29 @@
   </div>
 </section>
 
+<!-- CASP15 Validation -->
+<section>
+  <h2>CASP15 Validation</h2>
+  <p>The 3-complex result above was validated on <strong>35 CASP15 protein targets</strong> (38 attempted, 3 exceeded L40S memory). Targets span 44–1,439 residues across single-chain and multi-chain complexes. Both configs use pre-cached MSAs on Modal L40S; timing is predict_only_s (phase timestamps).</p>
+
+  <table>
+    <thead>
+      <tr><th>Metric</th><th class="num">Baseline (SDE-200)</th><th class="num">Optimized (ODE-12+bypass)</th><th class="num">Delta</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Mean predict-only time</td><td class="num">40.5s</td><td class="num">25.1s</td><td class="num speedup"><strong>1.61×</strong></td></tr>
+      <tr><td>Mean pLDDT</td><td class="num">0.8133</td><td class="num">0.8143</td><td class="num">+0.09pp</td></tr>
+      <tr><td>Mean CA RMSD (30 targets)</td><td class="num">20.9 Å</td><td class="num">20.2 Å</td><td class="num">−0.7 Å</td></tr>
+      <tr><td>Targets with &gt;2pp pLDDT regression</td><td class="num" colspan="2"></td><td class="num">2 / 35</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.82rem;color:var(--muted)">35 CASP15 protein targets (T* + H*) with deposited PDB structures. 3 targets &gt;2,800 residues excluded (OOM on L40S). 5 targets have N/A RMSD due to non-standard chain IDs in cryo-EM structures. CASP target → PDB mapping from predictioncenter.org. 1 seed per config.</p>
+
+  <div class="insight">
+    <strong>The 3-complex speedup holds at scale.</strong> Predict-only speedup is 1.61× across 35 diverse CASP15 targets, consistent with the 1.69× measured on the 3-complex development set. Mean pLDDT is unchanged (+0.09pp) and mean CA RMSD improves slightly (−0.7 Å). The optimized config produces structurally equivalent predictions across the full range of CASP15 protein targets.
+  </div>
+</section>
+
 <!-- Dead Ends -->
 <section>
   <h2>What Didn't Work</h2>
@@ -509,7 +532,7 @@
   <h2>Method</h2>
 
   <h3>Evaluation harness (eval-v5)</h3>
-  <p>Subprocess per prediction on Modal L40S GPU. Pre-cached MSAs eliminate network latency. Phase timestamps exclude model loading from timing. Three test complexes with PDB experimental ground truth: Barnase-Barstar (1BRS, 2.0Å), Fab HyHEL-63 + HEWL (1DQJ, 1.80Å), Hemoglobin tetramer (2DN2, 1.25Å). Baseline: 200 EDM/Karras steps, 3 recycling passes, fp32.</p>
+  <p>Subprocess per prediction on Modal L40S GPU. Pre-cached MSAs eliminate network latency. Phase timestamps exclude model loading from timing. <strong>Development set:</strong> three complexes with PDB experimental ground truth: Barnase-Barstar (1BRS, 2.0Å), Fab HyHEL-63 + HEWL (1DQJ, 1.80Å), Hemoglobin tetramer (2DN2, 1.25Å). <strong>Validation set:</strong> 35 CASP15 protein targets (T* + H*) spanning 44–1,439 residues, with PDB ground truth for CA RMSD. Baseline: 200 EDM/Karras steps, 3 recycling passes, fp32.</p>
 
   <h3>Quality gates</h3>
   <p><strong>pLDDT gate:</strong> mean regression ≤ 2pp, per-complex ≤ 5pp. <strong>Structural gate:</strong> CA RMSD vs PDB ground truth must not regress more than 1Å beyond baseline's own accuracy. Both gates validated with 3 seeds.</p>
