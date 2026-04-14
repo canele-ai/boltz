@@ -409,24 +409,50 @@
 <!-- CASP15 Validation -->
 <section>
   <h2>CASP15 Validation</h2>
-  <p>The 3-complex result above was validated on <strong>35 CASP15 protein targets</strong> (38 attempted, 3 exceeded L40S memory). Targets span 44–1,439 residues across single-chain and multi-chain complexes. Both configs use pre-cached MSAs on Modal L40S; timing is predict_only_s (phase timestamps).</p>
+  <p>The 3-complex result was validated on <strong>35 CASP15 protein targets</strong> (38 attempted, 3 exceeded L40S memory) spanning 44–1,439 residues. The question: does the optimized config regress prediction quality on any individual target?</p>
 
+  <h3>No regression on single-chain and 2-chain targets</h3>
   <table>
     <thead>
-      <tr><th>Metric</th><th class="num">Baseline (SDE-200)</th><th class="num">Optimized (ODE-12+bypass)</th><th class="num">Delta</th></tr>
+      <tr><th>Target class</th><th class="num">n</th><th class="num">Speedup</th><th class="num">pLDDT Δ</th><th class="num">CA RMSD Δ</th><th class="num">Targets regressed</th></tr>
     </thead>
     <tbody>
-      <tr><td>Mean predict-only time</td><td class="num">40.5s</td><td class="num">25.1s</td><td class="num speedup"><strong>1.61×</strong></td></tr>
-      <tr><td>Mean pLDDT</td><td class="num">0.8133</td><td class="num">0.8143</td><td class="num">+0.09pp</td></tr>
-      <tr><td>Mean CA RMSD (30 targets)</td><td class="num">20.9 Å</td><td class="num">20.2 Å</td><td class="num">−0.7 Å</td></tr>
-      <tr><td>Targets with &gt;2pp pLDDT regression</td><td class="num" colspan="2"></td><td class="num">2 / 35</td></tr>
+      <tr>
+        <td>Single-chain</td><td class="num">12</td><td class="num speedup">1.61×</td><td class="num">+0.93pp</td><td class="num">−0.21 Å</td>
+        <td class="num"><strong>0</strong> / 12</td>
+      </tr>
+      <tr>
+        <td>2-chain complexes</td><td class="num">12</td><td class="num speedup">1.61×</td><td class="num">+0.38pp</td><td class="num">+0.07 Å</td>
+        <td class="num"><strong>0</strong> / 12</td>
+      </tr>
+      <tr>
+        <td>3+ chain assemblies</td><td class="num">11</td><td class="num speedup">1.61×</td><td class="num">−1.13pp</td><td class="num">−1.90 Å</td>
+        <td class="num">2 pLDDT, 2 RMSD</td>
+      </tr>
     </tbody>
   </table>
-  <p style="font-size:0.82rem;color:var(--muted)">35 CASP15 protein targets (T* + H*) with deposited PDB structures. 3 targets &gt;2,800 residues excluded (OOM on L40S). 5 targets have N/A RMSD due to non-standard chain IDs in cryo-EM structures. CASP target → PDB mapping from predictioncenter.org. 1 seed per config.</p>
+  <p style="font-size:0.82rem;color:var(--muted)">"Regressed" = &gt;2pp pLDDT drop or &gt;1Å RMSD increase vs baseline. 1 seed per config, pre-cached MSAs, Modal L40S. 5 targets lack RMSD data due to non-standard chain IDs in cryo-EM structures.</p>
 
-  <div class="insight">
-    <strong>The 3-complex speedup holds at scale.</strong> Predict-only speedup is 1.61× across 35 diverse CASP15 targets, consistent with the 1.69× measured on the 3-complex development set. Mean pLDDT is unchanged (+0.09pp) and mean CA RMSD improves slightly (−0.7 Å). The optimized config produces structurally equivalent predictions across the full range of CASP15 protein targets.
-  </div>
+  <p>Across <strong>24 single-chain and 2-chain targets</strong>, there is zero quality regression on either metric. pLDDT improves slightly on average, and CA RMSD is unchanged. The optimization is safe for these target classes.</p>
+
+  <h3>Inconclusive on 3+ chain assemblies</h3>
+  <p>Four of the 11 targets with 3+ chains show individual regressions:</p>
+  <table>
+    <thead>
+      <tr><th>Target</th><th class="num">Chains</th><th class="num">pLDDT Δ</th><th class="num">RMSD Δ</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>T1123 (7UZT)</td><td class="num">3</td><td class="num" style="color:var(--red)">−12.3pp</td><td class="num">N/A</td></tr>
+      <tr><td>T1147 (8EM5)</td><td class="num">6</td><td class="num" style="color:var(--red)">−3.5pp</td><td class="num" style="color:var(--green)">−5.2 Å</td></tr>
+      <tr><td>T1176 (8SMQ)</td><td class="num">4</td><td class="num">+0.2pp</td><td class="num" style="color:var(--red)">+8.1 Å</td></tr>
+      <tr><td>T1185 (8OUY)</td><td class="num">4</td><td class="num">+1.5pp</td><td class="num" style="color:var(--red)">+1.7 Å</td></tr>
+    </tbody>
+  </table>
+  <p>However, other 3+ chain targets swing equally in the <em>opposite</em> direction (T1187: −14Å, T1147: −5.2Å, T1132: −4.3Å improved). This is consistent with high variance in chain packing for symmetric assemblies — different sampling trajectories (SDE-200 vs ODE-12) land on different chain arrangements. With only 1 seed, we cannot distinguish real regression from sampling noise on these targets. Multi-seed evaluation would be needed to resolve this.</p>
+
+  <h3>Speedup confirmed</h3>
+  <p>Predict-only speedup is <strong>1.61×</strong> (40.5s → 25.1s mean) across all 35 targets, consistent with the 1.69× measured on the 3-complex development set. The speedup is uniform across target sizes — it does not depend on chain count or residue count.</p>
+  <p style="font-size:0.82rem;color:var(--muted)">35 CASP15 protein targets (T* + H*) with deposited PDB structures. 3 targets &gt;2,800 residues excluded (OOM on L40S). CASP target → PDB mapping from predictioncenter.org. Full per-target data in research/eval/casp15/results/.</p>
 </section>
 
 <!-- Dead Ends -->
